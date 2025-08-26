@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { School, ChevronRight, GraduationCap, House } from "lucide-react";
+import { School, ChevronRight, GraduationCap, House, Plus } from "lucide-react";
 
 import {
   Collapsible,
@@ -8,23 +8,18 @@ import {
 } from "@/components/ui/collapsible";
 
 import {
-  Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupLabel,
-  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarProvider,
-  SidebarRail,
 } from "@/components/ui/sidebar";
-import useLogout from "@/hooks/useLogout";
-import { Link, useNavigate } from "react-router-dom";
-import Context from "@/context/context";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const data = {
   navMain: [
@@ -72,6 +67,11 @@ const data = {
 const SidebarContentComponent = ({ navUser, changeNavGroupFunction }) => {
   return (
     <SidebarContent>
+      <SidebarGroup>
+        <Button>
+          <Plus /> New Chat
+        </Button>
+      </SidebarGroup>
       <SidebarGroup>
         <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
         <SidebarMenu>
