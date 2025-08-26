@@ -1,0 +1,11 @@
+{
+  "welcomeRegistrationTemplate": {
+    "message": {
+      "subject": "Welcome to the Management",
+      "text": "Welcome to the Management. We are glad to have you with us.",
+      "html": null
+    },
+    "fileName": "welcome.template.html",
+    "dynamicDataKeys": ["user_name", "user_email"]
+  }
+}
