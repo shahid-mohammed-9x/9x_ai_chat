@@ -1,4 +1,4 @@
-const getInitials = (fullName) => {
+export const getInitials = (fullName = "") => {
   const names = fullName.split(" ");
   const initials = names
     .map((name) => name.charAt(0).toUpperCase())
@@ -6,5 +6,3 @@ const getInitials = (fullName) => {
     .join("");
   return initials;
 };
-
-export default getInitials;

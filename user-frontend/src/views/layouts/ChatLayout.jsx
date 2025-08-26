@@ -7,7 +7,6 @@ import {
   LogOut,
   Wallet,
   CreditCard,
-  Clock,
   GraduationCap,
   House,
 } from "lucide-react";
@@ -45,7 +44,7 @@ import {
 } from "@/components/ui/sidebar";
 import useLogout from "@/hooks/useLogout";
 import { Link, useNavigate } from "react-router-dom";
-import getInitials from "@/helpers/get-initials";
+import { getInitials } from "@/helpers";
 import Context from "@/context/context";
 import _ from "lodash";
 
@@ -92,28 +91,27 @@ const data = {
   ],
 };
 
-const UserSidebar = ({ user, children }) => {
+const user = {
+  name: "John Doe",
+  email: "jonh Doe",
+  avatar: "https://i.pravatar.cc/150?img=3",
+};
+
+const UserSidebar = ({ children }) => {
   const logoutFunction = useLogout();
   const navigate = useNavigate();
   const {
-    notificationState: { fetchNotificationsAction, notifications },
-    sidebarState: { isSidebarOpen, navMainAdmin, changeNavMainAdminAction },
+    sidebarState: { isSidebarOpen, navUser, changeNavUserAction },
   } = useContext(Context);
-
-  useEffect(() => {
-    if (!notifications) {
-      fetchNotificationsAction();
-    }
-  }, []);
 
   const changeNavMainAdminGroupFunction = useCallback(
     (id) => {
-      let value = navMainAdmin[id];
-      let updateState = _.cloneDeep(navMainAdmin);
+      let value = navUser[id];
+      let updateState = _.cloneDeep(navUser);
       updateState[id] = !value;
-      changeNavMainAdminAction(updateState);
+      changeNavUserAction(updateState);
     },
-    [navMainAdmin]
+    [navUser]
   );
 
   return (
@@ -129,9 +127,9 @@ const UserSidebar = ({ user, children }) => {
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold capitalize">
-                      {"Tuition Management"}
+                      {"9x AI Chat"}
                     </span>
-                    <span className="truncate text-xs">Admin Portal</span>
+                    <span className="truncate text-xs">Talk With AI</span>
                   </div>
                 </div>
               </SidebarMenuButton>
@@ -147,8 +145,8 @@ const UserSidebar = ({ user, children }) => {
                 <Collapsible
                   key={item.title}
                   asChild
-                  // defaultOpen={navMainAdmin[item?.id] ?? false}
-                  open={navMainAdmin[item?.id] ?? false}
+                  // defaultOpen={navUser[item?.id] ?? false}
+                  open={navUser[item?.id] ?? false}
                   className="group/collapsible"
                 >
                   <SidebarMenuItem>
@@ -181,7 +179,7 @@ const UserSidebar = ({ user, children }) => {
             </SidebarMenu>
           </SidebarGroup>
 
-          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+          {/* <SidebarGroup className="group-data-[collapsible=icon]:hidden">
             <SidebarGroupLabel>Quick Access</SidebarGroupLabel>
             <SidebarMenu>
               {data.quickAccess.map((item) => (
@@ -195,7 +193,7 @@ const UserSidebar = ({ user, children }) => {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-          </SidebarGroup>
+          </SidebarGroup> */}
         </SidebarContent>
 
         <SidebarFooter>
