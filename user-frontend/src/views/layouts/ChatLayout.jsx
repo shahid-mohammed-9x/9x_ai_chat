@@ -91,6 +91,7 @@ const data = {
     },
   ],
 };
+
 const UserSidebar = ({ user, children }) => {
   const logoutFunction = useLogout();
   const navigate = useNavigate();

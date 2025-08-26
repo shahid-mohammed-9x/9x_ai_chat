@@ -18,7 +18,8 @@
     "hooks": "@/hooks",
     "helpers": "@/helpers",
     "redux": "@/redux",
-    "services": "@/services"
+    "services": "@/services",
+    "context": "@/context"
   },
   "iconLibrary": "lucide"
 }
