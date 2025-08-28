@@ -17,7 +17,7 @@ const sendEmailOTPValidation = celebrate({
     .label("body"),
 });
 
-const verifyRegisterUserOTPValidation = celebrate({
+const verifyOTPValidation = celebrate({
   body: Joi.object({
     otp: Joi.string()
       .length(4) // assuming OTP is 4 digits
@@ -25,6 +25,7 @@ const verifyRegisterUserOTPValidation = celebrate({
       .required()
       .trim()
       .label("OTP"),
+    email: Joi.string().email().required().label("email"),
   })
     .required()
     .label("body"),
@@ -33,6 +34,7 @@ const verifyRegisterUserOTPValidation = celebrate({
 module.exports = {
   checkUserValidation,
   sendEmailOTPValidation,
+  verifyOTPValidation,
 };
 
 // password: Joi.string()

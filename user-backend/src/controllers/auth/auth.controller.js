@@ -8,6 +8,7 @@ const logger = require("../../config/logger.config");
 const errorHandling = require("../../utils/errorHandling.util");
 const responseHandlerUtil = require("../../utils/responseHandler.util");
 const { generateOTP } = require("../../utils/otpGenerator.util");
+const { createAccessToken } = require("../../utils/jwtToken.util");
 
 // check user controller
 const checkUserController = async (req, res, next) => {
@@ -91,6 +92,7 @@ const sendEmailOTPController = async (req, res, next) => {
         {
           otp,
           $inc: { count: 1 },
+          verifyAttempts: 0,
           expiresAt: new Date(Date.now() + 5 * 60 * 1000),
         },
         { new: true }
@@ -147,17 +149,16 @@ const sendEmailOTPController = async (req, res, next) => {
   }
 };
 
-const verifyRegisterUserEmailOTPController = async (req, res, next) => {
+// verify otp controller
+const verifyOTPController = async (req, res, next) => {
   try {
     logger.info(
-      "controller - users - otpVerfication.controller - verifyRegisterUserEmailOTPController - start"
+      "controller - auth - auth.controller - verifyOTPController - start"
     );
 
-    const { otp } = req.body;
+    const { otp, email } = req.body;
 
-    const isOtpExist = await otpModel
-      .findOne({ user: req.user._id, type: "email" })
-      .lean();
+    const isOtpExist = await otpModel.findOne({ email }).lean();
 
     if (!isOtpExist || isOtpExist.expiresAt < new Date())
       return next(
@@ -189,18 +190,29 @@ const verifyRegisterUserEmailOTPController = async (req, res, next) => {
     }
 
     await otpModel.findByIdAndDelete(isOtpExist._id);
-    await userModel.findByIdAndUpdate(req.user._id, { isEmailVerified: true });
+    const token = await createAccessToken(isOtpExist.user, "user");
+    const details = await userModel.findByIdAndUpdate(
+      isOtpExist?.user,
+      {
+        isEmailVerified: true,
+        isActive: true,
+        token,
+      },
+      { new: true }
+    );
 
     logger.info(
-      "controller - users - otpVerfication.controller - verifyRegisterUserEmailOTPController - end"
+      "controller - auth - auth.controller - verifyOTPController - end"
     );
 
     responseHandlerUtil.successResponseStandard(res, {
       message: "OTP verified successfully.",
+      data: details,
+      otherData: { token },
     });
   } catch (error) {
     logger.error(
-      "controller - users - otpVerfication.controller - verifyRegisterUserEmailOTPController - error",
+      "controller - auth - auth.controller - verifyOTPController - error",
       error
     );
     errorHandling.handleCustomErrorService(error, next);
@@ -210,4 +222,5 @@ const verifyRegisterUserEmailOTPController = async (req, res, next) => {
 module.exports = {
   checkUserController,
   sendEmailOTPController,
+  verifyOTPController,
 };
