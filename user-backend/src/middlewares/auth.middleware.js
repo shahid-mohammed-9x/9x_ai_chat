@@ -99,6 +99,7 @@ module.exports.AnonymousAuthentication = async (req, res, next) => {
     }
     req.user = userExist;
     req.role = userExist?.role;
+    req.isAnonymous = false;
     logger.info(
       `req Email : ${userExist?.email || userExist?.lastName} role:${
         userExist.role

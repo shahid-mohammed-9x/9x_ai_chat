@@ -38,6 +38,7 @@ const createChatController = async (req, res, next) => {
 
     newMessage.chat = newChat._id;
     newChat.responses.push(newMessage._id);
+    userId && (newChat.user = userId);
 
     await newMessage.save();
     await newChat.save();

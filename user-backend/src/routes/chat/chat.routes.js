@@ -1,6 +1,9 @@
 const express = require("express");
 
-const { Authentication } = require("../../middlewares/auth.middleware");
+const {
+  Authentication,
+  AnonymousAuthentication,
+} = require("../../middlewares/auth.middleware");
 const {
   createChatController,
   chatsListController,
@@ -12,7 +15,11 @@ const {
 
 const ChatRoutes = express.Router();
 
-ChatRoutes.route("/new-chat").post(createChatValidation, createChatController);
+ChatRoutes.route("/new-chat").post(
+  AnonymousAuthentication,
+  createChatValidation,
+  createChatController
+);
 
 ChatRoutes.route("/user-chats").get(
   Authentication,
