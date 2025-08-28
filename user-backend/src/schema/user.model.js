@@ -6,9 +6,9 @@ const ModelSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
-      required: true,
       lowercase: true,
       trim: true,
+      default: null,
     },
     userName: {
       type: String,
@@ -40,7 +40,7 @@ const ModelSchema = new mongoose.Schema(
     },
     isActive: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     token: {
       type: String,

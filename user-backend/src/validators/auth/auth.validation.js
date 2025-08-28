@@ -9,8 +9,30 @@ const checkUserValidation = celebrate({
     .label("body"),
 });
 
+const sendEmailOTPValidation = celebrate({
+  body: Joi.object({
+    email: Joi.string().email().required().label("email"),
+  })
+    .required()
+    .label("body"),
+});
+
+const verifyRegisterUserOTPValidation = celebrate({
+  body: Joi.object({
+    otp: Joi.string()
+      .length(4) // assuming OTP is 4 digits
+      .pattern(/^\d+$/) // only digits
+      .required()
+      .trim()
+      .label("OTP"),
+  })
+    .required()
+    .label("body"),
+});
+
 module.exports = {
   checkUserValidation,
+  sendEmailOTPValidation,
 };
 
 // password: Joi.string()
