@@ -9,6 +9,7 @@ const errorHandling = require("../../utils/errorHandling.util");
 const responseHandlerUtil = require("../../utils/responseHandler.util");
 const { generateOTP } = require("../../utils/otpGenerator.util");
 const { createAccessToken } = require("../../utils/jwtToken.util");
+const { verifyPasswordMethod } = require("../../utils/verifyPassword.util");
 
 // check user controller
 const checkUserController = async (req, res, next) => {
@@ -219,8 +220,58 @@ const verifyOTPController = async (req, res, next) => {
   }
 };
 
+const loginController = async (req, res, next) => {
+  try {
+    logger.info(
+      "controller - auth - auth.controller - loginController - start"
+    );
+
+    const { userInput, password } = req.body;
+
+    const userDetails = await userModel
+      .findOne({
+        $or: [{ email: userInput }, { userName: userInput }],
+      })
+      .select("+password");
+
+    if (!userDetails) return next(httpErrors.NotFound("Invalid credentials."));
+
+    const isPasswordMatch = await verifyPasswordMethod(
+      password,
+      userDetails.password
+    );
+
+    if (!isPasswordMatch)
+      return next(httpErrors.Unauthorized("Invalid credentials."));
+
+    const token = await createAccessToken(userDetails._id.toString(), "user");
+
+    userDetails.token = token;
+    await userDetails.save();
+
+    const userDetailsObj = userDetails.toObject();
+    delete userDetailsObj.password;
+    delete userDetailsObj.token;
+
+    logger.info("controller - auth - auth.controller - loginController - end");
+
+    responseHandlerUtil.successResponseStandard(res, {
+      message: "Login successful.",
+      data: userDetailsObj,
+      otherData: { token },
+    });
+  } catch (error) {
+    logger.error(
+      "controller - auth - auth.controller - loginController - error",
+      error
+    );
+    errorHandling.handleCustomErrorService(error, next);
+  }
+};
+
 module.exports = {
   checkUserController,
   sendEmailOTPController,
   verifyOTPController,
+  loginController,
 };
