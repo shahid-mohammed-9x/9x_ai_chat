@@ -7,21 +7,27 @@ const logger = require("../../config/logger.config");
 const errorHandling = require("../../utils/errorHandling.util");
 const responseHandlerUtil = require("../../utils/responseHandler.util");
 
-const createPublicChatController = async (req, res, next) => {
+const createChatController = async (req, res, next) => {
   try {
     logger.info(
-      "controller - chat - chat.controller - createPublicChatController - start"
+      "controller - chat - chat.controller - createChatController - start"
     );
-    const { title } = req.body;
+    const { question } = req.body;
+    const userId = req.user?._id || null;
 
-    const newChat = new chatModel({
-      title,
-    });
+    const newChatDetails = {
+      title: question.substring(0, 20) + "...",
+      isAnonymous: !userId,
+    };
+
+    const newChat = new chatModel(newChatDetails);
 
     await newChat.save();
 
+    // api =qustion
+
     logger.info(
-      "controller - chat - chat.controller - createPublicChatController - end"
+      "controller - chat - chat.controller - createChatController - end"
     );
     responseHandlerUtil.successResponseStandard(res, {
       message: "successfully public chat created",
@@ -29,9 +35,13 @@ const createPublicChatController = async (req, res, next) => {
     });
   } catch (error) {
     logger.error(
-      "controller - chat - chat.controller - createPublicChatController - error",
+      "controller - chat - chat.controller - createChatController - error",
       error
     );
     errorHandling.handleCustomErrorService(error, next);
   }
+};
+
+module.exports = {
+  createChatController,
 };
