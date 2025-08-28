@@ -8,8 +8,7 @@ import { ArrowUp } from 'lucide-react';
 const navLinks = [
   { name: 'About', href: '#' },
   { name: 'Features', href: '#' },
-  { name: 'API', href: '#' },
-  { name: 'Careers', href: '#' },
+  { name: 'FAQs', href: '#' },
 ];
 
 const Home = () => {
