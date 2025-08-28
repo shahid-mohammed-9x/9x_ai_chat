@@ -64,24 +64,50 @@ module.exports.Authorization = (...roles) => {
   };
 };
 
-// user email,phone verified middleware
+// user email verified middleware
 module.exports.CheckUserVerified = (req, res, next) => {
   if (!req.user?.isEmailVerified)
     return next(httpErrors.Forbidden("User email is not verified"));
-  else if (!req.user?.isPhoneVerified)
-    return next(httpErrors.Forbidden("User Phone is not verified"));
   else next();
 };
 
-// user email,phone,kyc verified middleware
-module.exports.CompletelyUserVerified = (req, res, next) => {
-  if (!req.user?.isEmailVerified)
-    return next(httpErrors.Forbidden("User email is not verified"));
-  else if (!req.user?.isPhoneVerified)
-    return next(httpErrors.Forbidden("User Phone is not verified"));
-  else if (!req.user?.isKycVerified)
-    return next(httpErrors.Forbidden("User KYC is not verified"));
-  else next();
+// anonymous  authentication middleware
+module.exports.AnonymousAuthentication = async (req, res, next) => {
+  try {
+    let authHeader = req.header("Authorization");
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return next(httpErrors.Unauthorized(AUTHENTICATION_TOKEN_REQUIRED));
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    if (token === "anonymous_token") {
+      req.isAnonymous = true;
+      return next();
+    }
+
+    const decode = await verifyAccessToken(token);
+    if (!decode.success) {
+      return next(httpErrors.Unauthorized(decode.error.message));
+    }
+
+    let userExist = await userModel.findById(decode.id).lean();
+
+    if (!userExist) {
+      return next(httpErrors.NotFound(USER_NOT_FOUND));
+    }
+    req.user = userExist;
+    req.role = userExist?.role;
+    logger.info(
+      `req Email : ${userExist?.email || userExist?.lastName} role:${
+        userExist.role
+      }`
+    );
+    next();
+  } catch (error) {
+    errorHandling.handleCustomErrorService(error, next);
+  }
 };
 
 // setting headers for the development purpose

@@ -13,6 +13,16 @@ const createChatValidation = celebrate({
     .label("body"),
 });
 
+const chatsListValidation = celebrate({
+  query: Joi.object({
+    limit: Joi.number().min(1).label("limit"),
+    page: Joi.number().min(1).label("page"),
+    sort: Joi.string().valid("createdAt", "-createdAt").label("sort"),
+  })
+    .required()
+    .label("query"),
+});
 module.exports = {
   createChatValidation,
+  chatsListValidation,
 };
