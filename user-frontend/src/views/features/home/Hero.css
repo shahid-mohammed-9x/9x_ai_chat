@@ -1,0 +1,44 @@
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+/* ------------------Herocomponent1----------------------- */
+
+/* --- Custom styles ported from your HTML --- */
+:root { --bg: #0D0D0D; --card: #1A1A1A; }
+
+body { background: var(--bg); color: #fff; }
+
+/* gradient text helper (can also be done with Tailwind) */
+.gradient-text {
+  background: linear-gradient(90deg, #8B5CF6, #EC4899, #F97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* gradient “border” wrapper */
+.gradient-border { position: relative; border-radius: 24px; padding: 2px; }
+.gradient-border::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, #8B5CF6, #EC4899, #F97316);
+  border-radius: 24px; opacity: .2; z-index: -1;
+}
+.inner-card { background: var(--card); border-radius: 22px; }
+
+/* Starry bg */
+.starry-background { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+.star { position: absolute; background: white; border-radius: 9999px; animation: twinkle linear infinite; }
+@keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:1} }
+
+/* Gradient button sweep */
+.btn-gradient { background-image: linear-gradient(to right, #8B5CF6, #EC4899, #F97316); background-size: 200% auto; transition: background-position .5s; }
+.btn-gradient:hover { background-position: right center; }
+
+/* slow spin for optional blobs (not used by default but handy) */
+@keyframes spin-slow { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+.animate-spin-slow { animation: spin-slow 20s linear infinite; }

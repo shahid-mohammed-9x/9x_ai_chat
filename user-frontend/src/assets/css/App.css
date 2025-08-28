@@ -1,4 +1,17 @@
 @import "tailwindcss";
+/* Remove default margins and make sure app fills the screen */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+/* ------------------------------ */
+
+
+
+
+/* --------------------------- */
+
 
 
 @layer utilities {
