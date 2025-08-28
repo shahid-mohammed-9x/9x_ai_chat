@@ -3,11 +3,13 @@ const {
   checkUserController,
   sendEmailOTPController,
   verifyOTPController,
+  loginController,
 } = require("../../controllers/auth/auth.controller");
 const {
   checkUserValidation,
   sendEmailOTPValidation,
   verifyOTPValidation,
+  loginValidation,
 } = require("../../validators/auth/auth.validation");
 
 const AuthRoutes = express.Router();
@@ -20,5 +22,7 @@ AuthRoutes.route("/send-otp").post(
 );
 
 AuthRoutes.route("/verify-otp").post(verifyOTPValidation, verifyOTPController);
+
+AuthRoutes.route("/login").post(loginValidation, loginController);
 
 module.exports = AuthRoutes;

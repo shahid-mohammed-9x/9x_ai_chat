@@ -31,8 +31,26 @@ const verifyOTPValidation = celebrate({
     .label("body"),
 });
 
+const loginValidation = celebrate({
+  body: Joi.object({
+    userInput: Joi.string().min(3).required().label("userInput"),
+    password: Joi.string()
+      .min(8)
+      .max(30)
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/)
+      .required()
+      .label("password")
+      .messages({
+        "string.pattern.base": `"password" must contain at least one uppercase letter, one lowercase letter, one number, and one special character`,
+      }),
+  })
+    .required()
+    .label("body"),
+});
+
 module.exports = {
   checkUserValidation,
   sendEmailOTPValidation,
   verifyOTPValidation,
+  loginValidation,
 };
