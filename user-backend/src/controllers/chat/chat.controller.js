@@ -7,7 +7,8 @@ const logger = require("../../config/logger.config");
 // utils
 const errorHandling = require("../../utils/errorHandling.util");
 const responseHandlerUtil = require("../../utils/responseHandler.util");
-const { user, chat } = require("../../constants/model.constants");
+// constants
+const sortConstants = require("../../constants/sort.constants");
 
 // create chat controller
 const createChatController = async (req, res, next) => {
@@ -83,7 +84,7 @@ const chatsListController = async (req, res, next) => {
       .find(query)
       .skip(skip_docs)
       .limit(limit)
-      .sort(sort);
+      .sort(sortConstants[sort] || sortConstants["-createdAt"]);
 
     const hasNext = totalDocs > skip_docs + limit;
     const hasPrev = page > 1;
@@ -97,14 +98,14 @@ const chatsListController = async (req, res, next) => {
       hasPrev,
       limit,
     };
+    logger.info(
+      "controller - chat - chat.controller - chatsListController - end"
+    );
 
     responseHandlerUtil.successResponseStandard(res, {
       message: "Successfully fetched chat list",
       data,
     });
-    logger.info(
-      "controller - chat - chat.controller - chatsListController - end"
-    );
   } catch (error) {
     logger.error(
       "controller - chat - chat.controller - chatsListController - error",
@@ -114,7 +115,69 @@ const chatsListController = async (req, res, next) => {
   }
 };
 
+const messageListController = async (req, res, next) => {
+  try {
+    logger.info(
+      "controller - chat - chat.controller - messageListController - start"
+    );
+
+    const userId = req.user?._id;
+    const { chatId } = req.params;
+    const isChatExist = await chatModel.findOne({ _id: chatId, user: userId });
+
+    if (!isChatExist) {
+      return next(httpErrors.NotFound("Chat not found"));
+    }
+
+    let { limit = 15, page = 1, sort = "-createdAt" } = req.query;
+    limit = Number(limit);
+    page = Number(page);
+
+    const skip_docs = (page - 1) * limit;
+    const query = { chat: chatId, user: userId };
+
+    const totalDocs = await messageModel.countDocuments(query);
+    const totalPages = Math.ceil(totalDocs / limit);
+
+    const docs = await messageModel
+      .find(query)
+      .skip(skip_docs)
+      .limit(limit)
+      .select("responses question order")
+      .sort(sortConstants[sort] || sortConstants["-createdAt"]);
+
+    const hasNext = totalDocs > skip_docs + limit;
+    const hasPrev = page > 1;
+
+    const data = {
+      totalDocs,
+      totalPages,
+      docs,
+      currentPage: page,
+      hasNext,
+      hasPrev,
+      limit,
+      chatDetails: isChatExist,
+    };
+
+    logger.info(
+      "controller - chat - chat.controller - messageListController - end"
+    );
+    responseHandlerUtil.successResponseStandard(res, {
+      message: "Successfully fetched message list",
+      data,
+    });
+  } catch (error) {
+    logger.error(
+      "controller - chat - chat.controller - messageListController - error",
+      error
+    );
+    errorHandling.handleCustomErrorService(error, next);
+  }
+};
+
 module.exports = {
   createChatController,
   chatsListController,
+  messageListController,
 };

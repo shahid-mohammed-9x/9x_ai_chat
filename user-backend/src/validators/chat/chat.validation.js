@@ -22,7 +22,19 @@ const chatsListValidation = celebrate({
     .required()
     .label("query"),
 });
+
+const messageListValidation = celebrate({
+  query: Joi.object({
+    limit: Joi.number().min(1).label("limit"),
+    page: Joi.number().min(1).label("page"),
+    sort: Joi.string().valid("createdAt", "-createdAt").label("sort"),
+  })
+    .required()
+    .label("query"),
+});
+
 module.exports = {
   createChatValidation,
   chatsListValidation,
+  messageListValidation,
 };
