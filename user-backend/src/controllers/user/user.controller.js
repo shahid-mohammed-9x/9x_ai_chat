@@ -7,68 +7,38 @@ const errorHandling = require("../../utils/errorHandling.util");
 const responseHandlerUtil = require("../../utils/responseHandler.util");
 const { rolesConstants } = require("../../constants/index.constants");
 const USER_CONSTANTS = require("../../constants/user.constants");
+const { user } = require("../../constants/model.constants");
 
-const registerUserController = async (req, res, next) => {
+const loginUserExistController = async (req, res, next) => {
   try {
     logger.info(
-      "controller - users - user.controller - registerUserController - start"
+      "controller - users - user.controller - loginUserExistController - start"
     );
 
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      confirmPassword,
-      gender,
-      phoneNumber,
-    } = req.body;
-
-    // if passwords or not same
-    if (password !== confirmPassword)
-      return next(httpErrors.BadRequest(USER_CONSTANTS.CONFIRM_PASSWORD_SAME));
-
-    let userExist = await userModel.findOne({ email });
-
-    // if user exists
-    if (userExist)
-      return next(httpErrors.BadRequest(USER_CONSTANTS.USER_ALREADY_EXISTS));
-
-    const newUserDetails = new userModel({
-      firstName,
-      lastName,
-      email,
-      password,
-      gender,
-      phoneNumber,
-    });
-
-    const token = await createAccessToken(
-      newUserDetails?._id.toString(),
-      newUserDetails.role
-    );
-
-    newUserDetails.token = token;
-    await newUserDetails.save();
-
-    const leanUserDetails = newUserDetails.toObject();
-    delete leanUserDetails.password;
-    delete leanUserDetails.token;
+    const { username } = req.body;
+    const userExist = await userModel
+      .findOne({
+        $or: [{ email: username }, { username }],
+      })
+      .select("+password")
+      .lean();
 
     logger.info(
-      "controller - users - user.controller - registerUserController - end"
+      "controller - users - user.controller - loginUserExistController - end"
     );
 
     responseHandlerUtil.successResponseStandard(res, {
-      success: true,
-      statusCode: 201,
-      message: USER_CONSTANTS.SUCCESSFULLY_USER_CREATED,
-      data: leanUserDetails,
-      otherData: { token },
+      success: !!userExist,
+      statusCode: 200,
+      message: userExist ? "user exist" : "user not exist",
+      data: {
+        userExist: !!userExist,
+        isPasswordSet: userExist?.password ? true : false,
+      },
     });
   } catch (error) {
     logger.error(
-      "controller - users - user.controller - registerUserController - error",
+      "controller - users - user.controller - loginUserExistController - error",
       error
     );
     errorHandling.handleCustomErrorService(error, next);
@@ -98,61 +68,7 @@ const myProfileController = async (req, res, next) => {
   }
 };
 
-const loginUserController = async (req, res, next) => {
-  try {
-    logger.info(
-      "controller - users - user.controller - loginUserController - start"
-    );
-
-    const { email, password } = req.body;
-
-    let userExist = await userModel
-      .findOne({ email, role: rolesConstants.USER })
-      .select("+password");
-
-    // if user exists
-    if (!userExist)
-      return next(httpErrors.BadRequest(USER_CONSTANTS.INVALID_EMAIL_PASSWORD));
-
-    const isPasspwordMatch = await verifyPasswordMethod(
-      password,
-      userExist.password
-    );
-    if (!isPasspwordMatch)
-      return next(httpErrors.BadRequest(USER_CONSTANTS.INVALID_EMAIL_PASSWORD));
-
-    const token = await createAccessToken(
-      userExist?._id.toString(),
-      userExist.role
-    );
-
-    userExist.token = token;
-    await userExist.save();
-
-    const leanUserDetails = userExist.toObject();
-    delete leanUserDetails.password;
-    delete leanUserDetails.token;
-
-    logger.info(
-      "controller - users - user.controller - loginUserController - end"
-    );
-
-    responseHandlerUtil.successResponseStandard(res, {
-      message: USER_CONSTANTS.SUCCESSFULLY_USER_LOGIN,
-      data: leanUserDetails,
-      otherData: { token },
-    });
-  } catch (error) {
-    logger.error(
-      "controller - users - user.controller - loginUserController - error",
-      error
-    );
-    errorHandling.handleCustomErrorService(error, next);
-  }
-};
-
 module.exports = {
-  registerUserController,
   myProfileController,
-  loginUserController,
+  loginUserExistController,
 };

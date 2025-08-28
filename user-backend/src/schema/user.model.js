@@ -25,9 +25,9 @@ const ModelSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
       select: false,
       minimum: 8,
+      default: null,
     },
     isEmailVerified: {
       type: Boolean,
