@@ -31,7 +31,7 @@ body { background: var(--bg); color: #fff; }
 .inner-card { background: var(--card); border-radius: 22px; }
 
 /* Starry bg */
-.starry-background { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+.starry-background { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
 .star { position: absolute; background: white; border-radius: 9999px; animation: twinkle linear infinite; }
 @keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:1} }
 
