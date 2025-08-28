@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import './Hero.css';
 
 import { useState } from 'react';
@@ -12,7 +12,7 @@ const navLinks = [
   { name: 'Careers', href: '#' },
 ];
 
-export default function Home() {
+const Home = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const baseLink = 'text-gray-400 hover:text-white transition duration-200';
   return (
@@ -87,7 +87,6 @@ export default function Home() {
           Our AI is a truth-seeking companion designed for unfiltered answers, with advanced
           capabilities in reasoning, coding, and visual processing.
         </p>
-
         <div className="relative w-full max-w-2xl mx-auto">
           <form action="/chat" method="GET" className="relative">
             <input
@@ -112,4 +111,6 @@ export default function Home() {
       </main>
     </div>
   );
-}
+};
+
+export default memo(Home);
