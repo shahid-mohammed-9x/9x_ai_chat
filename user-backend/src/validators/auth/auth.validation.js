@@ -1,16 +1,16 @@
 const { celebrate, Joi } = require("celebrate");
 // const passwordComplexity = require("joi-password-complexity");
 
-const loginUserValidation = celebrate({
+const checkUserValidation = celebrate({
   body: Joi.object({
-    email: Joi.string().email().required().label("email"),
+    userInput: Joi.string().min(3).required().label("userInput"),
   })
     .required()
     .label("body"),
 });
 
 module.exports = {
-  loginUserValidation,
+  checkUserValidation,
 };
 
 // password: Joi.string()

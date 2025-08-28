@@ -1,16 +1,13 @@
 const express = require("express");
 const {
-  loginUserExistController,
+  checkUserController,
 } = require("../../controllers/auth/auth.controller");
 const {
-  loginUserValidation,
+  checkUserValidation,
 } = require("../../validators/auth/auth.validation");
 
 const AuthRoutes = express.Router();
 
-AuthRoutes.route("/check-user").post(
-  loginUserValidation,
-  loginUserExistController
-);
+AuthRoutes.route("/check-user").post(checkUserValidation, checkUserController);
 
 module.exports = AuthRoutes;
