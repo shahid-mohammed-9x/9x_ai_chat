@@ -18,18 +18,30 @@ const ModelSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    responses: [
-      {
-        model: {
-          type: String,
-          enum: ["gpt", "claude", "gemini", "deepseek", "grok"],
-        },
+    responses: {
+      gpt: {
         answer: {
           type: String,
-          required: true,
+        },
+        inputTokens: {
+          type: Number,
+        },
+        outputTokens: {
+          type: Number,
         },
       },
-    ],
+      gemini: {
+        answer: {
+          type: String,
+        },
+        inputTokens: {
+          type: Number,
+        },
+        outputTokens: {
+          type: Number,
+        },
+      },
+    },
     order: {
       type: Number,
       required: true,

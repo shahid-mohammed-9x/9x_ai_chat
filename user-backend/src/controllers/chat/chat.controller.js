@@ -1,6 +1,8 @@
 const httpErrors = require("http-errors");
 // models
 const userModel = require("../../schema/user.model");
+const chatModel = require("../../schema/chat.model");
+const messageModel = require("../../schema/message.model");
 // config
 const logger = require("../../config/logger.config");
 // utils
@@ -12,19 +14,32 @@ const createChatController = async (req, res, next) => {
     logger.info(
       "controller - chat - chat.controller - createChatController - start"
     );
-    const { question } = req.body;
+    const { question, models = [] } = req.body;
     const userId = req.user?._id || null;
+
+    const newMessageDetails = {
+      user: userId,
+      question: question,
+      responses: models.reduce((acc, model) => {
+        acc[model] = { answer: null, inputTokens: 0, outputTokens: 0 };
+        return acc;
+      }, {}),
+      order: 0,
+    };
 
     const newChatDetails = {
       title: question.substring(0, 20) + "...",
       isAnonymous: !userId,
     };
 
+    const newMessage = new messageModel(newMessageDetails);
     const newChat = new chatModel(newChatDetails);
 
-    await newChat.save();
+    newMessage.chat = newChat._id;
+    newChat.responses.push(newMessage._id);
 
-    // api =qustion
+    await newMessage.save();
+    await newChat.save();
 
     logger.info(
       "controller - chat - chat.controller - createChatController - end"

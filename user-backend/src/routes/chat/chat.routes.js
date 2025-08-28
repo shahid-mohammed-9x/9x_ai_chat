@@ -4,9 +4,12 @@ const { Authentication } = require("../../middlewares/auth.middleware");
 const {
   createChatController,
 } = require("../../controllers/chat/chat.controller");
+const {
+  createChatValidation,
+} = require("../../validators/chat/chat.validation");
 
-const UserRoutes = express.Router();
+const ChatRoutes = express.Router();
 
-UserRoutes.route("/new-chat").get(createChatController);
+ChatRoutes.route("/new-chat").post(createChatValidation, createChatController);
 
-module.exports = UserRoutes;
+module.exports = ChatRoutes;
