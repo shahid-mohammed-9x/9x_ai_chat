@@ -12,16 +12,10 @@ const ModelSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    type: {
-      type: String,
-      enum: ["email", "phone"],
-      required: true,
-    },
     email: {
       type: String,
-    },
-    phoneNumber: {
-      type: String,
+      required: true,
+      trim: true,
     },
     count: {
       // for resending
