@@ -1,6 +1,9 @@
 const httpErrors = require("http-errors");
+// models
 const userModel = require("../../schema/user.model");
+// config
 const logger = require("../../config/logger.config");
+// utils
 const errorHandling = require("../../utils/errorHandling.util");
 const responseHandlerUtil = require("../../utils/responseHandler.util");
 
