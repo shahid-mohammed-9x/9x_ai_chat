@@ -13,6 +13,8 @@ import _ from "lodash";
 import SidebarHeaderComponent from "../sections/sidebar/SidebarHeaderComponent";
 import SidebarFooterComponent from "../sections/sidebar/SidebarFooterComponent";
 import SidebarContentComponent from "../sections/sidebar/SidebarContentComponent";
+import ChatFooter from '../features/chat/ChatFooter'
+import ChatWindow from "../features/chat/ChatWindow";
 
 const user = {
   name: "John Doe",
@@ -67,9 +69,11 @@ const UserSidebar = ({ children }) => {
             onClick={() => handleSidebarTrigger(!isSidebarOpen)}
           />
         </div>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-auto w-full">
+        <ChatWindow />
+        <ChatFooter />
+        {/* <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-auto w-full">
           {children}
-        </div>
+        </div> */}
       </SidebarInset>
     </SidebarProvider>
   );
