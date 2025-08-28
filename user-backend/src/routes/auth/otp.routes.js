@@ -1,12 +1,12 @@
 const express = require("express");
 const {
   verifyRegisterUserOTPValidation,
-} = require("../../validators/user/user.validation");
+} = require("../../validators/auth/otp.validation");
 const { Authentication } = require("../../middlewares/auth.middleware");
 const {
   sendRegisterUserEmailOTPController,
   verifyRegisterUserEmailOTPController,
-} = require("../../controllers/user/otpVerification.controller");
+} = require("../../controllers/auth/otpVerification.controller");
 
 const OtpRoutes = express.Router();
 
