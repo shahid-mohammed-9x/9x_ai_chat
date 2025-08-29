@@ -20,8 +20,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useDispatch } from 'react-redux';
+import { themeActions } from '@/redux/combineAction';
 
 const SidebarFooterComponent = ({ user, logoutFunction, isSidebarOpen }) => {
+  const { openLoginAction } = themeActions;
+  const dispatch = useDispatch();
   return (
     <SidebarFooter>
       {user ? (
@@ -102,7 +106,7 @@ const SidebarFooterComponent = ({ user, logoutFunction, isSidebarOpen }) => {
             </Card>
           ) : null}
 
-          <Button>
+          <Button onClick={() => dispatch(openLoginAction(true))}>
             <Plus /> {isSidebarOpen && 'Login'}
           </Button>
         </SidebarMenu>

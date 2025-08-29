@@ -24,6 +24,14 @@ const getUserProfileAction = () => async (dispatch) => {
   }
 };
 
+const findUserEmailAction = async(email)=>{
+  const response = await Service.fetchPost(
+    `${API.BASE_AUTH}${API.AUTH_ROUTES.userEmail}`, email
+  );
+
+  console.log(response);
+}
+
 const clearUserProfileErrorsAction = () => (dispatch) => {
   dispatch({
     type: CLEAR_USER_PROFILE_ERRORS,
@@ -37,4 +45,5 @@ export default {
   getUserProfileAction,
   clearUserProfileErrorsAction,
   resetUserProfileAction,
+  findUserEmailAction
 };
