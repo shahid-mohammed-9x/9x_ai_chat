@@ -1,6 +1,7 @@
 import Home from '@/views/pages/Home';
-import ChatLayout from './views/layouts/ChatLayout';
-import AuthWrapper from './views/layouts/AuthWrapper';
+import Chat from './views/pages/Chat';
+import AuthWrapper from './views/wrappers/AuthWrapper';
+import ChatWrapper from './views/wrappers/ChatWrapper';
 
 const allRoutesMapper = [
   {
@@ -10,9 +11,9 @@ const allRoutesMapper = [
   {
     path: '/chat',
     component: (
-      <AuthWrapper roles={['user']}>
-        <ChatLayout />
-      </AuthWrapper>
+      <ChatWrapper>
+        <Chat />
+      </ChatWrapper>
     ),
   },
 ];

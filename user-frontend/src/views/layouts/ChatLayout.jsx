@@ -13,8 +13,6 @@ import _ from 'lodash';
 import SidebarHeaderComponent from '../sections/sidebar/SidebarHeaderComponent';
 import SidebarFooterComponent from '../sections/sidebar/SidebarFooterComponent';
 import SidebarContentComponent from '../sections/sidebar/SidebarContentComponent';
-import ChatFooter from '../features/chat/ChatFooter';
-import ChatWindow from '../features/chat/ChatWindow';
 
 const user = {
   name: 'John',
@@ -22,7 +20,7 @@ const user = {
   avatar: null,
 };
 
-const UserSidebar = ({ children }) => {
+const ChatLayout = ({ children }) => {
   const logoutFunction = useLogout();
   const navigate = useNavigate();
   const {
@@ -65,18 +63,12 @@ const UserSidebar = ({ children }) => {
           <div className="flex items-center gap-2 p-4">
             <SidebarTrigger onClick={() => handleSidebarTrigger(!isSidebarOpen)} />
           </div>
-
-          <ChatWindow />
-          <ChatFooter />
-          {/* 
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-auto w-full">
-      {children}
-    </div> 
-    */}
+          {/* {children} */}
+          <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-auto w-full">{children}</div>
         </div>
       </SidebarInset>
     </SidebarProvider>
   );
 };
 
-export default memo(UserSidebar);
+export default memo(ChatLayout);
