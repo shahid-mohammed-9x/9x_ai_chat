@@ -1,8 +1,8 @@
 const development = {
-  API_SERVER: "http://localhost:8000/api/v1",
-  GPT_SERVER: "http://localhost:8002/api/v1",
-  GEMINI_SERVER: "http://localhost:8003/api/v1",
-  GROK_SERVER: "http://localhost:8004/api/v1",
+  API_SERVER: 'http://localhost:8000/api/v1',
+  GPT_SERVER: 'http://localhost:8002/api/v1',
+  GEMINI_SERVER: 'http://localhost:8003/api/v1',
+  GROK_SERVER: 'http://localhost:8004/api/v1',
 };
 
 const production = {
@@ -13,10 +13,10 @@ const production = {
 };
 
 const ip = {
-  API_SERVER: "http://10.10.1.192:8000/api/v1",
-  GPT_SERVER: "http://10.10.1.192:8002/api/v1",
-  GEMINI_SERVER: "http://10.10.1.192:8003/api/v1",
-  GROK_SERVER: "http://10.10.1.192:8004/api/v1",
+  API_SERVER: 'http://10.10.1.193:8000/api/v1',
+  GPT_SERVER: 'http://10.10.1.192:8002/api/v1',
+  GEMINI_SERVER: 'http://10.10.1.192:8003/api/v1',
+  GROK_SERVER: 'http://10.10.1.192:8004/api/v1',
 };
 
 const config_urls = {
@@ -25,7 +25,6 @@ const config_urls = {
   ip,
 };
 
-const API_URLS =
-  config_urls[import.meta.env.VITE_DEVELOPMENT_MODE || "development"];
+const API_URLS = config_urls[import.meta.env.VITE_DEVELOPMENT_MODE || 'development'];
 
 export default API_URLS;

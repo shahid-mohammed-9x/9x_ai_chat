@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { THEME_SLICE_NAME } from "./constants";
+import { createSlice } from '@reduxjs/toolkit';
+import { THEME_SLICE_NAME } from './constants';
 
 const initialState = {
   screenSize: null,
-  activeTheme: "dark",
+  activeTheme: 'dark',
 };
 
 const themeSlice = createSlice({
@@ -28,10 +28,6 @@ const themeSlice = createSlice({
   },
 });
 
-export const {
-  setScreenSizeState,
-  setActiveThemeState,
-  updateThemeState,
-  resetThemeState,
-} = themeSlice.actions;
+export const { setScreenSizeState, setActiveThemeState, updateThemeState, resetThemeState } =
+  themeSlice.actions;
 export const themeReducerToolkit = themeSlice.reducer;
