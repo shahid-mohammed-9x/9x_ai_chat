@@ -4,6 +4,8 @@ import './Hero.css';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { ArrowUp } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { themeActions } from '@/redux/combineAction';
 
 const navLinks = [
   { name: 'About', href: '#' },
@@ -14,6 +16,9 @@ const navLinks = [
 const Home = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const baseLink = 'text-gray-400 hover:text-white transition duration-200';
+  const { openLoginAction } = themeActions;
+  const dispatch = useDispatch();
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-gray-200 font-inter">
       <header className="fixed top-0 left-0 w-full z-50 py-6 px-6 md:px-12 flex justify-between items-center bg-gray-900 text-white shadow-md">
@@ -37,8 +42,11 @@ const Home = () => {
 
         {/* Get Started Button */}
         <div className="hidden md:block">
-          <button className="bg-white text-gray-900 font-semibold py-2 px-6 rounded-lg hover:bg-gray-200 transition">
-            Get Started
+          <button
+            className="bg-primary text-white-900 font-semibold py-2 px-6 rounded-lg hover:bg-gray-600 transition"
+            onClick={() => dispatch(openLoginAction(true))}
+          >
+            Login
           </button>
         </div>
 
@@ -60,7 +68,7 @@ const Home = () => {
                 {link.name}
               </a>
             ))}
-            <button className="bg-white text-gray-900 font-semibold py-2 px-6 rounded-lg hover:bg-gray-200 transition">
+            <button className="bg-primary text-gray-900 font-semibold py-2 px-6 rounded-lg hover:bg-gray-200 transition">
               {' '}
               Get Started
             </button>
@@ -96,7 +104,7 @@ const Home = () => {
             />
             <button
               type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 bg-purple-600 hover:bg-purple-700 rounded-full p-2.5 transition"
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-primary hover:bg-purple-700 rounded-full p-2.5 transition"
             >
               <ArrowUp className="text-white w-5 h-5" />
             </button>

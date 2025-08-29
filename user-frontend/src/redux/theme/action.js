@@ -3,6 +3,7 @@ import {
   setActiveThemeState,
   updateThemeState,
   resetThemeState,
+  openLoginPopup
 } from "./reducer";
 import { setSessionStorageTheme } from "@/helpers/session-storage";
 
@@ -28,9 +29,15 @@ const resetThemeAction = () => (dispatch) => {
   dispatch(resetThemeState());
 };
 
+const openLoginAction =(value) =>(dispatch)=>{
+  console.log(value)
+  dispatch(openLoginPopup(value));
+}
+
 export default {
   setScreenSizeAction,
   setActiveThemeAction,
   updateThemeAction,
   resetThemeAction,
+  openLoginAction
 };
