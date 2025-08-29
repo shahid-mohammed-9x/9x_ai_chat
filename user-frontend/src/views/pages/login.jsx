@@ -28,7 +28,6 @@ function LoginModal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await findUserEmailAction(email);
-    console.log(res);
     if (res[0]) setData(res[1]?.data);
   };
 
@@ -117,9 +116,25 @@ function LoginModal() {
               </label>
             </div>
 
+            {/* OTP Input */}
+            {!data?.userExist && !data?.isPasswordSet && (
+              <InputOTP maxLength={6}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+            )}
             {/* Password Input */}
 
-            {data?.isPasswordSet && (
+            {data?.isPasswordSet && data?.userExist && (
               <div className="relative w-full sm:w-[70%] md:w-[55%]">
                 <Input
                   type="password"
