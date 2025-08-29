@@ -9,8 +9,8 @@ import { themeActions } from '@/redux/combineAction';
 
 const navLinks = [
   { name: 'About', href: '#' },
-  { name: 'Features', href: '#' },
-  { name: 'FAQs', href: '#' },
+  { name: 'Features', href: '#features' },
+  { name: 'FAQs', href: '#faqs' },
 ];
 
 const Home = () => {

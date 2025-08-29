@@ -22,7 +22,7 @@ const faqs = [
       "We'll notify you when you're running low. You can purchase additional token packs or upgrade to a higher-tier plan to continue using the service without interruption.",
   },
   {
-    question: 'How is my data protected on AI Fiesta?',
+    question: 'How is my data protected on 9X_AI_CHAT?',
     answer:
       'All data transmitted is encrypted using industry-standard protocols. We have strict data handling policies to protect your information and ensure confidentiality.',
   },
@@ -45,7 +45,7 @@ const faqs = [
 
 const FAQSection = () => {
   return (
-    <section className="container mx-auto px-4 py-12 md:py-24">
+    <section id="faqs" className="container mx-auto px-4 py-12 md:py-24">
       <h1 className="text-4xl md:text-5xl font-bold text-center mb-12">
         Frequently Asked Questions (FAQs)
       </h1>
