@@ -7,6 +7,8 @@ import { themeActions } from "@/redux/combineAction";
 import { getSessionStorageTheme } from "@/helpers/session-storage";
 import { useIsMobile } from "@/hooks/useMobile";
 
+
+
 const App = () => {
   const dispatch = useDispatch();
   const isMobile = useIsMobile();
