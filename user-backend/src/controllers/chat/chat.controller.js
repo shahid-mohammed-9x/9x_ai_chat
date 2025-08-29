@@ -30,8 +30,9 @@ const createChatController = async (req, res, next) => {
     };
 
     const newChatDetails = {
-      title: question.substring(0, 20) + "...",
+      title: question.substring(0, 50),
       isAnonymous: !userId,
+      models,
     };
 
     const newMessage = new messageModel(newMessageDetails);
@@ -84,6 +85,7 @@ const chatsListController = async (req, res, next) => {
       .find(query)
       .skip(skip_docs)
       .limit(limit)
+      .select("title models createdAt")
       .sort(sortConstants[sort] || sortConstants["-createdAt"]);
 
     const hasNext = totalDocs > skip_docs + limit;
