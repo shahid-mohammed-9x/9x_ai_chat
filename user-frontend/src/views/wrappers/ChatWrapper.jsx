@@ -90,6 +90,8 @@ const ChatWrapper = ({ roles = [], children }) => {
     const token = getAccessToken();
     if (token && !profileDetails) {
       dispatch(getUserProfileAction());
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
