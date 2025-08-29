@@ -60,17 +60,9 @@ const data = {
   ],
 };
 
-const SidebarContentComponent = ({ navUser, changeNavGroupFunction, isSidebarOpen }) => {
+const SidebarContentComponent = ({ navUser, changeNavGroupFunction }) => {
   return (
     <SidebarContent>
-      <SidebarGroup>
-        <SidebarMenuButton asChild className="w-full">
-          <Button>
-            <Plus /> {isSidebarOpen && 'New Chat'}
-          </Button>
-        </SidebarMenuButton>
-      </SidebarGroup>
-
       <SidebarGroup>
         <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
         <SidebarMenu>

@@ -13,6 +13,7 @@ import _ from 'lodash';
 import SidebarHeaderComponent from '../sections/sidebar/SidebarHeaderComponent';
 import SidebarFooterComponent from '../sections/sidebar/SidebarFooterComponent';
 import SidebarContentComponent from '../sections/sidebar/SidebarContentComponent';
+import { Separator } from '@/components/ui/separator';
 
 const user = {
   name: 'John',
@@ -44,12 +45,12 @@ const ChatLayout = ({ children }) => {
   return (
     <SidebarProvider open={isSidebarOpen}>
       <Sidebar collapsible="icon">
-        <SidebarHeaderComponent />
+        <SidebarHeaderComponent isSidebarOpen={isSidebarOpen} />
+        <Separator />
 
         <SidebarContentComponent
           navUser={navUser}
           changeNavGroupFunction={changeNavGroupFunction}
-          isSidebarOpen={isSidebarOpen}
         />
 
         <SidebarFooterComponent user={user} logoutFunction={logoutFunction} />

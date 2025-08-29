@@ -1,5 +1,4 @@
 import React, { useEffect, useState, memo } from 'react';
-import useAuth from '@/hooks/useAuth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { userActions } from '@/redux/combineAction';
 import { useDispatch, useSelector } from 'react-redux';
