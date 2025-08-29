@@ -1,22 +1,37 @@
 // src/components/LoginModal.jsx
 import { memo, useState } from 'react';
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Mail, Shield, LogIn } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { openLoginPopup } from '@/redux/theme/reducer';
 
 function LoginModal() {
-  const [open, setOpen] = useState(true);
+  const { loginPopup } = useSelector((state) => state.themeState);
+  const dispatch = useDispatch();
 
+  console.log(loginPopup, 'login component');
   return (
     <div>
       {/* Button to open modal */}
-      <Button onClick={() => setOpen(true)}>
-        <LogIn className="mr-2 h-4 w-4" /> Login
-      </Button>
+      <Dialog open={loginPopup} onOpenChange={() => dispatch(openLoginPopup(false))}>
+        <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-md" />
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="min-w-lg rounded-2xl backdrop-blur-md p-6 shadow-yellow-50/40">
+        <DialogContent
+          className="min-w-lg rounded-2xl p-6 
+             bg-card 
+             ring-1 ring-white/40 
+             shadow-[0_0_30px_rgba(255,255,255,0.3)] 
+             backdrop-blur-md"
+        >
           <DialogHeader className="items-center">
             <div className="flex justify-center mb-3">
               <img
@@ -25,8 +40,10 @@ function LoginModal() {
                 className="h-12 w-auto"
               />
             </div>
-            <h2 className="text-xl font-bold">Welcome to 9x AI Chat</h2>
-            <p className="text-sm text-gray-500">Choose how you would like to sign in</p>
+            <DialogTitle className="text-xl font-bold">Welcome to 9x AI Chat</DialogTitle>
+            <DialogDescription className="text-sm text-gray-500">
+              Choose how you would like to sign in
+            </DialogDescription>
           </DialogHeader>
 
           {/* Continue with Google */}
@@ -49,14 +66,23 @@ function LoginModal() {
           </div>
 
           {/* Email input */}
-          <div className="space-y-3">
-            <div>
-              <label className="text-sm font-medium">Email Address</label>
-              <Input type="email" placeholder="Enter your email address" className="mt-1" />
+          <div className="flex items-center gap-3 mx-4">
+            {/* <label className="text-lg font-medium whitespace-nowrap">Email:</label>
+            <Input type="email" placeholder="Enter your email address" className="flex-1" /> */}
+            <div className="relative flex-1">
+              <Input type="email" id="email" placeholder="" className="peer h-12 px-2 pt-3" />
+              <label
+                htmlFor="email"
+                className="absolute left-3 top-3 text-gray-500 text-sm transition-all 
+                 peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
+                 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary"
+              >
+                Email Address
+              </label>
             </div>
-            <Button className="w-full bg-gray-700 text-white hover:bg-gray-600 flex gap-2">
-              <Shield className="h-4 w-4" />
-              Send verification code
+            <Button className="bg-gray-700 text-white flex gap-2 hover:bg-gray-700">
+              <Shield className="h-10 w-auto" />
+              Send OTP
             </Button>
           </div>
         </DialogContent>

@@ -1,13 +1,12 @@
-import React, { memo, useCallback, useEffect } from "react";
-import "./assets/css/App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import allRoutesMapper from "./routes";
-import { useDispatch, useSelector } from "react-redux";
-import { themeActions } from "@/redux/combineAction";
-import { getSessionStorageTheme } from "@/helpers/session-storage";
-import { useIsMobile } from "@/hooks/useMobile";
-
-
+import React, { memo, useCallback, useEffect } from 'react';
+import './assets/css/App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import allRoutesMapper from './routes';
+import { useDispatch, useSelector } from 'react-redux';
+import { themeActions } from '@/redux/combineAction';
+import { getSessionStorageTheme } from '@/helpers/session-storage';
+import { useIsMobile } from '@/hooks/useMobile';
+import Login from './views/pages/login';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -23,9 +22,9 @@ const App = () => {
       handleResizeFunction();
     }
 
-    window.addEventListener("resize", handleResizeFunction);
+    window.addEventListener('resize', handleResizeFunction);
     return () => {
-      window.removeEventListener("resize", handleResizeFunction);
+      window.removeEventListener('resize', handleResizeFunction);
     };
   }, [isMobile]);
 
@@ -34,21 +33,22 @@ const App = () => {
     if (currentTheme) {
       dispatch(setActiveThemeAction(currentTheme));
     } else {
-      dispatch(setActiveThemeAction("dark"));
+      dispatch(setActiveThemeAction('dark'));
     }
   }, []);
 
   const handleResizeFunction = useCallback(() => {
     if (isMobile) {
-      dispatch(setScreenSizeAction("mobile"));
+      dispatch(setScreenSizeAction('mobile'));
     } else {
-      dispatch(setScreenSizeAction("desktop"));
+      dispatch(setScreenSizeAction('desktop'));
     }
   }, [isMobile, screenSize]);
 
   return (
     <div className="app">
       <BrowserRouter>
+        <Login />
         <Routes>
           {allRoutesMapper?.map((singleRoute) => (
             <Route
