@@ -15,7 +15,7 @@ const allRoutesMapper = [
     component: <Login />,
   },
   {
-    path: '/chat',
+    path: '/chat/:chatId',
     component: (
       <ChatWrapper>
         <Chat />
@@ -25,9 +25,9 @@ const allRoutesMapper = [
   {
     path: '/new-chat',
     component: (
-      <ChatWrapper>
+      <AuthWrapper roles={['user']}>
         <NewChat />
-      </ChatWrapper>
+      </AuthWrapper>
     ),
   },
   {

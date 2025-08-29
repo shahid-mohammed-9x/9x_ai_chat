@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/helpers';
 import AIResponses from './AIResponses';
+import { useDispatch, useSelector } from 'react-redux';
 
 const messages = [
   {
@@ -39,18 +40,13 @@ const messages = [
 
 const ChatWindow = () => {
   const [input, setInput] = useState('');
-
-  const sendMessage = () => {
-    if (!input.trim()) return;
-    setMessages([...messages, { id: Date.now(), text: input, sender: 'user' }]);
-    setInput('');
-  };
+  const { chatMessages, messageLoading } = useSelector((state) => state.chatsState);
 
   return (
     <div className="w-full flex flex-col h-[700px] rounded-2xl shadow-lg">
       {/* Chat Messages */}
       <CardContent className="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar">
-        <AIResponses messages={messages} />
+        <AIResponses {...chatMessages} />
       </CardContent>
 
       {/* Input Area */}
