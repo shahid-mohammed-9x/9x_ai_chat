@@ -20,6 +20,12 @@ const ModelSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    models: [
+      {
+        type: String,
+        enum: ["gpt", "gemini"],
+      },
+    ],
     responses: [
       {
         type: mongoose.Schema.Types.ObjectId,
