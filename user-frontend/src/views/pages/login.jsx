@@ -12,21 +12,42 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Shield } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { openLoginPopup } from '@/redux/theme/reducer';
+import { userActions, themeActions } from '@/redux/combineAction';
+import { setAccessToken } from '@/helpers/local-storage';
 
 function LoginModal() {
+  const { findUserEmailAction, userLoginAction } = userActions;
+  const { openLoginPopup } = themeActions;
   const { loginPopup } = useSelector((state) => state.themeState);
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [data, setData] = useState(null);
 
-  const handleSubmit = ()=>{
-    
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const res = await findUserEmailAction(email);
+    console.log(res);
+    if (res[0]) setData(res[1]?.data);
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const data = {
+      userInput: email,
+      password: password,
+    };
+    const res = await userLoginAction(data);
+    if (res[0]) {
+      setAccessToken(res[1]?.token);
+      dispatch(openLoginPopup('false'));
+    }
+  };
 
   return (
     <div>
-      <Dialog open={loginPopup} onOpenChange={() => dispatch(openLoginPopup(false))}>
+      <Dialog open={loginPopup} onOpenChange={() => dispatch(openLoginPopup('false'))}>
         <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-md" />
 
         <DialogContent
@@ -74,12 +95,13 @@ function LoginModal() {
           </div>
 
           {/* Email input */}
-          <div className="flex flex-col sm:flex-row items-stretch gap-3 mx-0 sm:mx-4 w-full">
-            <div className="relative flex-1">
+          <div className="flex flex-col items-center w-full gap-4">
+            {/* Email Input */}
+            <div className="relative w-full sm:w-[70%] md:w-[55%]">
               <Input
                 type="email"
                 id="email"
-                placeholder=""
+                placeholder=" "
                 className="peer h-12 px-2 pt-3 w-full"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -87,15 +109,45 @@ function LoginModal() {
               <label
                 htmlFor="email"
                 className="absolute left-3 top-3 text-gray-500 text-sm transition-all 
-                 peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
-                 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary"
+                peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
+                peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary 
+                peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
               >
                 Email
               </label>
             </div>
-            <Button className="bg-gray-700 text-white flex gap-2 justify-center items-center hover:bg-gray-600 sm:w-auto w-full">
-              {/* <Shield className="h-5 w-5 sm:h-6" /> */}
-              <span className="sm:inline">Submit</span>
+
+            {/* Password Input */}
+
+            {data?.isPasswordSet && (
+              <div className="relative w-full sm:w-[70%] md:w-[55%]">
+                <Input
+                  type="password"
+                  id="password"
+                  placeholder=" "
+                  className="peer h-12 px-2 pt-3 w-full"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <label
+                  htmlFor="password"
+                  className="absolute left-3 top-3 text-gray-500 text-sm transition-all 
+              peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
+              peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary 
+              peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
+                >
+                  Password
+                </label>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <Button
+              className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
+               bg-gray-700 text-white hover:bg-gray-600 rounded-lg shadow mt-4"
+              onClick={data?.isPasswordSet ? handleLogin : handleSubmit}
+            >
+              <span className="sm:inline">{data?.isPasswordSet ? 'Login' : 'Submit'}</span>
             </Button>
           </div>
         </DialogContent>

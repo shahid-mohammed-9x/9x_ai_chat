@@ -44,7 +44,7 @@ const Home = () => {
         <div className="hidden md:block">
           <button
             className="bg-primary text-white-900 font-semibold py-2 px-6 rounded-lg hover:bg-gray-600 transition"
-            onClick={() => dispatch(openLoginAction(true))}
+            onClick={() => dispatch(openLoginAction('true'))}
           >
             Login
           </button>
