@@ -8,7 +8,11 @@ import {
 import { School } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 const SidebarHeaderComponent = ({ isSidebarOpen, profileDetails }) => {
+  const navigate = useNavigate();
+
   return (
     <SidebarHeader>
       <SidebarMenu>
@@ -28,7 +32,10 @@ const SidebarHeaderComponent = ({ isSidebarOpen, profileDetails }) => {
 
         {profileDetails && (
           <SidebarMenuButton asChild className="w-full my-3">
-            <Button>
+            <Button
+              onClick={() => navigate('/new-chat')}
+              className={'cursor-pointer hover:bg-primary/90 hover:text-black'}
+            >
               <Plus /> {isSidebarOpen && 'New Chat'}
             </Button>
           </SidebarMenuButton>
