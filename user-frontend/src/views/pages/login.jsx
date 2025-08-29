@@ -49,7 +49,8 @@ function LoginModal() {
           {/* Continue with Google */}
           <Button
             variant="default"
-            className="w-full flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-800"
+            className="h-10 px-6 w-auto flex-shrink-0 
+             bg-gray-600 text-white hover:bg-gray-100 rounded-lg shadow"
           >
             <img
               src="https://www.svgrepo.com/show/355037/google.svg"
