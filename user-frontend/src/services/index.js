@@ -1,6 +1,6 @@
-import { AxiosConfig, RequestMethodInstance } from "./axiosInstance";
-import axios from "axios";
-import API_URLS from "./config";
+import { AxiosConfig, RequestMethodInstance } from './axiosInstance';
+import axios from 'axios';
+import API_URLS from './config';
 
 const ApiUrlMapper = {
   server: API_URLS.API_SERVER,
@@ -13,7 +13,7 @@ const handleHeaders = (token, contentType) => {
   const axiosConfig = new AxiosConfig();
   if (!contentType) {
     axiosConfig.removeContentType();
-  } else if (contentType === "formData") {
+  } else if (contentType === 'formData') {
     axiosConfig.addFormHeaderContentType();
   }
   if (token) {
@@ -23,7 +23,7 @@ const handleHeaders = (token, contentType) => {
 };
 
 const processResponse = async (response) => {
-  if (response?.message === "Network Error") {
+  if (response?.message === 'Network Error') {
     return [false, { message: response.message, statusCode: 500 }, 500];
   }
 
@@ -39,12 +39,7 @@ const processResponse = async (response) => {
 
 const apiFetch = new RequestMethodInstance();
 const Service = {
-  fetchGet: async (
-    url,
-    token = null,
-    contentType = null,
-    accessPoint = "server"
-  ) => {
+  fetchGet: async (url, token = null, contentType = null, accessPoint = 'server') => {
     try {
       const endpoint = ApiUrlMapper[accessPoint] + url;
       const headers = handleHeaders(token, contentType);
@@ -54,27 +49,21 @@ const Service = {
       if (axios.isCancel(error)) {
         console.log(`Request to ${url} was cancelled`);
         // Return a specific value or throw a custom error to indicate cancellation
-        return [false, { message: "api is aborted" }];
+        return [false, { message: 'api is aborted' }];
       }
-      onFailure("network", url);
+      onFailure('network', url);
       return processResponse(error?.response || error);
     }
   },
 
-  fetchPost: async (
-    url,
-    body,
-    token = null,
-    contentType = "json",
-    accessPoint = "server"
-  ) => {
+  fetchPost: async (url, body, token = null, contentType = 'json', accessPoint = 'server') => {
     try {
       const endpoint = ApiUrlMapper[accessPoint] + url;
       const headers = handleHeaders(token, contentType);
       const response = await apiFetch.postMethod(endpoint, body, headers);
       return processResponse(response);
     } catch (error) {
-      onFailure("network", url);
+      onFailure('network', url);
       return processResponse(error?.response || error);
     }
   },
@@ -83,8 +72,8 @@ const Service = {
     url,
     body = null,
     token = null,
-    contentType = "json",
-    accessPoint = "server"
+    contentType = 'json',
+    accessPoint = 'server'
   ) => {
     try {
       const endpoint = ApiUrlMapper[accessPoint] + url;
@@ -92,7 +81,7 @@ const Service = {
       const response = await apiFetch.putMethod(endpoint, body, headers);
       return processResponse(response);
     } catch (error) {
-      onFailure("network", url);
+      onFailure('network', url);
       return processResponse(error?.response || error);
     }
   },
@@ -101,8 +90,8 @@ const Service = {
     url,
     body = null,
     token = null,
-    contentType = "json",
-    accessPoint = "server"
+    contentType = 'json',
+    accessPoint = 'server'
   ) => {
     try {
       const endpoint = ApiUrlMapper[accessPoint] + url;
@@ -110,7 +99,7 @@ const Service = {
       const response = await apiFetch.patchMethod(endpoint, body, headers);
       return processResponse(response);
     } catch (error) {
-      onFailure("network", url);
+      onFailure('network', url);
       return processResponse(error?.response || error);
     }
   },
@@ -119,8 +108,8 @@ const Service = {
     url,
     token = null,
     body = {},
-    contentType = "json",
-    accessPoint = "server"
+    contentType = 'json',
+    accessPoint = 'server'
   ) => {
     try {
       const endpoint = ApiUrlMapper[accessPoint] + url;
@@ -128,7 +117,7 @@ const Service = {
       const response = await apiFetch.deleteMethod(endpoint, body, headers);
       return processResponse(response);
     } catch (error) {
-      onFailure("network", url);
+      onFailure('network', url);
       return processResponse(error?.response || error);
     }
   },
@@ -138,14 +127,14 @@ const Service = {
   },
 
   // Cancel a specific API request if needed
-  cancelRequest: (url, method, accessPoint = "server") => {
+  cancelRequest: (url, method, accessPoint = 'server') => {
     const endpoint = ApiUrlMapper[accessPoint] + url;
     apiFetch.cancelRequest(endpoint, method);
   },
 };
 
 const onFailure = async (res, url) => {
-  console.log("API FAILED " + url);
+  console.log('API FAILED ' + url);
 };
 
 const onUserKickedOut = async () => {

@@ -1,11 +1,7 @@
-import React, { memo } from "react";
-import { School, ChevronRight, GraduationCap, House, Plus } from "lucide-react";
+import React, { memo } from 'react';
+import { School, ChevronRight, GraduationCap, House, Plus } from 'lucide-react';
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 import {
   SidebarContent,
@@ -17,61 +13,64 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/sidebar';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const data = {
   navMain: [
     {
-      id: "dashboard",
-      title: "Dashboard",
-      url: "#",
+      id: 'dashboard',
+      title: 'Dashboard',
+      url: '#',
       icon: School,
       isActive: false,
       items: [
         {
-          title: "Overview",
-          url: "/dashboard",
+          title: 'Overview',
+          url: '/dashboard',
         },
         {
-          title: "Analytics",
-          url: "/admin/dashboard/analytics",
+          title: 'Analytics',
+          url: '/admin/dashboard/analytics',
         },
       ],
     },
 
     {
-      id: "batch",
-      title: "Batch",
-      url: "#",
+      id: 'batch',
+      title: 'Batch',
+      url: '#',
       icon: GraduationCap,
       isActive: false,
       items: [
         {
-          title: "Year Batches",
-          url: "/batches",
+          title: 'Year Batches',
+          url: '/batches',
         },
       ],
     },
   ],
   quickAccess: [
     {
-      name: "Home Page",
-      url: "/",
+      name: 'Home Page',
+      url: '/',
       icon: House,
     },
   ],
 };
 
-const SidebarContentComponent = ({ navUser, changeNavGroupFunction }) => {
+const SidebarContentComponent = ({ navUser, changeNavGroupFunction, isSidebarOpen }) => {
   return (
     <SidebarContent>
       <SidebarGroup>
-        <Button>
-          <Plus /> New Chat
-        </Button>
+        <SidebarMenuButton asChild className="w-full">
+          <Button>
+            <Plus /> {isSidebarOpen && 'New Chat'}
+          </Button>
+        </SidebarMenuButton>
       </SidebarGroup>
+
       <SidebarGroup>
         <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
         <SidebarMenu>
@@ -84,10 +83,7 @@ const SidebarContentComponent = ({ navUser, changeNavGroupFunction }) => {
               className="group/collapsible"
             >
               <SidebarMenuItem>
-                <CollapsibleTrigger
-                  asChild
-                  onClick={() => changeNavGroupFunction(item?.id)}
-                >
+                <CollapsibleTrigger asChild onClick={() => changeNavGroupFunction(item?.id)}>
                   <SidebarMenuButton tooltip={item?.title}>
                     {item?.icon && <item.icon />}
                     <span>{item?.title}</span>

@@ -51,6 +51,7 @@ const UserSidebar = ({ children }) => {
         <SidebarContentComponent
           navUser={navUser}
           changeNavGroupFunction={changeNavGroupFunction}
+          isSidebarOpen={isSidebarOpen}
         />
 
         <SidebarFooterComponent user={user} logoutFunction={logoutFunction} />

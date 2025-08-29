@@ -1,5 +1,5 @@
 export const USERS_PROFILE = {
-  Profile: "/profile",
+  Profile: '/my-profile',
 };
 
-export const BASE_USER = "/admin";
+export const BASE_USER = '/user';

@@ -115,6 +115,7 @@ const chatsListController = async (req, res, next) => {
   }
 };
 
+// user message list controller
 const messageListController = async (req, res, next) => {
   try {
     logger.info(
