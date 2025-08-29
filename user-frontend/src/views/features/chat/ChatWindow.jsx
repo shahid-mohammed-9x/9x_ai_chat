@@ -41,12 +41,13 @@ const messages = [
 const ChatWindow = () => {
   const [input, setInput] = useState('');
   const { chatMessages, messageLoading } = useSelector((state) => state.chatsState);
+  const { profileDetails } = useSelector((state) => state.userProfileState);
 
   return (
     <div className="w-full flex flex-col h-[700px] rounded-2xl shadow-lg">
       {/* Chat Messages */}
       <CardContent className="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar">
-        <AIResponses {...chatMessages} />
+        <AIResponses {...chatMessages} profileDetails={profileDetails} />
       </CardContent>
 
       {/* Input Area */}

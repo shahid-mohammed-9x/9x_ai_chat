@@ -7,6 +7,7 @@ import gemini from '@/assets/modelIcons/geminiIcon.jpg';
 import deepseek from '@/assets/modelIcons/deepseekIcon.png';
 import gork from '@/assets/modelIcons/gorkIcon.png';
 import sonar from '@/assets/modelIcons/sonarIcon.png';
+import { getInitials } from '@/helpers';
 
 const modelIcons = {
   gpt: gpt,
@@ -17,9 +18,7 @@ const modelIcons = {
   sonar: sonar,
 };
 
-const AIResponses = ({ docs, chatDetails }) => {
-  console.log(docs);
-  console.log(chatDetails);
+const AIResponses = ({ docs, chatDetails, profileDetails }) => {
   return (
     <div className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
       {docs?.map((singleMessage) => (
@@ -30,9 +29,12 @@ const AIResponses = ({ docs, chatDetails }) => {
               <div className="bg-primary text-white px-4 py-2 rounded-2xl shadow">
                 {singleMessage?.question}
               </div>
-              <Avatar>
-                <AvatarImage src="/icons/user.png" />
-                <AvatarFallback>U</AvatarFallback>
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src={profileDetails?.avatar} alt={profileDetails?.fullName} />
+                <AvatarFallback className="rounded-lg">
+                  {' '}
+                  {getInitials(profileDetails?.fullName ?? 'U')}
+                </AvatarFallback>
               </Avatar>
             </div>
           </div>
