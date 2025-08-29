@@ -7,8 +7,8 @@ import { ArrowUp } from 'lucide-react';
 
 const navLinks = [
   { name: 'About', href: '#' },
-  { name: 'Features', href: '#' },
-  { name: 'FAQs', href: '#' },
+  { name: 'Features', href: '#features' },
+  { name: 'FAQs', href: '#faqs' },
 ];
 
 const Home = () => {
@@ -96,7 +96,7 @@ const Home = () => {
             />
             <button
               type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 bg-purple-600 hover:bg-purple-700 rounded-full p-2.5 transition"
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-primary hover:bg-purple-700 rounded-full p-2.5 transition"
             >
               <ArrowUp className="text-white w-5 h-5" />
             </button>

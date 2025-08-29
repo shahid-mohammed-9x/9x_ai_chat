@@ -93,7 +93,7 @@ const FeatureCard = memo(({ title, description, list, gradientFrom, gradientTo, 
 
 const HeroComponent1 = () => {
   return (
-    <div className="relative">
+    <div id="features" className="relative">
       <StarryBackground count={100} />
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 mt-10 text-center">
