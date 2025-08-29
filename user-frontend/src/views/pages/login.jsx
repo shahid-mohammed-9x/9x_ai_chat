@@ -1,5 +1,5 @@
 // src/components/LoginModal.jsx
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -17,6 +17,12 @@ import { openLoginPopup } from '@/redux/theme/reducer';
 function LoginModal() {
   const { loginPopup } = useSelector((state) => state.themeState);
   const dispatch = useDispatch();
+
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = ()=>{
+    
+  }
 
   return (
     <div>
@@ -75,6 +81,8 @@ function LoginModal() {
                 id="email"
                 placeholder=""
                 className="peer h-12 px-2 pt-3 w-full"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <label
                 htmlFor="email"
@@ -82,12 +90,12 @@ function LoginModal() {
                  peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
                  peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary"
               >
-                Email Address
+                Email
               </label>
             </div>
             <Button className="bg-gray-700 text-white flex gap-2 justify-center items-center hover:bg-gray-600 sm:w-auto w-full">
-              <Shield className="h-5 w-5 sm:h-6" />
-              <span className="sm:inline">Send OTP</span>
+              {/* <Shield className="h-5 w-5 sm:h-6" /> */}
+              <span className="sm:inline">Submit</span>
             </Button>
           </div>
         </DialogContent>
