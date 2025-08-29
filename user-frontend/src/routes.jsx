@@ -3,6 +3,7 @@ import Chat from './views/pages/Chat';
 import AuthWrapper from './views/wrappers/AuthWrapper';
 import ChatWrapper from './views/wrappers/ChatWrapper';
 import Login from './views/pages/login';
+import ProfilePage from './views/pages/ProfilePage';
 const allRoutesMapper = [
   {
     path: '/',
@@ -19,6 +20,10 @@ const allRoutesMapper = [
         <Chat />
       </ChatWrapper>
     ),
+  },
+  {
+    path: '/profile',
+    component: <ProfilePage />,
   },
 ];
 
