@@ -22,6 +22,7 @@ const allRoutesMapper = [
       </ChatWrapper>
     ),
   },
+
   {
     path: '/new-chat',
     component: (

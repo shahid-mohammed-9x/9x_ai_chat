@@ -40,7 +40,7 @@ export const ChatsReducer = (state = initialState, action) => {
       error: action?.payload?.message || 'Failed to load chats', // Default error message
       statusCode: action?.payload?.statusCode || 500,
     }),
-    [CHAT_LIST.fail]: () => ({
+    [CHAT_MESSAGES.fail]: () => ({
       ...state,
       messageLoading: false,
       error: action?.payload?.message || 'Failed to load messages chats', // Default error message
