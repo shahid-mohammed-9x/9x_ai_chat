@@ -139,7 +139,7 @@ const onFailure = async (res, url) => {
 
 const onUserKickedOut = async () => {
   localStorage.clear();
-  window.location.reload();
+  window.location.href = '/';
 };
 
 export default Service;

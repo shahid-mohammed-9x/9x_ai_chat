@@ -7,6 +7,7 @@ import gemini from '@/assets/modelIcons/geminiIcon.jpg';
 import deepseek from '@/assets/modelIcons/deepseekIcon.png';
 import gork from '@/assets/modelIcons/gorkIcon.png';
 import sonar from '@/assets/modelIcons/sonarIcon.png';
+import { getInitials } from '@/helpers';
 
 const modelIcons = {
   gpt: gpt,
@@ -17,20 +18,23 @@ const modelIcons = {
   sonar: sonar,
 };
 
-const AIResponses = ({ messages }) => {
+const AIResponses = ({ docs, chatDetails, profileDetails }) => {
   return (
     <div className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
-      {messages.map((msg) => (
-        <div key={msg._id} className="space-y-6">
+      {docs?.map((singleMessage) => (
+        <div key={singleMessage?._id} className="space-y-6">
           {/* User Message */}
           <div className="flex justify-end">
             <div className="flex items-center gap-2 max-w-[70%]">
               <div className="bg-primary text-white px-4 py-2 rounded-2xl shadow">
-                {msg.question}
+                {singleMessage?.question}
               </div>
-              <Avatar>
-                <AvatarImage src="/icons/user.png" />
-                <AvatarFallback>U</AvatarFallback>
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src={profileDetails?.avatar} alt={profileDetails?.fullName} />
+                <AvatarFallback className="rounded-lg">
+                  {' '}
+                  {getInitials(profileDetails?.fullName ?? 'U')}
+                </AvatarFallback>
               </Avatar>
             </div>
           </div>
@@ -38,24 +42,29 @@ const AIResponses = ({ messages }) => {
           {/* AI Responses */}
           <div className="w-full shadow-2xl rounded-2xl">
             <div className="flex flex-row gap-4 p-4 overflow-x-auto min-h-[600px] no-scrollbar snap-x snap-mandatory">
-              {msg.responses.map((res, i) => (
-                <div
-                  key={i}
-                  className="
+              {chatDetails?.models?.map((singleAiModel, i) => {
+                const answer = singleMessage?.responses?.[singleAiModel]?.answer ?? null;
+                return (
+                  <div
+                    key={singleMessage?._id + singleAiModel}
+                    className="
                     flex items-start gap-2 p-4 bg-card rounded-2xl 
                     snap-start shrink-0
                     w-[85%] sm:w-[45%] lg:w-[30%]
                   "
-                >
-                  <Avatar>
-                    <AvatarImage src={modelIcons[res.model]} />
-                    <AvatarFallback>{res?.model[0].toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <div className="bg-gray-200 text-gray-900 px-4 py-2 rounded-2xl shadow max-h-[500px] overflow-y-auto">
-                    {res.answer}
+                  >
+                    <Avatar>
+                      <AvatarImage src={modelIcons[singleAiModel]} />
+                      {/* <AvatarFallback>{res?.model[0].toUpperCase()}</AvatarFallback> */}
+                    </Avatar>
+                    {answer && (
+                      <div className="bg-gray-200 text-gray-900 px-4 py-2 rounded-2xl shadow max-h-[500px] overflow-y-auto">
+                        {answer}
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

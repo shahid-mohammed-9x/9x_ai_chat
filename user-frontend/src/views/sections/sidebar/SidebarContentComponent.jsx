@@ -20,12 +20,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { chatActions } from '@/redux/combineAction';
 import { useCallback, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const SidebarContentComponent = ({ profileDetails }) => {
-  const { isMobile } = useSidebar();
-  const dispatch = useDispatch();
   const { getChatsListAction } = chatActions;
   const { chatsList, loading } = useSelector((state) => state.chatsState);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { chatId } = useParams();
+  const { isMobile } = useSidebar();
 
   useEffect(() => {
     if (profileDetails && !chatsList && chatsList?.currentPage !== 1) {
@@ -36,6 +39,10 @@ const SidebarContentComponent = ({ profileDetails }) => {
   const fetchChatListFunctions = useCallback(() => {
     dispatch(getChatsListAction());
   }, [profileDetails, chatsList]);
+
+  const navigateToChatFunction = useCallback((chatDetails) => {
+    navigate(`/chat/${chatDetails?._id}`);
+  }, []);
 
   return (
     <SidebarContent>
@@ -51,7 +58,12 @@ const SidebarContentComponent = ({ profileDetails }) => {
             <SidebarMenu>
               {chatsList?.docs?.map((item) => (
                 <SidebarMenuItem key={item?._id}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton
+                    asChild
+                    // className={'cursor-pointer '}
+                    className={` cursor-pointer ${chatId === item?._id && 'bg-white text-black hover:bg-white hover:text-black'}`}
+                    onClick={() => navigateToChatFunction(item)}
+                  >
                     <div>
                       <span>{item?.title}</span>
                     </div>

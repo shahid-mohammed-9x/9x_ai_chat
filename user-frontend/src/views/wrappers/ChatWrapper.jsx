@@ -79,9 +79,11 @@ const SidebarSkeleton = memo(() => {
 
 const ChatWrapper = ({ roles = [], children }) => {
   const { getUserProfileAction } = userActions;
-  const { profileDetails } = useSelector((state) => state.userProfileState);
+
+  const { profileDetails, statusCode, error } = useSelector((state) => state.userProfileState);
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -93,6 +95,12 @@ const ChatWrapper = ({ roles = [], children }) => {
       setIsLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (error && statusCode === 401) {
+      navigate('/');
+    }
+  }, [error]);
 
   useEffect(() => {
     if (profileDetails) {
