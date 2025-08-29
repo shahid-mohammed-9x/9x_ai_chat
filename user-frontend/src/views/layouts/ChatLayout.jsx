@@ -14,29 +14,15 @@ import SidebarHeaderComponent from '../sections/sidebar/SidebarHeaderComponent';
 import SidebarFooterComponent from '../sections/sidebar/SidebarFooterComponent';
 import SidebarContentComponent from '../sections/sidebar/SidebarContentComponent';
 import { Separator } from '@/components/ui/separator';
-
-const user = {
-  name: 'John',
-  email: 'jonh Doe',
-  avatar: null,
-};
+import { useSelector } from 'react-redux';
 
 const ChatLayout = ({ children }) => {
   const logoutFunction = useLogout();
   const navigate = useNavigate();
+  const { profileDetails } = useSelector((state) => state.userProfileState);
   const {
     sidebarState: { isSidebarOpen, navUser, changeNavUserAction, isSidebarOpenAction },
   } = useContext(Context);
-
-  const changeNavGroupFunction = useCallback(
-    (id) => {
-      let value = navUser[id];
-      let updateState = _.cloneDeep(navUser);
-      updateState[id] = !value;
-      changeNavUserAction(updateState);
-    },
-    [navUser]
-  );
 
   const handleSidebarTrigger = useCallback(() => {
     isSidebarOpenAction(!isSidebarOpen);
@@ -45,15 +31,17 @@ const ChatLayout = ({ children }) => {
   return (
     <SidebarProvider open={isSidebarOpen}>
       <Sidebar collapsible="icon">
-        <SidebarHeaderComponent isSidebarOpen={isSidebarOpen} />
+        <SidebarHeaderComponent isSidebarOpen={isSidebarOpen} profileDetails={profileDetails} />
         <Separator />
 
-        <SidebarContentComponent
-          navUser={navUser}
-          changeNavGroupFunction={changeNavGroupFunction}
-        />
+        <SidebarContentComponent profileDetails={profileDetails} />
 
-        <SidebarFooterComponent user={user} logoutFunction={logoutFunction} />
+        <Separator />
+        <SidebarFooterComponent
+          user={profileDetails}
+          logoutFunction={logoutFunction}
+          isSidebarOpen={isSidebarOpen}
+        />
 
         <SidebarRail />
       </Sidebar>

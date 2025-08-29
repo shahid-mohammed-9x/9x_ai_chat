@@ -8,7 +8,7 @@ import {
 import { School } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-const SidebarHeaderComponent = ({ isSidebarOpen }) => {
+const SidebarHeaderComponent = ({ isSidebarOpen, profileDetails }) => {
   return (
     <SidebarHeader>
       <SidebarMenu>
@@ -26,11 +26,13 @@ const SidebarHeaderComponent = ({ isSidebarOpen }) => {
           </SidebarMenuButton>
         </SidebarMenuItem>
 
-        <SidebarMenuButton asChild className="w-full mt-3">
-          <Button>
-            <Plus /> {isSidebarOpen && 'New Chat'}
-          </Button>
-        </SidebarMenuButton>
+        {profileDetails && (
+          <SidebarMenuButton asChild className="w-full my-3">
+            <Button>
+              <Plus /> {isSidebarOpen && 'New Chat'}
+            </Button>
+          </SidebarMenuButton>
+        )}
       </SidebarMenu>
     </SidebarHeader>
   );

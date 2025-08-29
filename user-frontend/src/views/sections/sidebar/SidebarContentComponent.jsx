@@ -1,123 +1,132 @@
-import React, { memo } from 'react';
-import { School, ChevronRight, GraduationCap, House, Plus } from 'lucide-react';
-
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-
+import { ArrowUpRight, Link, MoreHorizontal, StarOff, Trash2 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 
-const data = {
-  navMain: [
+const SidebarContentComponent = ({ profileDetails }) => {
+  const { isMobile } = useSidebar();
+
+  const favorites = [
     {
-      id: 'dashboard',
-      title: 'Dashboard',
+      name: 'Project Management & Task Tracking',
       url: '#',
-      icon: School,
-      isActive: false,
-      items: [
-        {
-          title: 'Overview',
-          url: '/dashboard',
-        },
-        {
-          title: 'Analytics',
-          url: '/admin/dashboard/analytics',
-        },
-      ],
+      emoji: '📊',
     },
-
     {
-      id: 'batch',
-      title: 'Batch',
+      name: 'Family Recipe Collection & Meal Planning',
       url: '#',
-      icon: GraduationCap,
-      isActive: false,
-      items: [
-        {
-          title: 'Year Batches',
-          url: '/batches',
-        },
-      ],
+      emoji: '🍳',
     },
-  ],
-  quickAccess: [
     {
-      name: 'Home Page',
-      url: '/',
-      icon: House,
+      name: 'Fitness Tracker & Workout Routines',
+      url: '#',
+      emoji: '💪',
     },
-  ],
-};
+    {
+      name: 'Book Notes & Reading List',
+      url: '#',
+      emoji: '📚',
+    },
+    {
+      name: 'Sustainable Gardening Tips & Plant Care',
+      url: '#',
+      emoji: '🌱',
+    },
+    {
+      name: 'Language Learning Progress & Resources',
+      url: '#',
+      emoji: '🗣️',
+    },
+    {
+      name: 'Home Renovation Ideas & Budget Tracker',
+      url: '#',
+      emoji: '🏠',
+    },
+    {
+      name: 'Personal Finance & Investment Portfolio',
+      url: '#',
+      emoji: '💰',
+    },
+    {
+      name: 'Movie & TV Show Watchlist with Reviews',
+      url: '#',
+      emoji: '🎬',
+    },
+    {
+      name: 'Daily Habit Tracker & Goal Setting',
+      url: '#',
+      emoji: '✅',
+    },
+  ];
 
-const SidebarContentComponent = ({ navUser, changeNavGroupFunction }) => {
   return (
     <SidebarContent>
-      <SidebarGroup>
-        <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
-        <SidebarMenu>
-          {data.navMain.map((item) => (
-            <Collapsible
-              key={item?.title}
-              asChild
-              // defaultOpen={navUser[item?.id] ?? false}
-              open={navUser[item?.id] ?? false}
-              className="group/collapsible"
-            >
-              <SidebarMenuItem>
-                <CollapsibleTrigger asChild onClick={() => changeNavGroupFunction(item?.id)}>
-                  <SidebarMenuButton tooltip={item?.title}>
-                    {item?.icon && <item.icon />}
-                    <span>{item?.title}</span>
-                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {item?.items?.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem?.title}>
-                        <SidebarMenuSubButton asChild>
-                          <Link to={subItem?.url}>
-                            <span>{subItem?.title}</span>
-                          </Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
+      {profileDetails && (
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+          <SidebarGroupLabel>Favorites</SidebarGroupLabel>
+          <SidebarMenu>
+            {favorites.map((item) => (
+              <SidebarMenuItem key={item.name}>
+                <SidebarMenuButton asChild>
+                  <a href={item.url} title={item.name}>
+                    <span>{item.emoji}</span>
+                    <span>{item.name}</span>
+                  </a>
+                </SidebarMenuButton>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <SidebarMenuAction showOnHover>
+                      <MoreHorizontal />
+                      <span className="sr-only">More</span>
+                    </SidebarMenuAction>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="w-56 rounded-lg"
+                    side={isMobile ? 'bottom' : 'right'}
+                    align={isMobile ? 'end' : 'start'}
+                  >
+                    <DropdownMenuItem>
+                      <Link className="text-muted-foreground" />
+                      <span>Copy Link</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <ArrowUpRight className="text-muted-foreground" />
+                      <span>Open in New Tab</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <Trash2 className="text-muted-foreground" />
+                      <span>Delete</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </SidebarMenuItem>
-            </Collapsible>
-          ))}
-        </SidebarMenu>
-      </SidebarGroup>
-
-      {/* <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarGroupLabel>Quick Access</SidebarGroupLabel>
-            <SidebarMenu>
-              {data.quickAccess.map((item) => (
-                <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild>
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{item.name}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroup> */}
+            ))}
+            <SidebarMenuItem>
+              <SidebarMenuButton className="text-sidebar-foreground/70">
+                <MoreHorizontal />
+                <span>More</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+      )}
     </SidebarContent>
   );
 };
 
-export default memo(SidebarContentComponent);
+export default SidebarContentComponent;
