@@ -1,131 +1,102 @@
-import React, { memo } from 'react';
-import { School, ChevronRight, GraduationCap, House, Plus } from 'lucide-react';
-
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-
+import { ArrowUpRight, Link, MoreHorizontal, StarOff, Trash2 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { useDispatch, useSelector } from 'react-redux';
+import { chatActions } from '@/redux/combineAction';
+import { useCallback, useEffect } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const data = {
-  navMain: [
-    {
-      id: 'dashboard',
-      title: 'Dashboard',
-      url: '#',
-      icon: School,
-      isActive: false,
-      items: [
-        {
-          title: 'Overview',
-          url: '/dashboard',
-        },
-        {
-          title: 'Analytics',
-          url: '/admin/dashboard/analytics',
-        },
-      ],
-    },
+const SidebarContentComponent = ({ profileDetails }) => {
+  const { isMobile } = useSidebar();
+  const dispatch = useDispatch();
+  const { getChatsListAction } = chatActions;
+  const { chatsList, loading } = useSelector((state) => state.chatsState);
 
-    {
-      id: 'batch',
-      title: 'Batch',
-      url: '#',
-      icon: GraduationCap,
-      isActive: false,
-      items: [
-        {
-          title: 'Year Batches',
-          url: '/batches',
-        },
-      ],
-    },
-  ],
-  quickAccess: [
-    {
-      name: 'Home Page',
-      url: '/',
-      icon: House,
-    },
-  ],
-};
+  useEffect(() => {
+    if (profileDetails && !chatsList && chatsList?.currentPage !== 1) {
+      fetchChatListFunctions();
+    }
+  }, [profileDetails]);
 
-const SidebarContentComponent = ({ navUser, changeNavGroupFunction, isSidebarOpen }) => {
+  const fetchChatListFunctions = useCallback(() => {
+    dispatch(getChatsListAction());
+  }, [profileDetails, chatsList]);
+
   return (
     <SidebarContent>
-      <SidebarGroup>
-        <SidebarMenuButton asChild className="w-full">
-          <Button>
-            <Plus /> {isSidebarOpen && 'New Chat'}
-          </Button>
-        </SidebarMenuButton>
-      </SidebarGroup>
+      {profileDetails && (
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+          <SidebarGroupLabel>Chat History</SidebarGroupLabel>
 
-      <SidebarGroup>
-        <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
-        <SidebarMenu>
-          {data.navMain.map((item) => (
-            <Collapsible
-              key={item?.title}
-              asChild
-              // defaultOpen={navUser[item?.id] ?? false}
-              open={navUser[item?.id] ?? false}
-              className="group/collapsible"
-            >
-              <SidebarMenuItem>
-                <CollapsibleTrigger asChild onClick={() => changeNavGroupFunction(item?.id)}>
-                  <SidebarMenuButton tooltip={item?.title}>
-                    {item?.icon && <item.icon />}
-                    <span>{item?.title}</span>
-                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {item?.items?.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem?.title}>
-                        <SidebarMenuSubButton asChild>
-                          <Link to={subItem?.url}>
-                            <span>{subItem?.title}</span>
-                          </Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </SidebarMenuItem>
-            </Collapsible>
-          ))}
-        </SidebarMenu>
-      </SidebarGroup>
-
-      {/* <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarGroupLabel>Quick Access</SidebarGroupLabel>
+          {loading ? (
+            Array.from({ length: 15 }).map((_, idx) => (
+              <Skeleton key={idx} className={`h-6 ${idx % 2 === 0 ? 'w-full' : 'w-10/12'}  mb-2`} />
+            ))
+          ) : (
             <SidebarMenu>
-              {data.quickAccess.map((item) => (
-                <SidebarMenuItem key={item.name}>
+              {chatsList?.docs?.map((item) => (
+                <SidebarMenuItem key={item?._id}>
                   <SidebarMenuButton asChild>
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{item.name}</span>
-                    </Link>
+                    <div>
+                      <span>{item?.title}</span>
+                    </div>
                   </SidebarMenuButton>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuAction showOnHover>
+                        <MoreHorizontal />
+                        <span className="sr-only">More</span>
+                      </SidebarMenuAction>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      className="w-56 rounded-lg"
+                      side={isMobile ? 'bottom' : 'right'}
+                      align={isMobile ? 'end' : 'start'}
+                    >
+                      <DropdownMenuItem>
+                        <Link className="text-muted-foreground" />
+                        <span>Copy Link</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <ArrowUpRight className="text-muted-foreground" />
+                        <span>Open in New Tab</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                        <Trash2 className="text-muted-foreground" />
+                        <span>Delete</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton className="text-sidebar-foreground/70">
+                  <MoreHorizontal />
+                  <span>More</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
-          </SidebarGroup> */}
+          )}
+        </SidebarGroup>
+      )}
     </SidebarContent>
   );
 };
 
-export default memo(SidebarContentComponent);
+export default SidebarContentComponent;

@@ -6,6 +6,32 @@ html, body, #root {
   height: 100%;
 }
 /* ------------------------------ */
+/* For Webkit browsers (Chrome, Edge, Safari) */
+/* For Webkit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 12px; /* width of scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a; /* track color */
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FFD700; /* gold color */
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFC200; /* darker gold on hover */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #FFD700 #1a1a1a; /* thumb color, track color */
+}
+
 
 
 

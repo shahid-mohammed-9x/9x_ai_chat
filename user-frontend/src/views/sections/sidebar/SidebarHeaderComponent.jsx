@@ -1,13 +1,14 @@
-import React, { memo } from "react";
+import React, { memo } from 'react';
 import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { School } from "lucide-react";
-
-const SidebarHeaderComponent = () => {
+} from '@/components/ui/sidebar';
+import { School } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+const SidebarHeaderComponent = ({ isSidebarOpen, profileDetails }) => {
   return (
     <SidebarHeader>
       <SidebarMenu>
@@ -18,14 +19,20 @@ const SidebarHeaderComponent = () => {
                 <School className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold capitalize">
-                  {"9x AI Chat"}
-                </span>
+                <span className="truncate font-semibold capitalize">{'9x AI Chat'}</span>
                 <span className="truncate text-xs">Talk With AI</span>
               </div>
             </div>
           </SidebarMenuButton>
         </SidebarMenuItem>
+
+        {profileDetails && (
+          <SidebarMenuButton asChild className="w-full my-3">
+            <Button>
+              <Plus /> {isSidebarOpen && 'New Chat'}
+            </Button>
+          </SidebarMenuButton>
+        )}
       </SidebarMenu>
     </SidebarHeader>
   );
