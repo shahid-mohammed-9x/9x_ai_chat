@@ -4,6 +4,7 @@ export const USERS_PROFILE = {
 
 export const AUTH_ROUTES = {
   userEmail: '/check-user',
+  userLogin: '/login',
 }
 
 export const BASE_USER = '/user';

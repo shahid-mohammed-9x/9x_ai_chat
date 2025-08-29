@@ -25,11 +25,22 @@ const getUserProfileAction = () => async (dispatch) => {
 };
 
 const findUserEmailAction = async(email)=>{
+  const json = {
+    userInput : email,
+  }
   const response = await Service.fetchPost(
-    `${API.BASE_AUTH}${API.AUTH_ROUTES.userEmail}`, email
+    `${API.BASE_AUTH}${API.AUTH_ROUTES.userEmail}`, json
   );
+  
+  return response
+}
 
-  console.log(response);
+const userLoginAction = async(data)=>{
+  const response = await Service.fetchPost(
+    `${API.BASE_AUTH}${API.AUTH_ROUTES.userLogin}`, data
+  );
+  
+  return response;
 }
 
 const clearUserProfileErrorsAction = () => (dispatch) => {
@@ -41,9 +52,11 @@ const clearUserProfileErrorsAction = () => (dispatch) => {
 const resetUserProfileAction = () => (dispatch) => {
   dispatch({ type: RESET_USER_PROFILE_STATE });
 };
+
 export default {
   getUserProfileAction,
   clearUserProfileErrorsAction,
   resetUserProfileAction,
-  findUserEmailAction
+  findUserEmailAction,
+  userLoginAction
 };

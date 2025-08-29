@@ -31,7 +31,9 @@ const resetThemeAction = () => (dispatch) => {
 
 const openLoginAction =(value) =>(dispatch)=>{
   console.log(value)
-  dispatch(openLoginPopup(value));
+  if(value=='true')
+    dispatch(openLoginPopup(true))
+  else dispatch(openLoginPopup(false));
 }
 
 export default {
