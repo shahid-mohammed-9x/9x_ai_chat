@@ -24,7 +24,13 @@ const createChatController = async (req, res, next) => {
       question: question,
       models,
       responses: models.reduce((acc, model) => {
-        acc[model] = { answer: null, inputTokens: 0, outputTokens: 0 };
+        acc[model] = {
+          answer: null,
+          token_usage: {
+            input_tokens: 0,
+            output_tokens: 0,
+          },
+        };
         return acc;
       }, {}),
       order: 0,

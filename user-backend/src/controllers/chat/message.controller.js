@@ -18,30 +18,42 @@ const newQuestionController = async (req, res, next) => {
       "controller - chat - messsage.controller - newQuestionController - start"
     );
 
-    const userId = req.user?._id || null;
+    const userId = req.user?._id;
     const { chatId } = req.params;
-    // const isChatExist = await chatModel.findOne({ _id: chatId, user: userId });
+    const { question, models = [] } = req.body;
 
-    // if (!isChatExist) {
-    //   return next(httpErrors.NotFound("Chat not found"));
-    // }
+    const details = {
+      user: userId,
+      chat: chatId,
+      question,
+      models,
+      responses: models.reduce((acc, model) => {
+        acc[model] = { answer: null, token_usage: {} };
+        return acc;
+      }, {}),
+      order: req.orderQuestion,
+    };
+
+    const messageDetails = new messageModel(details);
+    await messageDetails.save();
 
     const json = {
-      question: "hello",
-      user_id: userId,
-      session_id: chatId,
+      question,
+      userId,
+      chatId,
+      messageId: messageDetails?._id,
       context: null,
       models: ["gemini"],
     };
-    const response = await axiosService.fetchPost("/chat", json);
-    console.log(response);
+
+    axiosService.fetchPost("/chat", json);
 
     logger.info(
       "controller - chat - message.controller - newQuestionController - end"
     );
     responseHandlerUtil.successResponseStandard(res, {
       message: "Success new question is created",
-      data: response,
+      // data: response,
     });
   } catch (error) {
     logger.error(
@@ -52,6 +64,69 @@ const newQuestionController = async (req, res, next) => {
   }
 };
 
+const callBackMessageResponseController = async (req, res, next) => {
+  try {
+    logger.info(
+      "controller - chat - messsage.controller - callBackMessageResponseController - start"
+    );
+
+    console.log(req.body);
+    // return res.status(200);
+    const { token_usage, answer, messageId, model } = req.body;
+
+    const messageExist = await messageModel.findById(messageId);
+
+    if (!messageExist) {
+      return next(httpErrors.BadRequest("message not found"));
+    }
+
+    messageExist.responses[model] = {
+      answer,
+      token_usage,
+    };
+
+    messageExist.save();
+
+    logger.info(
+      "controller - chat - messsage.controller - callBackMessageResponseController - end"
+    );
+    responseHandlerUtil.successResponseStandard(res, {
+      message: "ok",
+    });
+  } catch (error) {
+    logger.error(
+      "controller - chat - message.controller - callBackMessageResponseController - error",
+      error
+    );
+    errorHandling.handleCustomErrorService(error, next);
+  }
+};
+
+const callBackSummaryResponseController = async (req, res, next) => {
+  try {
+    logger.info(
+      "controller - chat - messsage.controller - callBackSummaryResponseController - start"
+    );
+    // const { model } = req.params;
+    console.log(req.body);
+
+    logger.info(
+      "controller - chat - messsage.controller - callBackSummaryResponseController - end"
+    );
+    responseHandlerUtil.successResponseStandard(res, {
+      message: "ok",
+    });
+  } catch (error) {
+    logger.error(
+      "controller - chat - message.controller - callBackSummaryResponseController - error",
+      error
+    );
+    errorHandling.handleCustomErrorService(error, next);
+  }
+};
+
 module.exports = {
   newQuestionController,
+  callBackMessageResponseController,
+  callBackSummaryResponseController,
 };

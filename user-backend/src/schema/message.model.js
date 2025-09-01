@@ -18,33 +18,25 @@ const ModelSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    models: [
-      {
-        type: String,
-        enum: ["gpt", "gemini"],
-      },
-    ],
+    models: {
+      type: Object,
+      default: {},
+    },
     responses: {
       gpt: {
         answer: {
           type: String,
         },
-        inputTokens: {
-          type: Number,
-        },
-        outputTokens: {
-          type: Number,
+        token_usage: {
+          type: Object,
         },
       },
       gemini: {
         answer: {
           type: String,
         },
-        inputTokens: {
-          type: Number,
-        },
-        outputTokens: {
-          type: Number,
+        token_usage: {
+          type: Object,
         },
       },
     },

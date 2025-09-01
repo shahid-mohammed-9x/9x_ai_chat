@@ -16,7 +16,12 @@ const {
 } = require("../../validators/chat/chat.validation");
 const {
   newQuestionController,
+  callBackMessageResponseController,
+  callBackSummaryResponseController,
 } = require("../../controllers/chat/message.controller");
+const {
+  CheckUserChatMiddleWare,
+} = require("../../middlewares/chat.middleware");
 
 const ChatRoutes = express.Router();
 
@@ -40,7 +45,16 @@ ChatRoutes.route("/chat-messages/:chatId").get(
 
 ChatRoutes.route("/:chatId/new-question").post(
   Authentication,
+  CheckUserChatMiddleWare(false),
   newQuestionController
+);
+
+ChatRoutes.route("/callback/answer-response").post(
+  callBackMessageResponseController
+);
+
+ChatRoutes.route("/callback/summary-response").post(
+  callBackSummaryResponseController
 );
 
 module.exports = ChatRoutes;

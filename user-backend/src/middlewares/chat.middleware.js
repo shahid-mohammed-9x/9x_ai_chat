@@ -10,11 +10,14 @@ const logger = require("../config/logger.config");
 module.exports.CheckUserChatMiddleWare = (isAnonymous = false) => {
   return async (req, res, next) => {
     const { chatId } = req.params;
-    const { userId } = req.user._id;
+    const userId = req.user._id;
+    logger.info("chat - middleware - CheckUserChatMiddleware");
     const isChatExist = await chatModel.findOne({ _id: chatId, user: userId });
-    if (!isChatExist)
-      return httpErrors.BadRequest("given chatId details not exist");
-
-    next();
+    if (isChatExist) {
+      req.orderQuestion = isChatExist.messages.length - 1;
+      next();
+    } else {
+      return next(httpErrors.BadRequest("given chatId details not exist"));
+    }
   };
 };
