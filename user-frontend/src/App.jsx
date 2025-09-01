@@ -6,13 +6,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { themeActions } from '@/redux/combineAction';
 import { getSessionStorageTheme } from '@/helpers/session-storage';
 import { useIsMobile } from '@/hooks/useMobile';
-import Login from './views/pages/login';
+import Login from './views/models/login';
 import { Toaster } from 'react-hot-toast';
+import Password from './views/models/Password';
 const OtherComponents = memo(() => {
   return (
     <>
       <Toaster />
       <Login />
+      <Password />
     </>
   );
 });

@@ -13,7 +13,12 @@ const FloatingInput = ({ label, type, value, onChange, visible, setVisible, onFo
         placeholder=" "
         className="peer w-full px-4 pt-5 pb-2 rounded-xs border border-gray-700 bg-gray-800 text-gray-100 placeholder-transparent focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none"
       />
-      <label className="absolute left-4 top-2.5 text-gray-400 text-sm transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-base peer-focus:top-2.5 peer-focus:text-sm peer-focus:text-purple-400">
+      <label
+        className="absolute left-3 top-3 text-gray-500 text-sm transition-all 
+                peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
+                peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary 
+                peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
+      >
         {label}
       </label>
 

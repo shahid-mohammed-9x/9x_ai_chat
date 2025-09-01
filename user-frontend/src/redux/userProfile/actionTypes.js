@@ -1,5 +1,8 @@
+import SetPassword from "@/views/models/Password";
+
 export const USERS_PROFILE = {
   Profile: '/my-profile',
+  SetPassword: '/set-password'
 };
 
 export const AUTH_ROUTES = {

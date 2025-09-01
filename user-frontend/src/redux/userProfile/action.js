@@ -24,6 +24,16 @@ const getUserProfileAction = () => async (dispatch) => {
   }
 };
 
+const setPasswordAction = (data) => async(dispatch)=>{
+  console.log("Password action", data)
+  dispatch({type: USER_PROFILE.request})
+  const response = await Service.fetchPost(
+    `${API.BASE_USER}${API.USERS_PROFILE.SetPassword}`, data
+  );
+
+  console.log(response)
+}
+
 const findUserEmailAction = async(email)=>{
   const json = {
     userInput : email,
@@ -51,6 +61,24 @@ const sendEmailVerificationAction = async(data)=>{
   return response;
 }
 
+const verifyEmailAction = (data) => async(dispatch)=>{
+  dispatch({ type: USER_PROFILE.request });
+  const response = await Service.fetchPost(
+    `${API.BASE_AUTH}${API.AUTH_ROUTES.verifyEmail}`, data
+  );
+  console.log(response)
+  if (response[0] === true) {
+    dispatch({ type: USER_PROFILE.success, payload: response[1].data });
+  } else {
+    dispatch({
+      type: USER_PROFILE.fail,
+      payload: response[1],
+    });
+  }
+
+};
+
+
 const clearUserProfileErrorsAction = () => (dispatch) => {
   dispatch({
     type: CLEAR_USER_PROFILE_ERRORS,
@@ -67,5 +95,7 @@ export default {
   resetUserProfileAction,
   findUserEmailAction,
   userLoginAction,
-  sendEmailVerificationAction
+  sendEmailVerificationAction,
+  verifyEmailAction,
+  setPasswordAction,
 };
