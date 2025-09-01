@@ -19,7 +19,7 @@ const themeSlice = createSlice({
       state.activeTheme = action.payload;
     },
 
-    openLoginPopup: (state, action)=>{
+    openLoginState: (state, action)=>{
       // return {...state, loginPopup:!stat.loginPopup}
       state.loginPopup = action.payload
     },
@@ -35,6 +35,6 @@ const themeSlice = createSlice({
   },
 });
 
-export const { setScreenSizeState, setActiveThemeState, updateThemeState, resetThemeState, openLoginPopup } =
+export const { setScreenSizeState, setActiveThemeState, updateThemeState, resetThemeState, openLoginState } =
   themeSlice.actions;
 export const themeReducerToolkit = themeSlice.reducer;

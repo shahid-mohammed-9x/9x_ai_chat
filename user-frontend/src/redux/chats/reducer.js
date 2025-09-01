@@ -1,10 +1,12 @@
-import { CHAT_LIST, CLEAR_CHAT_ERRORS, RESET_CHAT_STATE } from './constant';
+import { CHAT_LIST, CHAT_MESSAGES, CLEAR_CHAT_ERRORS, RESET_CHAT_STATE } from './constant';
 
 const initialState = {
   loading: false,
   error: null,
   statusCode: null,
   chatsList: null,
+  messageLoading: null,
+  chatMessages: null,
 };
 
 export const ChatsReducer = (state = initialState, action) => {
@@ -14,6 +16,10 @@ export const ChatsReducer = (state = initialState, action) => {
       ...state,
       loading: true,
     }),
+    [CHAT_MESSAGES.request]: () => ({
+      ...state,
+      messageLoading: true,
+    }),
 
     // Success state
     [CHAT_LIST.success]: () => ({
@@ -21,12 +27,23 @@ export const ChatsReducer = (state = initialState, action) => {
       loading: false, // Ensure loading is set to false on success
       chatsList: action.payload,
     }),
+    [CHAT_MESSAGES.success]: () => ({
+      ...state,
+      messageLoading: false, // Ensure loading is set to false on success
+      chatMessages: action.payload,
+    }),
 
     // Failure state
     [CHAT_LIST.fail]: () => ({
       ...state,
       loading: false,
       error: action?.payload?.message || 'Failed to load chats', // Default error message
+      statusCode: action?.payload?.statusCode || 500,
+    }),
+    [CHAT_MESSAGES.fail]: () => ({
+      ...state,
+      messageLoading: false,
+      error: action?.payload?.message || 'Failed to load messages chats', // Default error message
       statusCode: action?.payload?.statusCode || 500,
     }),
 

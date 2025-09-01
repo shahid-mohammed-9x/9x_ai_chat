@@ -18,6 +18,12 @@ const ModelSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    models: [
+      {
+        type: String,
+        enum: ["gpt", "gemini"],
+      },
+    ],
     responses: {
       gpt: {
         answer: {

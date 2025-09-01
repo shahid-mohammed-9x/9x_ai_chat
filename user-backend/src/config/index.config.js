@@ -18,4 +18,7 @@ module.exports = {
 
   // cors
   CORS_ALLOW_ORIGINS: process.env.ALLOW_ORIGINS_ACCESS || "[]",
+
+  // ai server configs
+  AI_API_URL: process.env.AI_API_URL || "http://10.10.1.65:8000",
 };

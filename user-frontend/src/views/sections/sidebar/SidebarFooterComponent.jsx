@@ -106,7 +106,7 @@ const SidebarFooterComponent = ({ user, logoutFunction, isSidebarOpen }) => {
             </Card>
           ) : null}
 
-          <Button onClick={() => dispatch(openLoginAction(true))}>
+          <Button onClick={() => dispatch(openLoginAction('true'))}>
             <Plus /> {isSidebarOpen && 'Login'}
           </Button>
         </SidebarMenu>

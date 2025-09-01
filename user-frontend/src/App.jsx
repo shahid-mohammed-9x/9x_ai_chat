@@ -7,6 +7,15 @@ import { themeActions } from '@/redux/combineAction';
 import { getSessionStorageTheme } from '@/helpers/session-storage';
 import { useIsMobile } from '@/hooks/useMobile';
 import Login from './views/pages/login';
+import { Toaster } from 'react-hot-toast';
+const OtherComponents = memo(() => {
+  return (
+    <>
+      <Toaster />
+      <Login />
+    </>
+  );
+});
 
 const App = () => {
   const dispatch = useDispatch();
@@ -48,7 +57,6 @@ const App = () => {
   return (
     <div className="app">
       <BrowserRouter>
-        <Login />
         <Routes>
           {allRoutesMapper?.map((singleRoute) => (
             <Route
@@ -59,6 +67,7 @@ const App = () => {
           ))}
         </Routes>
       </BrowserRouter>
+      <OtherComponents />
     </div>
   );
 };
