@@ -6,6 +6,8 @@ import { Menu, X } from 'lucide-react';
 import { ArrowUp } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { themeActions } from '@/redux/combineAction';
+import { getAccessToken } from '@/helpers/local-storage';
+import { Button } from '@/components/ui/button';
 
 const navLinks = [
   { name: 'About', href: '#' },
@@ -15,6 +17,7 @@ const navLinks = [
 
 const Home = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const token = getAccessToken();
   const baseLink = 'text-gray-400 hover:text-white transition duration-200';
   const { openLoginAction } = themeActions;
   const dispatch = useDispatch();
@@ -42,12 +45,14 @@ const Home = () => {
 
         {/* Get Started Button */}
         <div className="hidden md:block">
-          <button
+          <Button
             className="bg-primary text-white-900 font-semibold py-2 px-6 rounded-lg hover:bg-gray-600 transition"
-            onClick={() => dispatch(openLoginAction('true'))}
+            onClick={() => {
+              token ? '' : dispatch(openLoginAction('true'));
+            }}
           >
-            Login
-          </button>
+            {token ? 'Logout' : 'Login'}
+          </Button>
         </div>
 
         {/* Mobile Menu Button */}

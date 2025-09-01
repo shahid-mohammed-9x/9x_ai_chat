@@ -2,11 +2,10 @@ import Home from '@/views/pages/Home';
 import Chat from './views/pages/Chat';
 import AuthWrapper from './views/wrappers/AuthWrapper';
 import ChatWrapper from './views/wrappers/ChatWrapper';
-import Login from './views/pages/login';
+import Login from './views/models/login';
 import NewChat from './views/pages/NewChat';
 import ProfilePage from './views/pages/ProfilePage';
-import SetPassword from './views/pages/SetPassword';
-import SetPasswordModalWrapper from './views/pages/SetPasswordModalWrapper';
+
 const allRoutesMapper = [
   {
     path: '/',
@@ -36,10 +35,6 @@ const allRoutesMapper = [
   {
     path: '/profile',
     component: <ProfilePage />,
-  },
-  {
-    path: '/set-password',
-    component: <SetPasswordModalWrapper />,
   },
 ];
 

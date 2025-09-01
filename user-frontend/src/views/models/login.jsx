@@ -23,28 +23,35 @@ import {
 import toast from 'react-hot-toast';
 
 function LoginModal() {
-  const { findUserEmailAction, userLoginAction, sendEmailVerificationAction } = userActions;
-  const { openLoginAction } = themeActions;
+  const { findUserEmailAction, userLoginAction, sendEmailVerificationAction, verifyEmailAction } =
+    userActions;
+  const { openLoginAction, openPasswordAction } = themeActions;
   const { loginPopup } = useSelector((state) => state.themeState);
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [data, setData] = useState(null);
+  const [otp, setOTP] = useState('');
 
-  const handleVerify = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await findUserEmailAction(email);
+    console.log(res);
     if (res[0] && res[1]?.success) setData(res[1]?.data);
-    if (!res[1]?.success && !res[1]?.data?.isPasswordSet) {
+    // userExists: true, isPasswordSet: false, isEmailVerified: false
+    if (!res[1]?.data?.isPasswordSet) {
       let data = {
         email: email,
       };
       let emailRes = await sendEmailVerificationAction(data);
-      console.log(emailRes);
-      if (res[0] && res[1]?.success) toast.success('Email Veification OTP Send Successfully..');
+      if (emailRes[0] && emailRes[1]?.success)
+        toast.success('Email Veification OTP Send Successfully..');
     }
-    console.log(res);
+    if (!res[1]?.data?.isPasswordSet && res[1]?.data?.userExists && res[1]?.data?.isEmailVerified) {
+      dispatch(openPasswordAction('true'));
+      dispatch(openLoginAction('false'));
+    }
   };
 
   const handleLogin = async (e) => {
@@ -56,8 +63,22 @@ function LoginModal() {
     const res = await userLoginAction(data);
     if (res[0]) {
       setAccessToken(res[1]?.token);
-      dispatch(openLoginPopup('false'));
+      dispatch(openLoginAction('false'));
     }
+  };
+
+  const handleVerify = async (e) => {
+    console.log(otp);
+    e.preventDefault();
+    const data = {
+      email: email,
+      otp: otp,
+    };
+    dispatch(verifyEmailAction(data)).then(() => {
+      dispatch(openPasswordAction('true'));
+      dispatch(openLoginAction('false'));
+      toast.success('Done with Email verification!, Set Your UserName and Password');
+    });
   };
 
   return (
@@ -133,8 +154,8 @@ function LoginModal() {
             </div>
 
             {/* OTP Input */}
-            {!data?.userExist && !data?.isPasswordSet && data != null && (
-              <InputOTP maxLength={6}>
+            {!data?.isPasswordSet && !data?.isEmailVerified && (
+              <InputOTP maxLength={6} value={otp} onChange={(value) => setOTP(value)}>
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
@@ -150,7 +171,7 @@ function LoginModal() {
             )}
             {/* Password Input */}
 
-            {data?.isPasswordSet && data?.userExist && (
+            {data?.isPasswordSet && data?.userExists && (
               <div className="relative w-full sm:w-[70%] md:w-[55%]">
                 <Input
                   type="password"
@@ -173,21 +194,38 @@ function LoginModal() {
             )}
 
             {/* Submit Button */}
-            {/* <Button
-              className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
-               bg-gray-700 text-white hover:bg-gray-600 rounded-lg shadow mt-4"
-              onClick={data?.isPasswordSet ? handleLogin : handleVerify}
-            >
-              <span className="sm:inline">{data?.isPasswordSet ? 'Login' : 'Verify'}</span>
-            </Button> */}
-            <Button
-              className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
+            {data?.isPasswordSet && data?.userExists && (
+              <Button
+                className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
+              bg-[#FFD700] text-black hover:bg-[#E6C200] 
+              rounded-lg shadow mt-4"
+                onClick={handleLogin}
+              >
+                <span className="sm:inline">Login</span>
+              </Button>
+            )}
+
+            {data != null && data?.userExists && !data?.isEmailVerified && (
+              <Button
+                className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
+              bg-[#FFD700] text-black hover:bg-[#E6C200] 
+              rounded-lg shadow mt-4"
+                onClick={handleVerify}
+              >
+                <span className="sm:inline"> Verify</span>
+              </Button>
+            )}
+
+            {data == null && (
+              <Button
+                className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
              bg-[#FFD700] text-black hover:bg-[#E6C200] 
              rounded-lg shadow mt-4"
-              onClick={data?.isPasswordSet ? handleLogin : handleVerify}
-            >
-              <span className="sm:inline">{data?.isPasswordSet ? 'Login' : 'Verify'}</span>
-            </Button>
+                onClick={handleSubmit}
+              >
+                <span className="sm:inline">Submit</span>
+              </Button>
+            )}
           </div>
         </DialogContent>
       </Dialog>

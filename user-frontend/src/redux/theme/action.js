@@ -3,7 +3,8 @@ import {
   setActiveThemeState,
   updateThemeState,
   resetThemeState,
-  openLoginState
+  openLoginState,
+  openPasswordState
 } from "./reducer";
 import { setSessionStorageTheme } from "@/helpers/session-storage";
 
@@ -35,10 +36,18 @@ const openLoginAction =(value) =>(dispatch)=>{
   else dispatch(openLoginState(false));
 }
 
+const openPasswordAction = (value)=>(dispatch) =>{
+  if(value == 'true')
+    dispatch(openPasswordState(true))
+  else dispatch(openPasswordState(false));
+}
+
+
 export default {
   setScreenSizeAction,
   setActiveThemeAction,
   updateThemeAction,
   resetThemeAction,
-  openLoginAction
+  openLoginAction,
+  openPasswordAction
 };
