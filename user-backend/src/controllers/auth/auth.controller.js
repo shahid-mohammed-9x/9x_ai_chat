@@ -37,6 +37,7 @@ const checkUserController = async (req, res, next) => {
       data: {
         userExists: !!userExist,
         isPasswordSet: userExist?.password ? true : false,
+        isEmailVerified: userExist?.isEmailVerified,
       },
     });
   } catch (error) {
