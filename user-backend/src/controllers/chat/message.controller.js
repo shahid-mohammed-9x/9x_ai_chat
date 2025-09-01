@@ -36,6 +36,9 @@ const newQuestionController = async (req, res, next) => {
 
     const messageDetails = new messageModel(details);
     await messageDetails.save();
+    await chatModel.findByIdAndUpdate(chatId, {
+      $push: { messages: messageDetails._id },
+    });
 
     const json = {
       question,
@@ -46,6 +49,7 @@ const newQuestionController = async (req, res, next) => {
       models: ["gemini"],
     };
 
+    // calling ai api without waiting
     axiosService.fetchPost("/chat", json);
 
     logger.info(
@@ -70,8 +74,6 @@ const callBackMessageResponseController = async (req, res, next) => {
       "controller - chat - messsage.controller - callBackMessageResponseController - start"
     );
 
-    console.log(req.body);
-    // return res.status(200);
     const { token_usage, answer, messageId, model } = req.body;
 
     const messageExist = await messageModel.findById(messageId);
