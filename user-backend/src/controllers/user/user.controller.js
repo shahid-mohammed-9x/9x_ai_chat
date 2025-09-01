@@ -37,7 +37,7 @@ const setPasswordController = async (req, res, next) => {
     logger.info(
       "controller - users - user.controller - setPasswordController - start"
     );
-    const { password } = req.body;
+    const { password, fullName } = req.body;
 
     const isUserExist = await userModel
       .findById(req.user._id)
@@ -47,6 +47,7 @@ const setPasswordController = async (req, res, next) => {
       return next(httpErrors.BadRequest("Password already set"));
 
     isUserExist.password = password;
+    isUserExist.fullName = fullName;
     await isUserExist.save();
 
     logger.info(

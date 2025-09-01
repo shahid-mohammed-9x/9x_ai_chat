@@ -11,6 +11,7 @@ const setPasswordValidation = celebrate({
       .messages({
         "string.pattern.base": `"password" must contain at least one uppercase letter, one lowercase letter, one number, and one special character`,
       }),
+    fullName: Joi.string().required().min(3).label("fullName"),
   })
     .required()
     .label("body"),
