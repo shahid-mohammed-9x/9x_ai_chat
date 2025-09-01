@@ -42,7 +42,7 @@ const AIResponses = ({ docs, chatDetails, profileDetails }) => {
           {/* AI Responses */}
           <div className="w-full shadow-2xl rounded-2xl">
             <div className="flex flex-row gap-4 p-4 overflow-x-auto min-h-[600px] no-scrollbar snap-x snap-mandatory">
-              {chatDetails?.models?.map((singleAiModel, i) => {
+              {singleMessage?.models?.map((singleAiModel, i) => {
                 const answer = singleMessage?.responses?.[singleAiModel]?.answer ?? null;
                 return (
                   <div
