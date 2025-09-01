@@ -34,16 +34,17 @@ function LoginModal() {
 
   const handleVerify = async (e) => {
     e.preventDefault();
-    let res = await findUserEmailAction(email);
+    const res = await findUserEmailAction(email);
     if (res[0] && res[1]?.success) setData(res[1]?.data);
     if (!res[1]?.success && !res[1]?.data?.isPasswordSet) {
       let data = {
         email: email,
       };
-      res = await sendEmailVerificationAction(data);
-
+      let emailRes = await sendEmailVerificationAction(data);
+      console.log(emailRes);
       if (res[0] && res[1]?.success) toast.success('Email Veification OTP Send Successfully..');
     }
+    console.log(res);
   };
 
   const handleLogin = async (e) => {
@@ -61,7 +62,6 @@ function LoginModal() {
 
   return (
     <div>
-      <Dialog open={loginPopup} onOpenChange={() => dispatch(openLoginAction('false'))}>
       <Dialog open={loginPopup} onOpenChange={() => dispatch(openLoginAction('false'))}>
         <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-md" />
 
@@ -133,7 +133,6 @@ function LoginModal() {
             </div>
 
             {/* OTP Input */}
-            {!data?.userExist && !data?.isPasswordSet && data != null && (
             {!data?.userExist && !data?.isPasswordSet && data != null && (
               <InputOTP maxLength={6}>
                 <InputOTPGroup>
