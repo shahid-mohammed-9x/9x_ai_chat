@@ -10,6 +10,7 @@ const responseHandlerUtil = require("../../utils/responseHandler.util");
 // constants
 const sortConstants = require("../../constants/sort.constants");
 const axiosService = require("../../services/axios.service");
+const summaryModel = require("../../schema/summary.model");
 
 // new question
 const newQuestionController = async (req, res, next) => {
@@ -40,12 +41,18 @@ const newQuestionController = async (req, res, next) => {
       $push: { messages: messageDetails._id },
     });
 
+    const summaryData = await summaryModel.findOne({ chat: chatId });
+
+    const context = models?.map((model) => ({
+      model: summaryData?.summaries?.[model]?.summary || null,
+    }));
+
     const json = {
       question,
       userId,
       chatId,
       messageId: messageDetails?._id,
-      context: null,
+      context,
       models: ["gemini"],
     };
 
@@ -87,7 +94,7 @@ const callBackMessageResponseController = async (req, res, next) => {
       token_usage,
     };
 
-    messageExist.save();
+    await messageExist.save();
 
     logger.info(
       "controller - chat - messsage.controller - callBackMessageResponseController - end"
@@ -109,8 +116,13 @@ const callBackSummaryResponseController = async (req, res, next) => {
     logger.info(
       "controller - chat - messsage.controller - callBackSummaryResponseController - start"
     );
-    // const { model } = req.params;
-    console.log(req.body);
+    const { question, token_usage, model, chatId } = req.body;
+    // console.log(req.body);
+    const key = `summaries.${model}`;
+    await summaryModel.findOneAndUpdate(
+      { chat: chatId },
+      { $set: { [key]: { question, token_usage } } }
+    );
 
     logger.info(
       "controller - chat - messsage.controller - callBackSummaryResponseController - end"
