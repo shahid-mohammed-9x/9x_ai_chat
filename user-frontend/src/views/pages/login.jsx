@@ -14,10 +14,17 @@ import { Shield } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userActions, themeActions } from '@/redux/combineAction';
 import { setAccessToken } from '@/helpers/local-storage';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
+import toast from 'react-hot-toast';
 
 function LoginModal() {
-  const { findUserEmailAction, userLoginAction } = userActions;
-  const { openLoginPopup } = themeActions;
+  const { findUserEmailAction, userLoginAction, sendEmailVerificationAction } = userActions;
+  const { openLoginAction } = themeActions;
   const { loginPopup } = useSelector((state) => state.themeState);
   const dispatch = useDispatch();
 
@@ -25,10 +32,18 @@ function LoginModal() {
   const [password, setPassword] = useState('');
   const [data, setData] = useState(null);
 
-  const handleSubmit = async (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
-    const res = await findUserEmailAction(email);
-    if (res[0]) setData(res[1]?.data);
+    let res = await findUserEmailAction(email);
+    if (res[0] && res[1]?.success) setData(res[1]?.data);
+    if (!res[1]?.success && !res[1]?.data?.isPasswordSet) {
+      let data = {
+        email: email,
+      };
+      res = await sendEmailVerificationAction(data);
+
+      if (res[0] && res[1]?.success) toast.success('Email Veification OTP Send Successfully..');
+    }
   };
 
   const handleLogin = async (e) => {
@@ -46,7 +61,8 @@ function LoginModal() {
 
   return (
     <div>
-      <Dialog open={loginPopup} onOpenChange={() => dispatch(openLoginPopup('false'))}>
+      <Dialog open={loginPopup} onOpenChange={() => dispatch(openLoginAction('false'))}>
+      <Dialog open={loginPopup} onOpenChange={() => dispatch(openLoginAction('false'))}>
         <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-md" />
 
         <DialogContent
@@ -117,7 +133,8 @@ function LoginModal() {
             </div>
 
             {/* OTP Input */}
-            {!data?.userExist && !data?.isPasswordSet && (
+            {!data?.userExist && !data?.isPasswordSet && data != null && (
+            {!data?.userExist && !data?.isPasswordSet && data != null && (
               <InputOTP maxLength={6}>
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
@@ -160,9 +177,9 @@ function LoginModal() {
             <Button
               className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
                bg-gray-700 text-white hover:bg-gray-600 rounded-lg shadow mt-4"
-              onClick={data?.isPasswordSet ? handleLogin : handleSubmit}
+              onClick={data?.isPasswordSet ? handleLogin : handleVerify}
             >
-              <span className="sm:inline">{data?.isPasswordSet ? 'Login' : 'Submit'}</span>
+              <span className="sm:inline">{data?.isPasswordSet ? 'Login' : 'Verify'}</span>
             </Button>
           </div>
         </DialogContent>

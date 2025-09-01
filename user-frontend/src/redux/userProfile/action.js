@@ -43,6 +43,14 @@ const userLoginAction = async(data)=>{
   return response;
 }
 
+const sendEmailVerificationAction = async(data)=>{
+  console.log(data, "sending email verification")
+  const response = await Service.fetchPost(
+      `${API.BASE_AUTH}${API.AUTH_ROUTES.sendEmailOTP}`, data
+  );
+  return response;
+}
+
 const clearUserProfileErrorsAction = () => (dispatch) => {
   dispatch({
     type: CLEAR_USER_PROFILE_ERRORS,
@@ -58,5 +66,6 @@ export default {
   clearUserProfileErrorsAction,
   resetUserProfileAction,
   findUserEmailAction,
-  userLoginAction
+  userLoginAction,
+  sendEmailVerificationAction
 };
