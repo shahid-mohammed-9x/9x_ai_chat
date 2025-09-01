@@ -119,10 +119,14 @@ const callBackSummaryResponseController = async (req, res, next) => {
     const { question, token_usage, model, chatId } = req.body;
     // console.log(req.body);
     const key = `summaries.${model}`;
-    await summaryModel.findOneAndUpdate(
+    const summaryExist = await summaryModel.findOneAndUpdate(
       { chat: chatId },
       { $set: { [key]: { question, token_usage } } }
     );
+
+    if (!summaryExist) {
+      return next(httpErrors.BadRequest("summary not found"));
+    }
 
     logger.info(
       "controller - chat - messsage.controller - callBackSummaryResponseController - end"
