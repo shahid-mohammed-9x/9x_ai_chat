@@ -173,9 +173,17 @@ function LoginModal() {
             )}
 
             {/* Submit Button */}
-            <Button
+            {/* <Button
               className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
                bg-gray-700 text-white hover:bg-gray-600 rounded-lg shadow mt-4"
+              onClick={data?.isPasswordSet ? handleLogin : handleVerify}
+            >
+              <span className="sm:inline">{data?.isPasswordSet ? 'Login' : 'Verify'}</span>
+            </Button> */}
+            <Button
+              className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
+             bg-[#FFD700] text-black hover:bg-[#E6C200] 
+             rounded-lg shadow mt-4"
               onClick={data?.isPasswordSet ? handleLogin : handleVerify}
             >
               <span className="sm:inline">{data?.isPasswordSet ? 'Login' : 'Verify'}</span>
