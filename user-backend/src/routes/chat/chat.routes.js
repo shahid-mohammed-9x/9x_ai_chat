@@ -18,6 +18,7 @@ const {
   newQuestionController,
   callBackMessageResponseController,
   callBackSummaryResponseController,
+  pollingAnswerController,
 } = require("../../controllers/chat/message.controller");
 const {
   CheckUserChatMiddleWare,
@@ -56,5 +57,7 @@ ChatRoutes.route("/callback/answer-response").post(
 ChatRoutes.route("/callback/summary-response").post(
   callBackSummaryResponseController
 );
+
+ChatRoutes.route("/polling").get(pollingAnswerController);
 
 module.exports = ChatRoutes;

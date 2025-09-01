@@ -2,6 +2,7 @@ const httpErrors = require("http-errors");
 // models
 const chatModel = require("../../schema/chat.model");
 const messageModel = require("../../schema/message.model");
+const summaryModel = require("../../schema/summary.model");
 // config
 const logger = require("../../config/logger.config");
 // utils
@@ -10,7 +11,6 @@ const responseHandlerUtil = require("../../utils/responseHandler.util");
 // constants
 const sortConstants = require("../../constants/sort.constants");
 const axiosService = require("../../services/axios.service");
-const summaryModel = require("../../schema/summary.model");
 
 // new question
 const newQuestionController = async (req, res, next) => {
@@ -76,6 +76,7 @@ const newQuestionController = async (req, res, next) => {
   }
 };
 
+// call-back message answer for ai-server
 const callBackMessageResponseController = async (req, res, next) => {
   try {
     logger.info(
@@ -112,6 +113,7 @@ const callBackMessageResponseController = async (req, res, next) => {
   }
 };
 
+// call-back summary for ai-server
 const callBackSummaryResponseController = async (req, res, next) => {
   try {
     logger.info(
@@ -144,8 +146,43 @@ const callBackSummaryResponseController = async (req, res, next) => {
   }
 };
 
+// polling
+const pollingAnswerController = async (req, res, next) => {
+  try {
+    logger.info(
+      "controller - chat - messsage.controller - pollingAnswerController - start"
+    );
+    // const { messageId } = req.params;
+    const { userId, messageId } = req.query;
+    const messsageExist = await messageModel
+      .findOne({ _id: messageId, user: userId })
+      .lean();
+    if (!messsageExist) {
+      return next(httpErrors.BadRequest("message details not exist"));
+    }
+
+    logger.info(
+      "controller - chat - messsage.controller - pollingAnswerController - end"
+    );
+
+    // const isRecievedAllResponses = messsageExist.map(item=>item?.[model]?.)
+
+    responseHandlerUtil.successResponseStandard(res, {
+      message: "ok",
+      data: messsageExist,
+    });
+  } catch (error) {
+    logger.error(
+      "controller - chat - message.controller - pollingAnswerController - error",
+      error
+    );
+    errorHandling.handleCustomErrorService(error, next);
+  }
+};
+
 module.exports = {
   newQuestionController,
   callBackMessageResponseController,
   callBackSummaryResponseController,
+  pollingAnswerController,
 };
