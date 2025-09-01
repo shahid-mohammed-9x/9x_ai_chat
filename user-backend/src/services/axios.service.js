@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { AI_API_URL } = require("../config/index.config");
+const logger = require("../config/logger.config");
 
 class AxiosConfig {
   constructor() {
@@ -202,7 +203,8 @@ const axiosService = {
 };
 
 const onFailure = async (res, url, error) => {
-  console.log("API FAILED " + url, error);
+  logger.error("API FAILED ", error);
+  console.log("API FAILED " + url, error?.message);
 };
 
 module.exports = axiosService;

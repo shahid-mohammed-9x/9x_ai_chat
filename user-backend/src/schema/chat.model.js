@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { user, chat } = require("../constants/model.constants");
+const { user, chat, summary } = require("../constants/model.constants");
 
 const ModelSchema = new mongoose.Schema(
   {
@@ -19,6 +19,11 @@ const ModelSchema = new mongoose.Schema(
     isAnonymous: {
       type: Boolean,
       default: true,
+    },
+    summary: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: summary,
+      default: null,
     },
     messages: [
       {

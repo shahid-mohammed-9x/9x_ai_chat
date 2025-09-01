@@ -3,4 +3,5 @@ module.exports = {
   otp: "otp",
   chat: "chat",
   message: "message",
+  summary: "summary",
 };

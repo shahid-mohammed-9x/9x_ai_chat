@@ -10,6 +10,7 @@ const responseHandlerUtil = require("../../utils/responseHandler.util");
 // constants
 const sortConstants = require("../../constants/sort.constants");
 const axiosService = require("../../services/axios.service");
+const summaryModel = require("../../schema/summary.model");
 
 // create chat controller
 const createChatController = async (req, res, next) => {
@@ -44,13 +45,21 @@ const createChatController = async (req, res, next) => {
 
     const newMessage = new messageModel(newMessageDetails);
     const newChat = new chatModel(newChatDetails);
+    const summaryDetails = {
+      userId,
+      chat: newChat?._id,
+      summaries: models.reduce((acc, model) => (acc[model] = null), {}),
+    };
+    const newSummary = new summaryModel(summaryDetails);
 
     newMessage.chat = newChat._id;
     newChat.messages.push(newMessage._id);
+    newChat.summary = newSummary._id;
     userId && (newChat.user = userId);
 
     await newMessage.save();
     await newChat.save();
+    await newSummary.save();
 
     const json = {
       question,
