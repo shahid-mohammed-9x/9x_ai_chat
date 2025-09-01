@@ -31,7 +31,7 @@ const newQuestionController = async (req, res, next) => {
         acc[model] = { answer: null, token_usage: {} };
         return acc;
       }, {}),
-      order: req.orderQuestion,
+      order: req.orderQuestion + 1,
     };
 
     const messageDetails = new messageModel(details);

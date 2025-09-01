@@ -9,6 +9,7 @@ const errorHandling = require("../../utils/errorHandling.util");
 const responseHandlerUtil = require("../../utils/responseHandler.util");
 // constants
 const sortConstants = require("../../constants/sort.constants");
+const axiosService = require("../../services/axios.service");
 
 // create chat controller
 const createChatController = async (req, res, next) => {
@@ -50,6 +51,18 @@ const createChatController = async (req, res, next) => {
 
     await newMessage.save();
     await newChat.save();
+
+    const json = {
+      question,
+      userId,
+      chatId: newChat._id,
+      messageId: newMessage?._id,
+      context: null,
+      models: ["gemini"],
+    };
+
+    // calling ai api without waiting
+    axiosService.fetchPost("/chat", json);
 
     // calling an api of ai chat here
 
