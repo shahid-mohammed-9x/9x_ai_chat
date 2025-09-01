@@ -165,11 +165,16 @@ const pollingAnswerController = async (req, res, next) => {
       "controller - chat - messsage.controller - pollingAnswerController - end"
     );
 
-    // const isRecievedAllResponses = messsageExist.map(item=>item?.[model]?.)
+    let isRecievedAllResponses = messsageExist?.models?.map((item) =>
+      messsageExist?.responses?.[item]?.answer ? true : false
+    );
+
+    isRecievedAllResponses = isRecievedAllResponses.every((item) => item);
 
     responseHandlerUtil.successResponseStandard(res, {
       message: "ok",
       data: messsageExist,
+      otherData: { isRecievedAllResponses },
     });
   } catch (error) {
     logger.error(
