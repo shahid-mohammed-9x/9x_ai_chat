@@ -110,7 +110,7 @@ const processResponse = async (response) => {
 
 const apiFetch = new RequestMethodInstance();
 
-const Service = {
+const axiosService = {
   fetchGet: async (
     url,
     token = null,
@@ -123,11 +123,6 @@ const Service = {
       const response = await apiFetch.getMethod(endpoint, headers);
       return processResponse(response);
     } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log(`Request to ${url} was cancelled`);
-        // Return a specific value or throw a custom error to indicate cancellation
-        return [false, { message: "api is aborted" }];
-      }
       onFailure("network", url);
       return processResponse(error?.response || error);
     }
@@ -138,7 +133,7 @@ const Service = {
     body,
     token = null,
     contentType = "json",
-    accessPoint = "server"
+    accessPoint = "ai"
   ) => {
     try {
       const endpoint = ApiUrlMapper[accessPoint] + url;
@@ -146,7 +141,7 @@ const Service = {
       const response = await apiFetch.postMethod(endpoint, body, headers);
       return processResponse(response);
     } catch (error) {
-      onFailure("network", url);
+      onFailure("network", url, error);
       return processResponse(error?.response || error);
     }
   },
@@ -156,7 +151,7 @@ const Service = {
     body = null,
     token = null,
     contentType = "json",
-    accessPoint = "server"
+    accessPoint = "ai"
   ) => {
     try {
       const endpoint = ApiUrlMapper[accessPoint] + url;
@@ -174,7 +169,7 @@ const Service = {
     body = null,
     token = null,
     contentType = "json",
-    accessPoint = "server"
+    accessPoint = "ai"
   ) => {
     try {
       const endpoint = ApiUrlMapper[accessPoint] + url;
@@ -192,7 +187,7 @@ const Service = {
     token = null,
     body = {},
     contentType = "json",
-    accessPoint = "server"
+    accessPoint = "ai"
   ) => {
     try {
       const endpoint = ApiUrlMapper[accessPoint] + url;
@@ -206,8 +201,8 @@ const Service = {
   },
 };
 
-const onFailure = async (res, url) => {
-  console.log("API FAILED " + url);
+const onFailure = async (res, url, error) => {
+  console.log("API FAILED " + url, error);
 };
 
-module.exports = Service;
+module.exports = axiosService;

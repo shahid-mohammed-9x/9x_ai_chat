@@ -14,6 +14,9 @@ const {
   chatsListValidation,
   messageListValidation,
 } = require("../../validators/chat/chat.validation");
+const {
+  newQuestionController,
+} = require("../../controllers/chat/message.controller");
 
 const ChatRoutes = express.Router();
 
@@ -33,6 +36,11 @@ ChatRoutes.route("/chat-messages/:chatId").get(
   Authentication,
   messageListValidation,
   messageListController
+);
+
+ChatRoutes.route("/:chatId/new-question").post(
+  Authentication,
+  newQuestionController
 );
 
 module.exports = ChatRoutes;
