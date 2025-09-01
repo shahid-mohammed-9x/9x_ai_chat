@@ -5,6 +5,8 @@ import ChatWrapper from './views/wrappers/ChatWrapper';
 import Login from './views/pages/login';
 import NewChat from './views/pages/NewChat';
 import ProfilePage from './views/pages/ProfilePage';
+import SetPassword from './views/pages/SetPassword';
+import SetPasswordModalWrapper from './views/pages/SetPasswordModalWrapper';
 const allRoutesMapper = [
   {
     path: '/',
@@ -34,6 +36,10 @@ const allRoutesMapper = [
   {
     path: '/profile',
     component: <ProfilePage />,
+  },
+  {
+    path: '/set-password',
+    component: <SetPasswordModalWrapper />,
   },
 ];
 
