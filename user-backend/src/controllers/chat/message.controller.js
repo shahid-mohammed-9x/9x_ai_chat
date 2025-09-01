@@ -64,7 +64,8 @@ const newQuestionController = async (req, res, next) => {
     );
     responseHandlerUtil.successResponseStandard(res, {
       message: "Success new question is created",
-      // data: response,
+      data: messageDetails,
+      otherData: { pollingId: messageDetails?._id },
     });
   } catch (error) {
     logger.error(

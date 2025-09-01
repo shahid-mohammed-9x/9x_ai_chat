@@ -81,6 +81,7 @@ const createChatController = async (req, res, next) => {
     responseHandlerUtil.successResponseStandard(res, {
       message: "successfully public chat created",
       data: newChat,
+      otherData: { pollingId: newMessage?._id },
     });
   } catch (error) {
     logger.error(
