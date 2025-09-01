@@ -70,7 +70,7 @@ const Home = () => {
             ))}
             <button className="bg-primary text-gray-900 font-semibold py-2 px-6 rounded-lg hover:bg-gray-200 transition">
               {' '}
-              Get Started
+              Login
             </button>
           </div>
         )}
