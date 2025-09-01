@@ -15,10 +15,11 @@ const Chat = () => {
   const { chatMessages, messageLoading, error, statusCode } = useSelector(
     (state) => state.chatsState
   );
+  const { profileDetails } = useSelector((state) => state.userProfileState);
 
   useEffect(() => {
     if (chatId && (!chatMessages || !chatMessages?.chatDetails?._id !== chatId)) {
-      fetchChatMessageFunction();
+      profileDetails ? fetchChatMessageFunction() : null;
     }
   }, [chatId]);
 

@@ -22,6 +22,7 @@ const createChatController = async (req, res, next) => {
     const newMessageDetails = {
       user: userId,
       question: question,
+      models,
       responses: models.reduce((acc, model) => {
         acc[model] = { answer: null, inputTokens: 0, outputTokens: 0 };
         return acc;
@@ -32,14 +33,13 @@ const createChatController = async (req, res, next) => {
     const newChatDetails = {
       title: question.substring(0, 50),
       isAnonymous: !userId,
-      models,
     };
 
     const newMessage = new messageModel(newMessageDetails);
     const newChat = new chatModel(newChatDetails);
 
     newMessage.chat = newChat._id;
-    newChat.responses.push(newMessage._id);
+    newChat.messages.push(newMessage._id);
     userId && (newChat.user = userId);
 
     await newMessage.save();
@@ -146,7 +146,7 @@ const messageListController = async (req, res, next) => {
       .find(query)
       .skip(skip_docs)
       .limit(limit)
-      .select("responses question order")
+      .select("responses question models order")
       .sort(sortConstants[sort] || sortConstants["-createdAt"]);
 
     const hasNext = totalDocs > skip_docs + limit;
