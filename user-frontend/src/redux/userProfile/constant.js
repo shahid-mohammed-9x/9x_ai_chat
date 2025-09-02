@@ -1,7 +1,10 @@
+import { update } from "lodash";
+
 export const USER_PROFILE = {
   request: "USER_PROFILE_REQUEST",
   success: "USER_PROFILE_SUCCESS",
   fail: "USER_PROFILE_FAIL",
+  update: "USER_PROFILE_UPDATE"
 };
 
 export const CLEAR_USER_PROFILE_ERRORS = "CLEAR_USER_PROFILE_ERRORS";

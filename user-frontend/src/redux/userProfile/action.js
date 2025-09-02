@@ -5,7 +5,7 @@ import {
 } from "./constant";
 import Service from "../../services";
 import * as API from "./actionTypes";
-import { getAccessToken } from "../../helpers/local-storage";
+import { getAccessToken, setAccessToken } from "../../helpers/local-storage";
 
 const getUserProfileAction = () => async (dispatch) => {
   dispatch({ type: USER_PROFILE.request });
@@ -25,13 +25,21 @@ const getUserProfileAction = () => async (dispatch) => {
 };
 
 const setPasswordAction = (data) => async(dispatch)=>{
+  const token = getAccessToken();
   console.log("Password action", data)
   dispatch({type: USER_PROFILE.request})
   const response = await Service.fetchPost(
-    `${API.BASE_USER}${API.USERS_PROFILE.SetPassword}`, data
+    `${API.BASE_USER}${API.USERS_PROFILE.SetPassword}`, data, token
   );
 
-  console.log(response)
+  if (response[0] === true) {
+    dispatch({ type: USER_PROFILE.update, payload: data });
+  } else {
+    dispatch({
+      type: USER_PROFILE.fail,
+      payload: response[1],
+    });
+  }
 }
 
 const findUserEmailAction = async(email)=>{
@@ -68,7 +76,8 @@ const verifyEmailAction = (data) => async(dispatch)=>{
   );
   console.log(response)
   if (response[0] === true) {
-    dispatch({ type: USER_PROFILE.success, payload: response[1].data });
+    setAccessToken(response[1]?.token)
+    dispatch({ type: USER_PROFILE.success, payload: data });
   } else {
     dispatch({
       type: USER_PROFILE.fail,

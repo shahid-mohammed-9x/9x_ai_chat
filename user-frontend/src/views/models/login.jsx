@@ -21,6 +21,7 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 function LoginModal() {
   const { findUserEmailAction, userLoginAction, sendEmailVerificationAction, verifyEmailAction } =
@@ -34,13 +35,17 @@ function LoginModal() {
   const [data, setData] = useState(null);
   const [otp, setOTP] = useState('');
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await findUserEmailAction(email);
-    console.log(res);
-    if (res[0] && res[1]?.success) setData(res[1]?.data);
-    // userExists: true, isPasswordSet: false, isEmailVerified: false
-    if (!res[1]?.data?.isPasswordSet) {
+
+    if (res[0]) setData(res[1]?.data);
+    // isEmailVerified: false;
+    // isPasswordSet: false;
+    // userExists: false;
+    if (!res[1]?.data?.isPasswordSet && !res[1]?.data?.isEmailVerified) {
       let data = {
         email: email,
       };
@@ -63,12 +68,12 @@ function LoginModal() {
     const res = await userLoginAction(data);
     if (res[0]) {
       setAccessToken(res[1]?.token);
+      navigate('/new-chat');
       dispatch(openLoginAction('false'));
     }
   };
 
   const handleVerify = async (e) => {
-    console.log(otp);
     e.preventDefault();
     const data = {
       email: email,
@@ -154,7 +159,7 @@ function LoginModal() {
             </div>
 
             {/* OTP Input */}
-            {!data?.isPasswordSet && !data?.isEmailVerified && (
+            {!data?.isPasswordSet && !data?.isEmailVerified && data != null && (
               <InputOTP maxLength={6} value={otp} onChange={(value) => setOTP(value)}>
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
@@ -205,7 +210,7 @@ function LoginModal() {
               </Button>
             )}
 
-            {data != null && data?.userExists && !data?.isEmailVerified && (
+            {data != null && !data?.isEmailVerified && (
               <Button
                 className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
               bg-[#FFD700] text-black hover:bg-[#E6C200] 

@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import twittertrans from '@/assets/modelIcons/twittertrans.png';
 import linkedinlogo from '@/assets/modelIcons/linkedinlogo.png';
 import insta from '@/assets/modelIcons/insta.jpg';
+import toast from 'react-hot-toast';
 
 const navLinks = [
   { name: 'About', href: '#' },
@@ -29,17 +30,15 @@ const socialLinks = [
   className="mt-4 flex flex-col sm:flex-row gap-2"
   onSubmit={(e) => {
     e.preventDefault(); // stop page refresh
-    console.log('Subscribed!');
     // 👉 You can also call your API here
-    alert('Thanks for subscribing!');
+    toast.info('Thanks for subscribing!');
   }}
 ></form>;
 
 const Footer = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Subscribed!');
-    alert('Thanks for subscribing!');
+    toast.info('Thanks for subscribing!');
   };
   return (
     <footer className="bg-[#111318] border-t border-slate-800/50 relative">

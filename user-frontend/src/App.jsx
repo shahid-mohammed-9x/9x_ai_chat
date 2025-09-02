@@ -68,8 +68,8 @@ const App = () => {
             />
           ))}
         </Routes>
+        <OtherComponents />
       </BrowserRouter>
-      <OtherComponents />
     </div>
   );
 };

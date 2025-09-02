@@ -13,6 +13,8 @@ import FloatingInput from '../../helpers/FloatingInput';
 import PasswordRules from '../../helpers/PasswordRules';
 import { useDispatch, useSelector } from 'react-redux';
 import { themeActions, userActions } from '@/redux/combineAction';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const SetPassword = () => {
   const { openPasswordAction } = themeActions;
@@ -20,7 +22,6 @@ const SetPassword = () => {
   const { passwordPopup } = useSelector((state) => state.themeState);
   const { profileDetails } = useSelector((state) => state.userProfileState) || [];
 
-  console.log(profileDetails);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -39,6 +40,7 @@ const SetPassword = () => {
   const [confirmTouched, setConfirmTouched] = useState(false);
 
   const { setPasswordAction } = userActions;
+  const navigate = useNavigate();
 
   // Update handler for inputs
   const handleChange = (field, value) => {
@@ -68,22 +70,19 @@ const SetPassword = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    let submittedData;
+
     if (fullNameValid && allRulesPassed && passwordsMatch) {
-      const submittedData = {
+      submittedData = {
         fullName: formData.fullName,
-        email: profileDetails?.email,
         password: formData.password,
       };
-
-      dispatch(setPasswordAction(submittedData));
-      // reset
-      setFormData({
-        fullName: '',
-        password: '',
-        confirmPassword: '',
-      });
-      setConfirmTouched(false);
     }
+    dispatch(setPasswordAction(submittedData)).then(() => {
+      toast.success('Password Successfully set');
+      dispatch(openPasswordAction('false'));
+      navigate('/new-chat');
+    });
   };
 
   // Username validation
