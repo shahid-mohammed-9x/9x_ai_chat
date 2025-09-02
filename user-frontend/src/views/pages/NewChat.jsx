@@ -40,7 +40,7 @@ const NewChat = () => {
         };
         newUpdatedData = updatePaginationData(newUpdatedData, appendData);
         dispatch(updateChatStateAction({ chatsList: newUpdatedData }));
-        navigate(`/chat/${response?.data?._id}`);
+        navigate(`/chat/${response?.[1]?.data?._id}`);
       } else {
         toast.error(response?.[1]?.message || 'something went wrong');
       }

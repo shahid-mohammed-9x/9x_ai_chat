@@ -23,6 +23,8 @@ const newQuestionController = async (req, res, next) => {
     const { chatId } = req.params;
     const { question, models = [] } = req.body;
 
+    console.log(req.body);
+
     const details = {
       user: userId,
       chat: chatId,

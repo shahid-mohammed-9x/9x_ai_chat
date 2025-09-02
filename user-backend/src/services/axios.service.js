@@ -203,7 +203,7 @@ const axiosService = {
 };
 
 const onFailure = async (res, url, error) => {
-  logger.error("API FAILED ", error);
+  // logger.error("API FAILED ", error);
   console.log("API FAILED " + url, error?.message);
 };
 
