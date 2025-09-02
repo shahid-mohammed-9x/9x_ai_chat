@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, memo } from 'react';
+import React, { useCallback, useContext, memo, useEffect } from 'react';
 import {
   Sidebar,
   SidebarInset,
@@ -14,12 +14,15 @@ import SidebarHeaderComponent from '../sections/sidebar/SidebarHeaderComponent';
 import SidebarFooterComponent from '../sections/sidebar/SidebarFooterComponent';
 import SidebarContentComponent from '../sections/sidebar/SidebarContentComponent';
 import { Separator } from '@/components/ui/separator';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Password from '../models/Password';
+import { themeActions } from '@/redux/combineAction';
 
 const ChatLayout = ({ children }) => {
   const logoutFunction = useLogout();
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { profileDetails } = useSelector((state) => state.userProfileState);
+  const { openPasswordAction } = themeActions;
   const {
     sidebarState: { isSidebarOpen, navUser, changeNavUserAction, isSidebarOpenAction },
   } = useContext(Context);
@@ -28,35 +31,45 @@ const ChatLayout = ({ children }) => {
     isSidebarOpenAction(!isSidebarOpen);
   }, [isSidebarOpen]);
 
+  useEffect(() => {
+    if (profileDetails?.fullName == null) {
+      dispatch(openPasswordAction('true'));
+    }
+  }, [profileDetails, dispatch, openPasswordAction]);
   return (
-    <SidebarProvider open={isSidebarOpen}>
-      <Sidebar collapsible="icon">
-        <SidebarHeaderComponent isSidebarOpen={isSidebarOpen} profileDetails={profileDetails} />
-        <Separator />
+    <>
+      <Password />
+      <SidebarProvider open={isSidebarOpen}>
+        <Sidebar collapsible="icon">
+          <SidebarHeaderComponent isSidebarOpen={isSidebarOpen} profileDetails={profileDetails} />
+          <Separator />
 
-        <SidebarContentComponent profileDetails={profileDetails} />
+          <SidebarContentComponent profileDetails={profileDetails} />
 
-        <Separator />
-        <SidebarFooterComponent
-          user={profileDetails}
-          logoutFunction={logoutFunction}
-          isSidebarOpen={isSidebarOpen}
-        />
+          <Separator />
+          <SidebarFooterComponent
+            user={profileDetails}
+            logoutFunction={logoutFunction}
+            isSidebarOpen={isSidebarOpen}
+          />
 
-        <SidebarRail />
-      </Sidebar>
+          <SidebarRail />
+        </Sidebar>
 
-      <SidebarInset>
-        {/* Foreground Content */}
-        <div className="relative z-10 flex flex-col h-full">
-          <div className="flex items-center gap-2 p-4">
-            <SidebarTrigger onClick={() => handleSidebarTrigger(!isSidebarOpen)} />
+        <SidebarInset>
+          {/* Foreground Content */}
+          <div className="relative z-10 flex flex-col h-full">
+            <div className="flex items-center gap-2 p-4">
+              <SidebarTrigger onClick={() => handleSidebarTrigger(!isSidebarOpen)} />
+            </div>
+            {/* {children} */}
+            <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-auto w-full">
+              {children}
+            </div>
           </div>
-          {/* {children} */}
-          <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-auto w-full">{children}</div>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+        </SidebarInset>
+      </SidebarProvider>
+    </>
   );
 };
 

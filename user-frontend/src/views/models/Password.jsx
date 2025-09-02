@@ -1,4 +1,4 @@
-import { memo, useState, useMemo } from 'react';
+import { memo, useState, useMemo, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -17,10 +17,14 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const SetPassword = () => {
-  const { openPasswordAction } = themeActions;
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { setPasswordAction, resetUserProfileAction } = userActions;
+  const { openPasswordAction } = themeActions;
   const { passwordPopup } = useSelector((state) => state.themeState);
-  const { profileDetails } = useSelector((state) => state.userProfileState) || [];
+  const { profileDetails, error, statusCode } =
+    useSelector((state) => state.userProfileState) || {};
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -39,9 +43,6 @@ const SetPassword = () => {
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [confirmTouched, setConfirmTouched] = useState(false);
 
-  const { setPasswordAction } = userActions;
-  const navigate = useNavigate();
-
   // Update handler for inputs
   const handleChange = (field, value) => {
     setFormData((prev) => ({
@@ -49,6 +50,36 @@ const SetPassword = () => {
       [field]: value,
     }));
   };
+
+  // Submit handler
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!fullNameValid || !allRulesPassed || !passwordsMatch) {
+      toast.error('Please fix the errors before submitting');
+      return;
+    }
+
+    const submittedData = {
+      fullName: formData.fullName,
+      password: formData.password,
+    };
+
+    dispatch(setPasswordAction(submittedData)).then((res) => {
+      if (res) {
+        toast.success('Password Successfully set');
+        navigate('/new-chat');
+        dispatch(openPasswordAction('false'));
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (error && statusCode === 400) {
+      toast.error(error);
+      dispatch(resetUserProfileAction());
+    }
+  }, [error, statusCode, dispatch, navigate]);
 
   // Validations
   const fullNameValid = formData.fullName.length >= 3;
@@ -66,29 +97,8 @@ const SetPassword = () => {
   const allRulesPassed = Object.values(rules).every(Boolean);
   const passwordsMatch = formData.password && formData.confirmPassword === formData.password;
 
-  // Submit handler
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    let submittedData;
-
-    if (fullNameValid && allRulesPassed && passwordsMatch) {
-      submittedData = {
-        fullName: formData.fullName,
-        password: formData.password,
-      };
-    }
-    dispatch(setPasswordAction(submittedData)).then(() => {
-      toast.success('Password Successfully set');
-      dispatch(openPasswordAction('false'));
-      navigate('/new-chat');
-    });
-  };
-
-  // Username validation
-
   return (
-    <Dialog open={passwordPopup} onOpenChange={() => dispatch(openPasswordAction('false'))}>
+    <Dialog open={passwordPopup}>
       <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-md" />
       <DialogContent
         className="w-[90%] sm:max-w-sm md:max-w-md rounded-2xl p-6 
@@ -130,7 +140,7 @@ const SetPassword = () => {
           </div>
 
           {/* Email */}
-          <FloatingInput label="Email" type="email" value={profileDetails?.email} />
+          <FloatingInput label="Email" type="email" value={profileDetails?.email} readOnly />
 
           {/* Password */}
           <div>
