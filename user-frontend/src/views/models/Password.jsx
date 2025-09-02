@@ -1,4 +1,4 @@
-import { memo, useState, useMemo } from 'react';
+import { memo, useState, useMemo, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -16,7 +16,7 @@ import { themeActions, userActions } from '@/redux/combineAction';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-const SetPassword = () => {
+const Password = () => {
   const { openPasswordAction } = themeActions;
   const dispatch = useDispatch();
   const { passwordPopup } = useSelector((state) => state.themeState);
@@ -42,7 +42,10 @@ const SetPassword = () => {
   const { setPasswordAction } = userActions;
   const navigate = useNavigate();
 
-  // Update handler for inputs
+  const passwordRef = useRef(null);
+  const confirmRef = useRef(null);
+
+  // Update handler
   const handleChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -70,22 +73,19 @@ const SetPassword = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    let submittedData;
-
     if (fullNameValid && allRulesPassed && passwordsMatch) {
-      submittedData = {
+      const submittedData = {
         fullName: formData.fullName,
         password: formData.password,
       };
-    }
-    dispatch(setPasswordAction(submittedData)).then(() => {
-      toast.success('Password Successfully set');
-      dispatch(openPasswordAction('false'));
-      navigate('/new-chat');
-    });
-  };
 
-  // Username validation
+      dispatch(setPasswordAction(submittedData)).then(() => {
+        toast.success('Password Successfully set');
+        dispatch(openPasswordAction('false'));
+        navigate('/new-chat');
+      });
+    }
+  };
 
   return (
     <Dialog open={passwordPopup} onOpenChange={() => dispatch(openPasswordAction('false'))}>
@@ -135,6 +135,7 @@ const SetPassword = () => {
           {/* Password */}
           <div>
             <FloatingInput
+              ref={passwordRef}
               label="Password"
               type="password"
               value={formData.password}
@@ -143,6 +144,12 @@ const SetPassword = () => {
               setVisible={setPasswordVisible}
               onFocus={() => setFocused((p) => ({ ...p, password: true }))}
               onBlur={() => setFocused((p) => ({ ...p, password: false }))}
+              onKeyDown={(e) => {
+                if (e.key === 'Tab' && !e.shiftKey) {
+                  e.preventDefault();
+                  confirmRef.current?.focus();
+                }
+              }}
             />
             <PasswordRules rules={rules} show={focused.password} />
           </div>
@@ -150,6 +157,7 @@ const SetPassword = () => {
           {/* Confirm Password */}
           <div>
             <FloatingInput
+              ref={confirmRef}
               label="Confirm Password"
               type="password"
               value={formData.confirmPassword}
@@ -185,4 +193,4 @@ const SetPassword = () => {
   );
 };
 
-export default memo(SetPassword);
+export default memo(Password);

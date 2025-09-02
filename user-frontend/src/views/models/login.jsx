@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Shield } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userActions, themeActions } from '@/redux/combineAction';
 import { setAccessToken } from '@/helpers/local-storage';
@@ -22,6 +21,7 @@ import {
 } from '@/components/ui/input-otp';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import validateEmail from '@/helpers/EmailValidators';
 
 function LoginModal() {
   const { findUserEmailAction, userLoginAction, sendEmailVerificationAction, verifyEmailAction } =
@@ -41,22 +41,10 @@ function LoginModal() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // ✅ Email validations
-    if (!email) {
-      setEmailError('Email is required');
-      return;
-    } else if (!validateEmail(email)) {
-      setEmailError('Please enter a valid email');
-      return;
-    } else {
-      setEmailError(''); // Clear error if valid
-    }
+
     const res = await findUserEmailAction(email);
 
     if (res[0]) setData(res[1]?.data);
-    // isEmailVerified: false;
-    // isPasswordSet: false;
-    // userExists: false;
     if (!res[1]?.data?.isPasswordSet && !res[1]?.data?.isEmailVerified) {
       let data = {
         email: email,
@@ -157,8 +145,12 @@ function LoginModal() {
                 placeholder=" "
                 className="peer h-12 px-2 pt-3 w-full"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError(validateEmail(e.target.value));
+                }}
               />
+
               <label
                 htmlFor="email"
                 className="absolute left-3 top-3 text-gray-500 text-sm transition-all 
