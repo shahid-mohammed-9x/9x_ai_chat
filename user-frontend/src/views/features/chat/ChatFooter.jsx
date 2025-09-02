@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDownIcon, Send } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 
 const aiModels = [
   { value: 'gemini', label: 'Gemini' },
@@ -18,34 +18,55 @@ const aiModels = [
   { value: 'sonar', label: 'Sonar' },
 ];
 
-const ChatFooter = () => {
+const ChatFooter = ({ onClickFunction }) => {
   const [selectedModels, setSelectedModels] = useState([]);
+  const [info, setinfo] = useState({
+    loading: false,
+    inputMessage: '',
+  });
 
-  // toggle selection
-  const handleToggle = (value) => {
-    setSelectedModels((prev) =>
-      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
-    );
-  };
+  const triggerText = useMemo(() => {
+    const selectedList = aiModels.filter((m) => selectedModels.includes(m.value));
+    let text = 'Select AI Models';
+    if (selectedList.length === 1) {
+      text = selectedList[0].label;
+    } else if (selectedList.length > 1) {
+      text = `${selectedList[0].label}, +${selectedList.length - 1}`;
+    }
+    return text;
+  }, [selectedModels]);
 
-  const selectedList = aiModels.filter((m) => selectedModels.includes(m.value));
+  // Functions
+  const onChangeHandlerFunction = useCallback(
+    (e) => {
+      const { name, value } = e?.target;
+      setinfo((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    },
+    [info?.inputMessage]
+  );
 
-  // Build trigger text
-  let triggerText = 'Select AI Models';
-  if (selectedList.length === 1) {
-    triggerText = selectedList[0].label;
-  } else if (selectedList.length > 1) {
-    triggerText = `${selectedList[0].label}, +${selectedList.length - 1}`;
-  }
+  const handleToggleFunction = useCallback(
+    (value) => {
+      setSelectedModels((prev) =>
+        prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+      );
+    },
+    [selectedModels]
+  );
 
   return (
     <div className="bottom-0 left-0 right-0 items-center m-2">
       <CardContent className="mx-auto w-full max-w-[90%] sm:max-w-[80%] bg-card text-white flex flex-col gap-2 py-2 rounded-2xl shadow-lg">
         {/* Input */}
         <textarea
-          name="input text"
+          name="inputMessage"
           placeholder="Ask me anything..."
           className="min-h-[40px] max-h-[100px] w-full resize-none bg-transparent outline-none px-3 text-base placeholder-gray-400"
+          value={info?.inputMessage || ''}
+          onChange={onChangeHandlerFunction}
         />
 
         {/* Actions */}
@@ -68,7 +89,7 @@ const ChatFooter = () => {
                   key={model.value}
                   checked={selectedModels.includes(model.value)}
                   onSelect={(e) => e.preventDefault()}
-                  onCheckedChange={() => handleToggle(model.value)}
+                  onCheckedChange={() => handleToggleFunction(model.value)}
                 >
                   {model.label}
                 </DropdownMenuCheckboxItem>
