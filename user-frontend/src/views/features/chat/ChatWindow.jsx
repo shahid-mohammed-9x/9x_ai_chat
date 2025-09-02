@@ -11,7 +11,9 @@ const ChatWindow = () => {
   const { profileDetails } = useSelector((state) => state.userProfileState);
 
   const chatMessages = useMemo(() => {
-    return _.has(chatMessageObject, chatId) ? chatMessageObject?.[chatId] : null;
+    let data = _.has(chatMessageObject, chatId) ? _.cloneDeep(chatMessageObject?.[chatId]) : null;
+    data?.docs?.reverse();
+    return data;
   }, [chatMessageObject?.[chatId], chatId]);
 
   return (

@@ -66,6 +66,7 @@ const Chat = () => {
       const response = await newQuestionAction(chatId, json);
       if (response[0] === true) {
         let appendData = {
+          _id: response?.[1]?.data?._id,
           responses: response?.[1]?.data?.responses,
           question: response?.[1]?.data?.question,
           models: response?.[1]?.data?.models,
@@ -74,10 +75,11 @@ const Chat = () => {
 
         // Deep clone the specific chatId object to avoid mutation
         let updatedMessageObject = _.cloneDeep(chatMessageObject);
-        let chatDataClone = _.cloneDeep(updatedMessageObject[chatId]);
+        let chatDataClone = updatedMessageObject[chatId];
         chatDataClone = updatePaginationData(chatDataClone, appendData);
         updatedMessageObject = { ...updatedMessageObject, [chatId]: chatDataClone };
-        dispatch(updateChatStateAction({ chatMessageObject: updatedMessageObject }));
+        console.log(updatedMessageObject);
+        dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updatedMessageObject) }));
       } else {
         toast.error(response?.[1]?.message || 'something went wrong');
       }

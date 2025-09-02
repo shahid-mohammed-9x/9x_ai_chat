@@ -23,7 +23,7 @@ const AIResponses = ({ docs, chatDetails, profileDetails }) => {
   return (
     // <div className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
     <ScrollToBottom className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
-      {docs?.reverse()?.map((singleMessage) => (
+      {docs?.map((singleMessage) => (
         <div key={singleMessage?._id} className="space-y-6">
           {/* User Message */}
           <div className="flex justify-end">
