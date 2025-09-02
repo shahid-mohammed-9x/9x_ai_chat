@@ -1,9 +1,5 @@
 import { memo, useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { getInitials } from '@/helpers';
+import { CardContent } from '@/components/ui/card';
 import AIResponses from './AIResponses';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -17,6 +13,7 @@ const ChatWindow = () => {
   const chatMessages = useMemo(() => {
     return _.has(chatMessageObject, chatId) ? chatMessageObject?.[chatId] : null;
   }, [chatMessageObject?.[chatId], chatId]);
+
   return (
     <div className="w-full flex flex-col h-[700px] rounded-2xl shadow-lg">
       {/* Chat Messages */}

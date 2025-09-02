@@ -3,7 +3,7 @@ import {
   CHAT_MESSAGES,
   CLEAR_CHAT_ERRORS,
   RESET_CHAT_STATE,
-  UPDATE_SUBJECT_STATE,
+  UPDATE_CHAT_STATE,
 } from './constant';
 
 const initialState = {
@@ -55,7 +55,7 @@ export const ChatsReducer = (state = initialState, action) => {
 
     // Updates
     // global state purpose,
-    [UPDATE_SUBJECT_STATE]: () => ({
+    [UPDATE_CHAT_STATE]: () => ({
       ...state,
       ...action.payload,
     }),

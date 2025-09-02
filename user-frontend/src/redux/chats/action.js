@@ -1,7 +1,7 @@
 import {
   CHAT_LIST,
   CHAT_MESSAGES,
-  UPDATE_SUBJECT_STATE,
+  UPDATE_CHAT_STATE,
   CLEAR_CHAT_ERRORS,
   RESET_CHAT_STATE,
 } from './constant';
@@ -74,7 +74,7 @@ const newQuestionAction = async (chatId, json) => {
 // global state function to update
 const updateChatStateAction = (payload) => (dispatch) => {
   dispatch({
-    type: UPDATE_SUBJECT_STATE,
+    type: UPDATE_CHAT_STATE,
     payload,
   });
 };

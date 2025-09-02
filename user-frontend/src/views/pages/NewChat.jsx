@@ -16,7 +16,7 @@ const NewChat = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState({
     loading: false,
-    clearInput: true,
+    clearInput: false,
   });
 
   const submitNewChatHandlerFunction = useCallback(

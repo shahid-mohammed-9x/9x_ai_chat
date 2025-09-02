@@ -8,6 +8,7 @@ import deepseek from '@/assets/modelIcons/deepseekIcon.png';
 import gork from '@/assets/modelIcons/gorkIcon.png';
 import sonar from '@/assets/modelIcons/sonarIcon.png';
 import { getInitials } from '@/helpers';
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 const modelIcons = {
   gpt: gpt,
@@ -20,8 +21,9 @@ const modelIcons = {
 
 const AIResponses = ({ docs, chatDetails, profileDetails }) => {
   return (
-    <div className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
-      {docs?.map((singleMessage) => (
+    // <div className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
+    <ScrollToBottom className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
+      {docs?.reverse()?.map((singleMessage) => (
         <div key={singleMessage?._id} className="space-y-6">
           {/* User Message */}
           <div className="flex justify-end">
@@ -69,7 +71,8 @@ const AIResponses = ({ docs, chatDetails, profileDetails }) => {
           </div>
         </div>
       ))}
-    </div>
+    </ScrollToBottom>
+    // </div>
   );
 };
 

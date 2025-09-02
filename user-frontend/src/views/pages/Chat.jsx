@@ -6,9 +6,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { chatActions } from '@/redux/combineAction';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
+import _ from 'lodash';
+import { updatePaginationData } from '@/helpers';
 
 const Chat = () => {
-  const { getChatMessagesAction, clearChatsErrorsAction, newQuestionAction } = chatActions;
+  const {
+    getChatMessagesAction,
+    clearChatsErrorsAction,
+    newQuestionAction,
+    updateChatStateAction,
+  } = chatActions;
   const dispatch = useDispatch();
   const { chatId } = useParams();
   const navigate = useNavigate();
@@ -19,7 +26,7 @@ const Chat = () => {
 
   const [info, setInfo] = useState({
     loading: false,
-    clearInput: true,
+    clearInput: false,
     timeOut: null,
   });
 
@@ -58,7 +65,19 @@ const Chat = () => {
       };
       const response = await newQuestionAction(chatId, json);
       if (response[0] === true) {
-        // polling logic will appear here
+        let appendData = {
+          responses: response?.[1]?.data?.responses,
+          question: response?.[1]?.data?.question,
+          models: response?.[1]?.data?.models,
+          order: response?.[1]?.data?.order,
+        };
+
+        // Deep clone the specific chatId object to avoid mutation
+        let updatedMessageObject = _.cloneDeep(chatMessageObject);
+        let chatDataClone = _.cloneDeep(updatedMessageObject[chatId]);
+        chatDataClone = updatePaginationData(chatDataClone, appendData);
+        updatedMessageObject = { ...updatedMessageObject, [chatId]: chatDataClone };
+        dispatch(updateChatStateAction({ chatMessageObject: updatedMessageObject }));
       } else {
         toast.error(response?.[1]?.message || 'something went wrong');
       }

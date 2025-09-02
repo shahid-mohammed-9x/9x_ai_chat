@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const getInitials = (fullName = '') => {
   const names = fullName.split(' ');
   const initials = names
@@ -8,20 +10,15 @@ export const getInitials = (fullName = '') => {
 };
 
 export const updatePaginationData = (data, appendData) => {
-  // Append new data to docs
-  const updatedDocs = [appendData, ...data.docs];
+  const clonedDocs = _.cloneDeep(data?.docs || []); // shallow clone to prevent mutation
+  const updatedDocs = [appendData, ...clonedDocs];
 
-  // Update totalDocs
-  const totalDocs = data.totalDocs + 1;
+  const totalDocs = (data.totalDocs ?? 0) + 1;
+  const totalPages = Math.ceil(totalDocs / (data.limit ?? 1));
 
-  // Calculate totalPages based on limit
-  const totalPages = Math.ceil(totalDocs / data.limit);
+  const hasNext = (data.currentPage ?? 1) < totalPages;
+  const hasPrev = (data.currentPage ?? 1) > 1;
 
-  // Determine hasNext and hasPrev
-  const hasNext = data.currentPage < totalPages;
-  const hasPrev = data.currentPage > 1;
-
-  // Return updated data
   return {
     ...data,
     totalDocs,
