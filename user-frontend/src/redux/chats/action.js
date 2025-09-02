@@ -6,7 +6,7 @@ import { getAccessToken } from '../../helpers/local-storage';
 const getChatsListAction = () => async (dispatch) => {
   dispatch({ type: CHAT_LIST.request });
   const token = getAccessToken();
-  const response = await Service.fetchGet(`${API.BASE_USER}${API.CHATS.UserChats}`, token);
+  const response = await Service.fetchGet(`${API.BASE_CHAT}${API.CHATS.UserChats}`, token);
   if (response[0] === true) {
     dispatch({ type: CHAT_LIST.success, payload: response[1].data });
   } else {
@@ -21,7 +21,7 @@ const getChatMessagesAction = (chatId) => async (dispatch) => {
   dispatch({ type: CHAT_MESSAGES.request });
   const token = getAccessToken();
   const response = await Service.fetchGet(
-    `${API.BASE_USER}${API.CHATS.ChatMessages}/${chatId}`,
+    `${API.BASE_CHAT}${API.CHATS.ChatMessages}/${chatId}`,
     token
   );
   if (response[0] === true) {
@@ -32,6 +32,20 @@ const getChatMessagesAction = (chatId) => async (dispatch) => {
       payload: response[1],
     });
   }
+};
+
+const createNewChatAction = async (json) => {
+  const token = getAccessToken();
+  const response = await Service.fetchPost(`${API.BASE_CHAT}${API.CHATS.NewChat}`, json, token);
+  return response;
+};
+
+// global state function to update
+const updateChatStateAction = (payload) => (dispatch) => {
+  dispatch({
+    type: UPDATE_SUBJECT_STATE,
+    payload,
+  });
 };
 
 const clearChatsErrorsAction = () => (dispatch) => {
@@ -46,6 +60,8 @@ const resetChatsAction = () => (dispatch) => {
 export default {
   getChatsListAction,
   getChatMessagesAction,
+  createNewChatAction,
+  updateChatStateAction,
   clearChatsErrorsAction,
   resetChatsAction,
 };

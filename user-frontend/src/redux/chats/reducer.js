@@ -1,4 +1,10 @@
-import { CHAT_LIST, CHAT_MESSAGES, CLEAR_CHAT_ERRORS, RESET_CHAT_STATE } from './constant';
+import {
+  CHAT_LIST,
+  CHAT_MESSAGES,
+  CLEAR_CHAT_ERRORS,
+  RESET_CHAT_STATE,
+  UPDATE_SUBJECT_STATE,
+} from './constant';
 
 const initialState = {
   loading: false,
@@ -45,6 +51,13 @@ export const ChatsReducer = (state = initialState, action) => {
       messageLoading: false,
       error: action?.payload?.message || 'Failed to load messages chats', // Default error message
       statusCode: action?.payload?.statusCode || 500,
+    }),
+
+    // Updates
+    // global state purpose,
+    [UPDATE_SUBJECT_STATE]: () => ({
+      ...state,
+      ...action.payload,
     }),
 
     // Clear errors
