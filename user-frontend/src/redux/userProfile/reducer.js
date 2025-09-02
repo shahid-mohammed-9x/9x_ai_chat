@@ -26,6 +26,17 @@ export const UserProfileReducer = (state = initialState, action) => {
       profileDetails: action.payload,
     }),
 
+    //update state
+    [USER_PROFILE.update]: () => ({
+      ...state,
+      loading: false,
+      profileDetails: {
+        ...state.profileDetails,
+        fullName: action.payload?.fullName,
+        password: action.payload?.password
+      },
+    }),
+
     // Failure state
     [USER_PROFILE.fail]: () => ({
       ...state,
