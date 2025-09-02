@@ -9,6 +9,7 @@ import { useIsMobile } from '@/hooks/useMobile';
 import Login from './views/models/login';
 import { Toaster } from 'react-hot-toast';
 import Password from './views/models/Password';
+
 const OtherComponents = memo(() => {
   return (
     <>

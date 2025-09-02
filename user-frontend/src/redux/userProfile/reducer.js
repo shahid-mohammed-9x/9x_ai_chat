@@ -28,8 +28,7 @@ export const UserProfileReducer = (state = initialState, action) => {
       loading: false,
       profileDetails: {
         ...state.profileDetails,
-        fullName: action.payload?.fullName,
-        password: action.payload?.password,
+        ...action.payload
       },
     }),
 
