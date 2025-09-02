@@ -37,9 +37,7 @@ const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) =>
   }, [selectedModels]);
 
   useEffect(() => {
-    console.log(clearInput, 'useEffect');
     if (clearInput) {
-      console.log(clearInput, 'useEffect', '2');
       setInfo((prev) => ({ ...prev, inputMessage: '' }));
     }
   }, [clearInput]);

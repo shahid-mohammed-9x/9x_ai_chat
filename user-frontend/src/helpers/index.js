@@ -28,3 +28,17 @@ export const updatePaginationData = (data, appendData) => {
     docs: updatedDocs,
   };
 };
+
+export function objectToQueryString(obj) {
+  if (!_.isObject(obj)) return '';
+
+  const queryString = Object.entries(obj)
+    .map(([key, value]) => {
+      if (_.isNil(value) || value === '') return '';
+      return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+    })
+    .filter(Boolean)
+    .join('&');
+
+  return queryString ? `?${queryString}` : '';
+}

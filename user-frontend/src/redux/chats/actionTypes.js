@@ -3,6 +3,7 @@ export const CHATS = {
   ChatMessages: '/chat-messages',
   NewChat: '/new-chat',
   NewQuestion: '/new-question',
+  Polling: '/polling',
 };
 
 export const BASE_CHAT = '/chat';

@@ -15,6 +15,7 @@ const Chat = () => {
     clearChatsErrorsAction,
     newQuestionAction,
     updateChatStateAction,
+    pollingAnswerAction,
   } = chatActions;
   const dispatch = useDispatch();
   const { chatId } = useParams();
@@ -78,8 +79,8 @@ const Chat = () => {
         let chatDataClone = updatedMessageObject[chatId];
         chatDataClone = updatePaginationData(chatDataClone, appendData);
         updatedMessageObject = { ...updatedMessageObject, [chatId]: chatDataClone };
-        console.log(updatedMessageObject);
         dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updatedMessageObject) }));
+        pollingHandlerFunction(response?.[1]?.pollingId);
       } else {
         toast.error(response?.[1]?.message || 'something went wrong');
       }
@@ -88,6 +89,31 @@ const Chat = () => {
     },
     [info?.loading, info?.clearInput, chatId, chatMessageObject[chatId]]
   );
+
+  const pollingHandlerFunction = useCallback((pollingId) => {
+    let query = {
+      userId: profileDetails?._id,
+      messageId: pollingId,
+    };
+
+    // api polling function
+    const apiPollingFunction = async () => {
+      const response = await pollingAnswerAction(query);
+      if (response[1] === true) {
+        if (response[1]?.data?.isRecievedAllResponses) {
+          clearInterval(info?.timeOut);
+          setInfo((prev) => ({ ...prev, timeOut: null }));
+        }
+      }
+    };
+
+    let timeOut = setTimeout(() => {
+      apiPollingFunction();
+    }, 1000);
+
+    setInfo((prev) => ({ ...prev, timeOut }));
+  }, []);
+
   return (
     <ChatLayout>
       {messageLoading ? null : (

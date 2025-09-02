@@ -54,12 +54,7 @@ const AIResponses = ({ docs, chatDetails, profileDetails }) => {
                 return (
                   <div
                     key={singleMessage?._id + singleAiModel}
-                    className="
-            flex items-start gap-2 p-4 bg-card rounded-2xl 
-            snap-start
-            flex-1 shrink-0
-            min-w-[85%] sm:min-w-[45%] lg:min-w-[30%]
-          "
+                    className="flex items-start gap-2 p-4 bg-card rounded-2xl snap-start flex-1 shrink-0 min-w-[85%] sm:min-w-[45%] lg:min-w-[30%]"
                   >
                     <Avatar>
                       <AvatarImage src={modelIcons[singleAiModel]} />
