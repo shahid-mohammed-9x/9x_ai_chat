@@ -46,6 +46,16 @@ const createNewChatAction = async (json) => {
   return response;
 };
 
+const newQuestionAction = async (chatId, json) => {
+  const token = getAccessToken();
+  const response = await Service.fetchPost(
+    `${API.BASE_CHAT}/${chatId}${API.CHATS.NewQuestion}`,
+    json,
+    token
+  );
+  return response;
+};
+
 // global state function to update
 const updateChatStateAction = (payload) => (dispatch) => {
   dispatch({
@@ -67,6 +77,7 @@ export default {
   getChatsListAction,
   getChatMessagesAction,
   createNewChatAction,
+  newQuestionAction,
   updateChatStateAction,
   clearChatsErrorsAction,
   resetChatsAction,
