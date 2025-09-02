@@ -117,8 +117,9 @@ const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) =>
           <Button
             size="icon"
             className="h-10 w-10 rounded-full hover:bg-gray-50 shrink-0"
-            disabled={loading}
+            disabled={loading || info?.inputMessage.length < 3 || selectedModels.length < 1}
             onClick={submitButtonHandler}
+            onKeyDown={(e) => e.key === 'Enter' && submitButtonHandler()}
           >
             {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
           </Button>

@@ -1,4 +1,10 @@
-import { CHAT_LIST, CHAT_MESSAGES, CLEAR_CHAT_ERRORS, RESET_CHAT_STATE } from './constant';
+import {
+  CHAT_LIST,
+  CHAT_MESSAGES,
+  UPDATE_SUBJECT_STATE,
+  CLEAR_CHAT_ERRORS,
+  RESET_CHAT_STATE,
+} from './constant';
 import Service from '../../services';
 import * as API from './actionTypes';
 import { getAccessToken } from '../../helpers/local-storage';

@@ -9,10 +9,10 @@ export const getInitials = (fullName = '') => {
 
 export const updatePaginationData = (data, appendData) => {
   // Append new data to docs
-  const updatedDocs = [...data.docs, ...appendData];
+  const updatedDocs = [appendData, ...data.docs];
 
   // Update totalDocs
-  const totalDocs = data.totalDocs + appendData.length;
+  const totalDocs = data.totalDocs + 1;
 
   // Calculate totalPages based on limit
   const totalPages = Math.ceil(totalDocs / data.limit);

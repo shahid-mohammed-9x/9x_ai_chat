@@ -6,12 +6,14 @@ import { chatActions } from '@/redux/combineAction';
 import _ from 'lodash';
 import { updatePaginationData } from '@/helpers';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const NewChat = () => {
   const dispatch = useDispatch();
   const { createNewChatAction, updateChatStateAction } = chatActions;
   const { profileDetails } = useSelector((state) => state.userProfileState);
-  const { chatMessages, error, statusCode } = useSelector((state) => state.chatsState);
+  const { chatsList } = useSelector((state) => state.chatsState);
+  const navigate = useNavigate();
   const [info, setInfo] = useState({
     loading: false,
     clearInput: true,
@@ -23,28 +25,29 @@ const NewChat = () => {
 
       const { selectedModels, inputMessage } = e;
 
-      setInfo((prev) => ({ ...prev, loading: true }));
+      setInfo((prev) => ({ ...prev, loading: true, clearInput: true }));
       const json = {
         question: inputMessage,
         models: selectedModels,
       };
       const response = await createNewChatAction(json);
       if (response[0] === true) {
-        let newUpdatedData = _.cloneDeep(chatMessages);
+        let newUpdatedData = _.cloneDeep(chatsList);
         const appendData = {
           _id: response?.[1]?.data?._id,
           title: response?.[1]?.data?.title,
           createdAt: response?.[1]?.data?.createdAt,
         };
         newUpdatedData = updatePaginationData(newUpdatedData, appendData);
-        dispatch(updateChatStateAction({ chatMessages: newUpdatedData }));
+        dispatch(updateChatStateAction({ chatsList: newUpdatedData }));
+        navigate(`/chat/${response?.data?._id}`);
       } else {
         toast.error(response?.[1]?.message || 'something went wrong');
       }
 
       setInfo((prev) => ({ ...prev, loading: false, clearInput: false }));
     },
-    [info?.loading, chatMessages]
+    [info?.loading, info?.clearInput, chatsList]
   );
 
   return (
