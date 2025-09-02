@@ -26,7 +26,6 @@ const getUserProfileAction = () => async (dispatch) => {
 
 const setPasswordAction = (data) => async(dispatch)=>{
   const token = getAccessToken();
-  console.log("Password action", data)
   dispatch({type: USER_PROFILE.request})
   const response = await Service.fetchPost(
     `${API.BASE_USER}${API.USERS_PROFILE.SetPassword}`, data, token
@@ -34,6 +33,7 @@ const setPasswordAction = (data) => async(dispatch)=>{
 
   if (response[0] === true) {
     dispatch({ type: USER_PROFILE.update, payload: data });
+    return response
   } else {
     dispatch({
       type: USER_PROFILE.fail,
@@ -74,10 +74,10 @@ const verifyEmailAction = (data) => async(dispatch)=>{
   const response = await Service.fetchPost(
     `${API.BASE_AUTH}${API.AUTH_ROUTES.verifyEmail}`, data
   );
-  console.log(response)
   if (response[0] === true) {
     setAccessToken(response[1]?.token)
     dispatch({ type: USER_PROFILE.success, payload: data });
+    return response[0]
   } else {
     dispatch({
       type: USER_PROFILE.fail,

@@ -1,8 +1,4 @@
-import {
-  USER_PROFILE,
-  CLEAR_USER_PROFILE_ERRORS,
-  RESET_USER_PROFILE_STATE,
-} from "./constant";
+import { USER_PROFILE, CLEAR_USER_PROFILE_ERRORS, RESET_USER_PROFILE_STATE } from './constant';
 
 const initialState = {
   loading: false,
@@ -32,8 +28,7 @@ export const UserProfileReducer = (state = initialState, action) => {
       loading: false,
       profileDetails: {
         ...state.profileDetails,
-        fullName: action.payload?.fullName,
-        password: action.payload?.password
+        ...action.payload
       },
     }),
 
@@ -41,7 +36,7 @@ export const UserProfileReducer = (state = initialState, action) => {
     [USER_PROFILE.fail]: () => ({
       ...state,
       loading: false,
-      error: action?.payload?.message || "Failed to load user profile", // Default error message
+      error: action?.payload?.message || 'Failed to load user profile', // Default error message
       statusCode: action?.payload?.statusCode || 500,
     }),
 

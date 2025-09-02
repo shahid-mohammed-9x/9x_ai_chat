@@ -24,8 +24,8 @@ const newQuestionController = async (req, res, next) => {
     const { question, models = [] } = req.body;
 
     const details = {
-      user: userId,
-      chat: chatId,
+      user: userId.toString(),
+      chat: chatId.toString(),
       question,
       models,
       responses: models.reduce((acc, model) => {
@@ -41,18 +41,18 @@ const newQuestionController = async (req, res, next) => {
       $push: { messages: messageDetails._id },
     });
 
-    const summaryData = await summaryModel.findOne({ chat: chatId });
+    // const summaryData = await summaryModel.findOne({ chat: chatId });
 
-    const context = models?.map((model) => ({
-      model: summaryData?.summaries?.[model]?.summary || null,
-    }));
+    // let context = models?.map((model) => ({
+    //   [model]: summaryData?.summaries?.[model]?.summary || null,
+    // }));
 
     const json = {
       question,
       userId,
       chatId,
       messageId: messageDetails?._id,
-      context,
+      context: null,
       models: ["gemini"],
     };
 
@@ -82,8 +82,10 @@ const callBackMessageResponseController = async (req, res, next) => {
     logger.info(
       "controller - chat - messsage.controller - callBackMessageResponseController - start"
     );
+    console.log(req.body);
 
     const { token_usage, answer, messageId, model } = req.body;
+    console.log(req.body);
 
     const messageExist = await messageModel.findById(messageId);
 
@@ -120,7 +122,7 @@ const callBackSummaryResponseController = async (req, res, next) => {
       "controller - chat - messsage.controller - callBackSummaryResponseController - start"
     );
     const { question, token_usage, model, chatId } = req.body;
-    // console.log(req.body);
+    console.log(req.body);
     const key = `summaries.${model}`;
     const summaryExist = await summaryModel.findOneAndUpdate(
       { chat: chatId },

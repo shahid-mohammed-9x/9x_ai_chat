@@ -22,6 +22,7 @@ import {
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import validateEmail from '@/helpers/EmailValidators';
+import validateEmail from '@/helpers/EmailValidators';
 
 function LoginModal() {
   const { findUserEmailAction, userLoginAction, sendEmailVerificationAction, verifyEmailAction } =
@@ -36,6 +37,7 @@ function LoginModal() {
   const [password, setPassword] = useState('');
   const [data, setData] = useState(null);
   const [otp, setOTP] = useState('');
+ 
 
   const navigate = useNavigate();
 
@@ -44,7 +46,7 @@ function LoginModal() {
 
     const res = await findUserEmailAction(email);
 
-    if (res[0]) setData(res[1]?.data);
+    if (res[0]) setData(res[1]?.data)
     if (!res[1]?.data?.isPasswordSet && !res[1]?.data?.isEmailVerified) {
       let data = {
         email: email,
@@ -79,10 +81,12 @@ function LoginModal() {
       email: email,
       otp: otp,
     };
-    dispatch(verifyEmailAction(data)).then(() => {
-      dispatch(openPasswordAction('true'));
-      dispatch(openLoginAction('false'));
-      toast.success('Done with Email verification!, Set Your UserName and Password');
+    dispatch(verifyEmailAction(data)).then((res) => {
+      if (res) {
+        dispatch(openPasswordAction('true'));
+        dispatch(openLoginAction('false'));
+        toast.success('Done with Email verification!, Set Your UserName and Password');
+      }
     });
   };
 
@@ -135,9 +139,8 @@ function LoginModal() {
             <div className="flex-1 h-px bg-primary" />
           </div>
 
-          {/* Email input */}
           <div className="flex flex-col items-center w-full gap-4">
-            {/* Email Input */}
+            {/* Email input */}
             <div className="relative w-full sm:w-[70%] md:w-[55%]">
               <Input
                 type="email"
@@ -153,19 +156,28 @@ function LoginModal() {
 
               <label
                 htmlFor="email"
-                className="absolute left-3 top-3 text-gray-500 text-sm transition-all 
-      peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
-      peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary 
-      peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
+                className="absolute left-3 top-3 text-gray-500 text-sm transition-all
+              peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400
+              peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary
+              peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
               >
                 Email
               </label>
-              {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
+              {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
             </div>
 
             {/* OTP Input */}
             {!data?.isPasswordSet && !data?.isEmailVerified && data != null && (
-              <InputOTP maxLength={6} value={otp} onChange={(value) => setOTP(value)}>
+              <InputOTP
+                maxLength={6}
+                value={otp}
+                onChange={(value) => {
+                  const numeric = value.replace(/\D/g, '');
+                  setOTP(numeric);
+                }}
+                inputMode="numeric"
+                pattern="[0-9]*"
+              >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
@@ -230,8 +242,9 @@ function LoginModal() {
               <Button
                 className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
              bg-[#FFD700] text-black hover:bg-[#E6C200] 
-             rounded-lg shadow mt-4"
+             rounded-lg shadow mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleSubmit}
+                disabled={!email || !!emailError} // 👈 disable if email empty OR has error
               >
                 <span className="sm:inline">Submit</span>
               </Button>

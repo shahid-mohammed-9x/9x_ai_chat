@@ -2,6 +2,7 @@ const httpErrors = require("http-errors");
 // models
 const chatModel = require("../../schema/chat.model");
 const messageModel = require("../../schema/message.model");
+const summaryModel = require("../../schema/summary.model");
 // config
 const logger = require("../../config/logger.config");
 // utils
@@ -10,7 +11,6 @@ const responseHandlerUtil = require("../../utils/responseHandler.util");
 // constants
 const sortConstants = require("../../constants/sort.constants");
 const axiosService = require("../../services/axios.service");
-const summaryModel = require("../../schema/summary.model");
 
 // create chat controller
 const createChatController = async (req, res, next) => {
@@ -46,10 +46,14 @@ const createChatController = async (req, res, next) => {
     const newMessage = new messageModel(newMessageDetails);
     const newChat = new chatModel(newChatDetails);
     const summaryDetails = {
-      userId,
+      user: userId,
       chat: newChat?._id,
-      summaries: models.reduce((acc, model) => (acc[model] = null), {}),
+      summaries: models.reduce((acc, model) => {
+        acc[model] = null;
+        return acc;
+      }, {}),
     };
+
     const newSummary = new summaryModel(summaryDetails);
 
     newMessage.chat = newChat._id;
@@ -72,8 +76,6 @@ const createChatController = async (req, res, next) => {
 
     // calling ai api without waiting
     axiosService.fetchPost("/chat", json);
-
-    // calling an api of ai chat here
 
     logger.info(
       "controller - chat - chat.controller - createChatController - end"

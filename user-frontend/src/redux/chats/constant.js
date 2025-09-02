@@ -10,5 +10,6 @@ export const CHAT_MESSAGES = {
   fail: 'CHAT_MESSAGES_FAIL',
 };
 
+export const UPDATE_CHAT_STATE = 'UPDATE_CHAT_STATE';
 export const CLEAR_CHAT_ERRORS = 'CLEAR_CHAT_ERRORS';
 export const RESET_CHAT_STATE = 'RESET_CHAT_STATE';

@@ -7,7 +7,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDownIcon, Send } from 'lucide-react';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const aiModels = [
   { value: 'gemini', label: 'Gemini' },
@@ -18,10 +19,9 @@ const aiModels = [
   { value: 'sonar', label: 'Sonar' },
 ];
 
-const ChatFooter = ({ onClickFunction }) => {
+const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) => {
   const [selectedModels, setSelectedModels] = useState([]);
-  const [info, setinfo] = useState({
-    loading: false,
+  const [info, setInfo] = useState({
     inputMessage: '',
   });
 
@@ -36,11 +36,21 @@ const ChatFooter = ({ onClickFunction }) => {
     return text;
   }, [selectedModels]);
 
+  useEffect(() => {
+    console.log(clearInput, 'useEffect');
+    if (clearInput) {
+      console.log(clearInput, 'useEffect', '2');
+      setInfo((prev) => ({ ...prev, inputMessage: '' }));
+    }
+  }, [clearInput]);
+
+  console.log(clearInput, 'shahid');
+
   // Functions
   const onChangeHandlerFunction = useCallback(
     (e) => {
       const { name, value } = e?.target;
-      setinfo((prev) => ({
+      setInfo((prev) => ({
         ...prev,
         [name]: value,
       }));
@@ -55,6 +65,16 @@ const ChatFooter = ({ onClickFunction }) => {
       );
     },
     [selectedModels]
+  );
+
+  const submitButtonHandler = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (loading) return;
+      let data = { selectedModels, inputMessage: info?.inputMessage };
+      onClickFunction(data);
+    },
+    [info?.inputMessage, selectedModels, loading]
   );
 
   return (
@@ -98,8 +118,14 @@ const ChatFooter = ({ onClickFunction }) => {
           </DropdownMenu>
 
           {/* Send button */}
-          <Button size="icon" className="h-10 w-10 rounded-full hover:bg-gray-50 shrink-0">
-            <Send className="h-5 w-5" />
+          <Button
+            size="icon"
+            className="h-10 w-10 rounded-full hover:bg-gray-50 shrink-0"
+            disabled={loading || info?.inputMessage.length < 3 || selectedModels.length < 1}
+            onClick={submitButtonHandler}
+            onKeyDown={(e) => e.key === 'Enter' && submitButtonHandler()}
+          >
+            {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
           </Button>
         </div>
       </CardContent>
