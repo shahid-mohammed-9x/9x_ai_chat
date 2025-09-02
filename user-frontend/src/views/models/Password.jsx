@@ -20,6 +20,8 @@ const SetPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const passwordRef = useRef(null);
+  const confirmRef = useRef(null);
   const { setPasswordAction, resetUserProfileAction } = userActions;
   const { openPasswordAction } = themeActions;
   const { passwordPopup } = useSelector((state) => state.themeState);

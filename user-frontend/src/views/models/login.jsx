@@ -22,7 +22,7 @@ import {
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import validateEmail from '@/helpers/EmailValidators';
-import validateEmail from '@/helpers/EmailValidators';
+
 
 function LoginModal() {
   const { findUserEmailAction, userLoginAction, sendEmailVerificationAction, verifyEmailAction } =
