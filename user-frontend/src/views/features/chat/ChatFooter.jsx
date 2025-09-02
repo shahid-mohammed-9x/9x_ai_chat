@@ -20,7 +20,7 @@ const aiModels = [
 ];
 
 const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) => {
-  const [selectedModels, setSelectedModels] = useState([]);
+  const [selectedModels, setSelectedModels] = useState(['gemini']);
   const [info, setInfo] = useState({
     inputMessage: '',
   });
@@ -43,8 +43,6 @@ const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) =>
       setInfo((prev) => ({ ...prev, inputMessage: '' }));
     }
   }, [clearInput]);
-
-  console.log(clearInput, 'shahid');
 
   // Functions
   const onChangeHandlerFunction = useCallback(
