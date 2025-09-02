@@ -27,6 +27,7 @@ const FloatingInput = ({ label, type, value, onChange, visible, setVisible, onFo
           type="button"
           onClick={() => setVisible((prev) => !prev)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+          tabIndex={-1}
         >
           {visible ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
@@ -34,5 +35,4 @@ const FloatingInput = ({ label, type, value, onChange, visible, setVisible, onFo
     </div>
   );
 };
-
 export default FloatingInput;

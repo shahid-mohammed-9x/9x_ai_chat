@@ -31,6 +31,8 @@ function LoginModal() {
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+
   const [password, setPassword] = useState('');
   const [data, setData] = useState(null);
   const [otp, setOTP] = useState('');
@@ -39,6 +41,16 @@ function LoginModal() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // ✅ Email validations
+    if (!email) {
+      setEmailError('Email is required');
+      return;
+    } else if (!validateEmail(email)) {
+      setEmailError('Please enter a valid email');
+      return;
+    } else {
+      setEmailError(''); // Clear error if valid
+    }
     const res = await findUserEmailAction(email);
 
     if (res[0]) setData(res[1]?.data);
@@ -150,12 +162,13 @@ function LoginModal() {
               <label
                 htmlFor="email"
                 className="absolute left-3 top-3 text-gray-500 text-sm transition-all 
-                peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
-                peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary 
-                peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
+      peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
+      peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary 
+      peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
               >
                 Email
               </label>
+              {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
             </div>
 
             {/* OTP Input */}
