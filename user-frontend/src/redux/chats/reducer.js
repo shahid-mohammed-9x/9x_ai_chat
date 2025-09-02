@@ -12,7 +12,7 @@ const initialState = {
   statusCode: null,
   chatsList: null,
   messageLoading: null,
-  chatMessages: null,
+  chatMessageObject: {},
 };
 
 export const ChatsReducer = (state = initialState, action) => {
@@ -36,7 +36,7 @@ export const ChatsReducer = (state = initialState, action) => {
     [CHAT_MESSAGES.success]: () => ({
       ...state,
       messageLoading: false, // Ensure loading is set to false on success
-      chatMessages: action.payload,
+      chatMessageObject: action.payload,
     }),
 
     // Failure state

@@ -8,6 +8,7 @@ import {
 import Service from '../../services';
 import * as API from './actionTypes';
 import { getAccessToken } from '../../helpers/local-storage';
+import _ from 'lodash';
 
 const getChatsListAction = () => async (dispatch) => {
   dispatch({ type: CHAT_LIST.request });
@@ -23,15 +24,29 @@ const getChatsListAction = () => async (dispatch) => {
   }
 };
 
-const getChatMessagesAction = (chatId) => async (dispatch) => {
+const getChatMessagesAction = (chatId) => async (dispatch, state) => {
   dispatch({ type: CHAT_MESSAGES.request });
   const token = getAccessToken();
   const response = await Service.fetchGet(
     `${API.BASE_CHAT}${API.CHATS.ChatMessages}/${chatId}`,
     token
   );
+
+  const storeState = state();
+  let updatedMessageListObject = _.cloneDeep(storeState?.chatsState?.chatMessageObject);
+  let keysIds = _.keys(updatedMessageListObject);
+  if (_.size(keysIds) < 5) {
+    updatedMessageListObject[chatId] = response?.[1]?.data;
+  } else {
+    delete updatedMessageListObject[keysIds[0]];
+    updatedMessageListObject[chatId] = response?.[1]?.data;
+  }
+
   if (response[0] === true) {
-    dispatch({ type: CHAT_MESSAGES.success, payload: response[1].data });
+    dispatch({
+      type: CHAT_MESSAGES.success,
+      payload: updatedMessageListObject,
+    });
   } else {
     dispatch({
       type: CHAT_MESSAGES.fail,

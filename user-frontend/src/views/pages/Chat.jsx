@@ -12,7 +12,7 @@ const Chat = () => {
   const dispatch = useDispatch();
   const { chatId } = useParams();
   const navigate = useNavigate();
-  const { chatMessages, messageLoading, error, statusCode } = useSelector(
+  const { chatMessageObject, messageLoading, error, statusCode } = useSelector(
     (state) => state.chatsState
   );
   const { profileDetails } = useSelector((state) => state.userProfileState);
@@ -24,7 +24,7 @@ const Chat = () => {
   });
 
   useEffect(() => {
-    if (chatId && (!chatMessages || !chatMessages?.chatDetails?._id !== chatId)) {
+    if (chatId && !chatMessageObject?.[chatId] && !chatMessageObject?.[chatId]?.currentPage !== 1) {
       profileDetails ? fetchChatMessageFunction() : null;
     }
   }, [chatId]);
@@ -65,7 +65,7 @@ const Chat = () => {
 
       setInfo((prev) => ({ ...prev, loading: false, clearInput: false }));
     },
-    [info?.loading, info?.clearInput, chatMessages]
+    [info?.loading, info?.clearInput, chatId, chatMessageObject[chatId]]
   );
   return (
     <ChatLayout>
