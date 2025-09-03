@@ -29,7 +29,12 @@ const Chat = () => {
     loading: false,
     clearInput: false,
     timeOut: null,
-    responseLoading: false,
+    responseLoading: {
+      gpt: false,
+      gemini: false,
+      deepseek: false,
+      qrok: false,
+    },
   });
 
   useEffect(() => {
@@ -119,7 +124,7 @@ const Chat = () => {
     <ChatLayout>
       {messageLoading ? null : (
         <>
-          <ChatWindow />
+          <ChatWindow info={info} />
           <ChatFooter
             onClickFunction={submitNewQuestionHandlerFunction}
             loading={info?.loading}
