@@ -9,6 +9,7 @@ import Service from '../../services';
 import * as API from './actionTypes';
 import { getAccessToken } from '../../helpers/local-storage';
 import _ from 'lodash';
+import { objectToQueryString } from '@/helpers';
 
 const getChatsListAction = () => async (dispatch) => {
   dispatch({ type: CHAT_LIST.request });
@@ -71,6 +72,13 @@ const newQuestionAction = async (chatId, json) => {
   return response;
 };
 
+const pollingAnswerAction = async (queryObject) => {
+  const token = getAccessToken();
+  let query = queryObject ? objectToQueryString(queryObject) : '';
+  const response = await Service.fetchGet(`${API.BASE_CHAT}${API.CHATS.Polling}${query}`, token);
+  return response;
+};
+
 // global state function to update
 const updateChatStateAction = (payload) => (dispatch) => {
   dispatch({
@@ -93,6 +101,7 @@ export default {
   getChatMessagesAction,
   createNewChatAction,
   newQuestionAction,
+  pollingAnswerAction,
   updateChatStateAction,
   clearChatsErrorsAction,
   resetChatsAction,

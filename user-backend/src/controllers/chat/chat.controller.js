@@ -71,7 +71,7 @@ const createChatController = async (req, res, next) => {
       chatId: newChat._id,
       messageId: newMessage?._id,
       context: null,
-      models: ["gemini"],
+      models,
     };
 
     // calling ai api without waiting

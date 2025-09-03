@@ -84,6 +84,7 @@ import gork from '@/assets/modelIcons/gorkIcon.png';
 import sonar from '@/assets/modelIcons/sonarIcon.png';
 import { getInitials } from '@/helpers';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import ReactMarkdown from 'react-markdown';
 
 const modelIcons = {
   gpt,
@@ -104,7 +105,10 @@ const AIResponses = ({ docs = [], chatDetails, profileDetails }) => {
 
   return (
     // <div className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
-    <ScrollToBottom className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
+    <ScrollToBottom
+      className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar"
+      initialScrollBehavior="auto"
+    >
       {docs?.map((singleMessage) => (
         <div key={singleMessage?._id} className="space-y-6">
           {/* User Message */}
@@ -131,19 +135,14 @@ const AIResponses = ({ docs = [], chatDetails, profileDetails }) => {
                 return (
                   <div
                     key={singleMessage?._id + singleAiModel}
-                    className="
-            flex items-start gap-2 p-4 bg-card rounded-2xl 
-            snap-start
-            flex-1 shrink-0
-            min-w-[85%] sm:min-w-[45%] lg:min-w-[30%]
-          "
+                    className="flex items-start gap-2 p-4 bg-card rounded-2xl snap-start flex-1 shrink-0 min-w-[85%] sm:min-w-[45%] lg:min-w-[30%]"
                   >
                     <Avatar>
                       <AvatarImage src={modelIcons[singleAiModel]} />
                     </Avatar>
                     {answer && (
                       <div className=" text-white px-4 py-2 rounded-2xl shadow max-h-[500px] overflow-y-auto">
-                        {answer}
+                        <ReactMarkdown>{answer}</ReactMarkdown>
                       </div>
                     )}
                   </div>

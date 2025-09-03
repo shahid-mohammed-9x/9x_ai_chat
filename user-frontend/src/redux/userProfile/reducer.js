@@ -25,10 +25,9 @@ export const UserProfileReducer = (state = initialState, action) => {
     //update state
     [USER_PROFILE.update]: () => ({
       ...state,
-      loading: false,
       profileDetails: {
         ...state.profileDetails,
-        ...action.payload
+        ...action.payload,
       },
     }),
 

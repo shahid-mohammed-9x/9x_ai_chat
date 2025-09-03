@@ -58,7 +58,7 @@ const App = () => {
   }, [isMobile, screenSize]);
 
   return (
-    <div className="app">
+    <div className="app bg-background">
       <BrowserRouter>
         <Routes>
           {allRoutesMapper?.map((singleRoute) => (
