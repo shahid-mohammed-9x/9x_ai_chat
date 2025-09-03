@@ -136,14 +136,16 @@ const Chat = () => {
           let updateResponseLoading = {};
           let updateReduxAnswer = {};
 
-          activeModels?.models?.forEach((singleModel) => {
+          activeModels?.forEach((singleModel) => {
             if (answerResponses?.[singleModel]?.answer) {
-              updateResponseLoading[singleModel] = true;
+              updateResponseLoading[singleModel] = false;
               updateReduxAnswer[singleModel] = answerResponses?.[singleModel];
             }
           });
 
-          if (_.size(updateResponseLoading)) {
+          console.log(updateResponseLoading, 'shahid');
+
+          if (_.size(updateResponseLoading) > 0) {
             setInfo((prev) => ({
               ...prev,
               responseLoading: { ...prev.responseLoading, ...updateResponseLoading },

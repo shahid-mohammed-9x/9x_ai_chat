@@ -35,7 +35,7 @@ const AIResponses = ({ docs, info, profileDetails }) => {
             {/* User Message */}
             <div className="flex justify-end">
               <div className="flex items-center gap-2 max-w-[70%]">
-                <div className="bg-primary text-white px-4 py-2 rounded-2xl shadow">
+                <div className="bg-primary text-white  px-4 py-2 rounded-2xl shadow">
                   {singleMessage?.question}
                 </div>
                 <Avatar className="h-8 w-8 rounded-lg">
@@ -49,7 +49,7 @@ const AIResponses = ({ docs, info, profileDetails }) => {
             </div>
 
             {/* AI Responses */}
-            <div className="w-full shadow-2xl rounded-2xl">
+            <div className="w-full shadow-sm rounded-2xl">
               <div className="flex flex-row gap-4 p-4 overflow-x-auto min-h-[600px] no-scrollbar snap-x snap-mandatory">
                 {singleMessage?.models?.map((singleAiModel, modelIndex) => {
                   const answer = singleMessage?.responses?.[singleAiModel]?.answer ?? null;
@@ -63,7 +63,7 @@ const AIResponses = ({ docs, info, profileDetails }) => {
                         <Avatar>
                           <AvatarImage src={modelIcons[singleAiModel]} />
                         </Avatar>
-                        <div className=" text-white px-4 py-2 rounded-2xl shadow flex items-center gap-1.5">
+                        <div className=" dark:text-white text-black px-4 py-2 rounded-2xl shadow flex items-center gap-1.5">
                           <DotLoader />
                         </div>
                       </div>
@@ -78,7 +78,7 @@ const AIResponses = ({ docs, info, profileDetails }) => {
                           <AvatarImage src={modelIcons[singleAiModel]} />
                         </Avatar>
                         {answer && (
-                          <div className=" text-white px-4 py-2 rounded-2xl shadow max-h-[500px] overflow-y-auto">
+                          <div className=" dark:text-white text-black px-4 py-2 rounded-2xl shadow max-h-[500px] overflow-y-auto">
                             <ReactMarkdown>{answer}</ReactMarkdown>
                           </div>
                         )}
