@@ -91,7 +91,7 @@ const Chat = () => {
         chatDataClone = updatePaginationData(chatDataClone, appendData);
         updatedMessageObject = { ...updatedMessageObject, [chatId]: chatDataClone };
         dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updatedMessageObject) }));
-        pollingHandlerFunction(response?.[1]?.pollingId);
+        pollingHandlerFunction(response?.[1]?.pollingId, updatedMessageObject);
 
         // state update
         finalObjectUpdateState.responseLoading = { ...info.responseLoading, ...responseLoading };
@@ -104,77 +104,72 @@ const Chat = () => {
     [info?.loading, info?.clearInput, info?.responseLoading, chatId, chatMessageObject]
   );
 
-  const pollingHandlerFunction = useCallback(
-    (pollingId) => {
-      let query = {
-        userId: profileDetails?._id,
-        messageId: pollingId,
-      };
+  const pollingHandlerFunction = (pollingId, latestChatMessageObject) => {
+    let query = {
+      userId: profileDetails?._id,
+      messageId: pollingId,
+    };
 
-      // api polling function
-      const apiPollingFunction = async () => {
-        const response = await pollingAnswerAction(query);
-        if (response[0] === true) {
-          if (response[1]?.isRecievedAllResponses) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
+    const apiPollingFunction = async () => {
+      const response = await pollingAnswerAction(query);
+      if (response[0] === true) {
+        if (response[1]?.isRecievedAllResponses) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+
+          setInfo((prev) => ({
+            ...prev,
+            responseLoading: { chatgpt: false, gemini: false, deepseek: false, qrok: false },
+          }));
+
+          const updateRedux = _.cloneDeep(latestChatMessageObject);
+          updateRedux[chatId].docs.forEach((item) => {
+            if (item._id === pollingId) {
+              item.responses = response[1]?.data?.responses;
+            }
+          });
+
+          dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updateRedux) }));
+        } else {
+          const activeModels = response[1]?.data?.models;
+          const answerResponses = response[1]?.data?.responses;
+          let updateResponseLoading = {};
+          let updateReduxAnswer = {};
+
+          activeModels?.models?.forEach((singleModel) => {
+            if (answerResponses?.[singleModel]?.answer) {
+              updateResponseLoading[singleModel] = true;
+              updateReduxAnswer[singleModel] = answerResponses?.[singleModel];
+            }
+          });
+
+          if (_.size(updateResponseLoading)) {
             setInfo((prev) => ({
               ...prev,
-              responseLoading: { chatgpt: false, gemini: false, deepseek: false, qrok: false },
+              responseLoading: { ...prev.responseLoading, ...updateResponseLoading },
             }));
 
-            let updateRedux = _.cloneDeep(chatMessageObject);
-            console.log(updateRedux, 'shahid');
+            const updateRedux = _.cloneDeep(latestChatMessageObject);
             updateRedux[chatId].docs.forEach((item) => {
-              console.log(item.question);
               if (item._id === pollingId) {
-                item.responses = response[1]?.data?.responses;
+                item.responses = { ...item.responses, ...updateReduxAnswer };
               }
             });
-            // updateRedux[chatId].docs[0].responses = response[1]?.data?.responses;
 
             dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updateRedux) }));
-          } else {
-            const activeModels = response[1]?.data?.models;
-            const answerResponses = response[1]?.data?.responses;
-            let updateResponseLoading = {};
-            let updateReduxAnswer = {};
-            activeModels?.models?.forEach((singleModel) => {
-              if (answerResponses?.[singleModel]?.answer) {
-                updateResponseLoading[singleModel] = true;
-                updateReduxAnswer[singleModel] = answerResponses?.[singleModel];
-              }
-            });
-
-            if (_.size(updateResponseLoading)) {
-              setInfo((prev) => ({
-                ...prev,
-                responseLoading: { ...prev, responseLoading, ...updateResponseLoading },
-              }));
-
-              let updateRedux = _.cloneDeep(chatMessageObject);
-              updateRedux[chatId].docs.forEach((item) => {
-                if (item._id === pollingId) {
-                  item.responses = { ...item.responses, ...updateReduxAnswer };
-                }
-              });
-
-              dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updateRedux) }));
-            }
           }
         }
-      };
-
-      // Clear any existing interval before setting a new one
-      if (intervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
       }
+    };
 
-      const intervalId = setInterval(apiPollingFunction, 1000);
-      intervalRef.current = intervalId;
-    },
-    [info?.responseLoading, info?.timeOut, profileDetails, chatId, chatMessageObject]
-  );
+    // Clear any existing interval before setting a new one
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    const intervalId = setInterval(apiPollingFunction, 1000);
+    intervalRef.current = intervalId;
+  };
 
   return (
     <ChatLayout>
