@@ -7,9 +7,9 @@ import InitialLoader from '@/components/custom/loaders/InitialLoader';
 import Service from '@/services';
 import useLogout from '@/hooks/useLogout';
 
-const SidebarSkeleton = memo(() => {
+export const SidebarSkeleton = memo(() => {
   return (
-    <div className="flex h-screen w-64 flex-col bg-white shadow-lg">
+    <div className="flex h-screen w-64 flex-col bg-sidebar shadow-lg ">
       {/* Header Skeleton */}
       <div className="p-4 border-b">
         <div className="flex items-center space-x-3">
@@ -29,7 +29,7 @@ const SidebarSkeleton = memo(() => {
 
           {/* Nav Items */}
           <div className="space-y-3">
-            {[...Array(5)].map((_, index) => (
+            {[...Array(3)].map((_, index) => (
               <div key={index} className="space-y-3">
                 <div className="flex items-center space-x-3 p-2 rounded-lg">
                   <div className="h-5 w-5 rounded bg-gray-200 animate-pulse" />
@@ -78,6 +78,44 @@ const SidebarSkeleton = memo(() => {
   );
 });
 
+export const ChatSkeleton = memo(() => {
+  return (
+    <div className="flex ml-3 h-screen w-full flex-col bg-sidebar shadow-lg ">
+      {/* Main Navigation Skeleton */}
+      <div className="flex-1  p-4 space-y-6">
+        <div className="w-full flex flex-col h-[700px] rounded-2xl shadow-lg">
+          <div className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
+            <div className="space-y-6 animate-pulse">
+              {/* User Message Skeleton */}
+              <div className="flex justify-end">
+                <div className="flex items-center gap-2 max-w-[90%]">
+                  <div className="bg-gray-300 h-6 w-10 rounded-2xl" />
+                  <div className="bg-gray-300 h-8 w-8 rounded-lg" />
+                </div>
+              </div>
+
+              {/* AI Responses Skeleton */}
+              <div className="w-full shadow-2xl rounded-2xl">
+                <div className="flex flex-row gap-4 p-4 overflow-x-auto min-h-[600px] no-scrollbar snap-x snap-mandatory">
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="flex items-start gap-2 p-4 bg-gray-500 rounded-2xl snap-start flex-1 shrink-0 min-w-[85%] sm:min-w-[45%] lg:min-w-[30%]"
+                    >
+                      <div className="bg-gray-300 h-8 w-8 rounded-full" />
+                      <div className="bg-gray-300 h-[500px] w-full rounded-2xl" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});
+
 const AuthWrapper = ({ roles = [], children }) => {
   const { getUserProfileAction } = userActions;
   const { profileDetails } = useSelector((state) => state.userProfileState);
@@ -119,7 +157,7 @@ const AuthWrapper = ({ roles = [], children }) => {
     <div className="flex">
       <InitialLoader loading={true} />
       <SidebarSkeleton />
-      {/* <DashboardSkeleton /> */}
+      <ChatSkeleton />
     </div>
   ) : (
     children
