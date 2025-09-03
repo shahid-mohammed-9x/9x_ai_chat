@@ -21,11 +21,11 @@ const ModelSchema = new mongoose.Schema(
     models: [
       {
         type: String,
-        enum: ["gpt", "gemini", "deepseek", "groq", "claude"],
+        enum: ["chatgpt", "gemini", "deepseek", "groq", "claude"],
       },
     ],
     responses: {
-      gpt: {
+      chatgpt: {
         answer: {
           type: String,
         },

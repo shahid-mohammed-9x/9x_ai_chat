@@ -31,7 +31,7 @@ const Chat = () => {
     loading: false,
     clearInput: false,
     responseLoading: {
-      gpt: false,
+      chatgpt: false,
       gemini: false,
       deepseek: false,
       qrok: false,
@@ -101,7 +101,7 @@ const Chat = () => {
 
       setInfo((prev) => ({ ...prev, ...finalObjectUpdateState }));
     },
-    [info?.loading, info?.clearInput, info?.responseLoading, chatId, chatMessageObject[chatId]]
+    [info?.loading, info?.clearInput, info?.responseLoading, chatId, chatMessageObject]
   );
 
   const pollingHandlerFunction = useCallback(
@@ -120,15 +120,18 @@ const Chat = () => {
             intervalRef.current = null;
             setInfo((prev) => ({
               ...prev,
-              responseLoading: { gpt: false, gemini: false, deepseek: false, qrok: false },
+              responseLoading: { chatgpt: false, gemini: false, deepseek: false, qrok: false },
             }));
 
             let updateRedux = _.cloneDeep(chatMessageObject);
+            console.log(updateRedux, 'shahid');
             updateRedux[chatId].docs.forEach((item) => {
+              console.log(item.question);
               if (item._id === pollingId) {
                 item.responses = response[1]?.data?.responses;
               }
             });
+            // updateRedux[chatId].docs[0].responses = response[1]?.data?.responses;
 
             dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updateRedux) }));
           } else {
@@ -170,7 +173,7 @@ const Chat = () => {
       const intervalId = setInterval(apiPollingFunction, 1000);
       intervalRef.current = intervalId;
     },
-    [info?.responseLoading, info?.timeOut, profileDetails, chatMessageObject]
+    [info?.responseLoading, info?.timeOut, profileDetails, chatId, chatMessageObject]
   );
 
   return (

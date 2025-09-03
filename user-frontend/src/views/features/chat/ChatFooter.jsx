@@ -20,7 +20,7 @@ const aiModels = [
 ];
 
 const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) => {
-  const [selectedModels, setSelectedModels] = useState(['deepseek']);
+  const [selectedModels, setSelectedModels] = useState(['chatgpt']);
   const [info, setInfo] = useState({
     inputMessage: '',
   });
