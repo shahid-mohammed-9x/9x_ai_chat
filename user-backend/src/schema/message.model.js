@@ -41,6 +41,30 @@ const ModelSchema = new mongoose.Schema(
           type: Object,
         },
       },
+      deepseek: {
+        answer: {
+          type: String,
+        },
+        token_usage: {
+          type: Object,
+        },
+      },
+      grok: {
+        answer: {
+          type: String,
+        },
+        token_usage: {
+          type: Object,
+        },
+      },
+      claude: {
+        answer: {
+          type: String,
+        },
+        token_usage: {
+          type: Object,
+        },
+      },
     },
     order: {
       type: Number,

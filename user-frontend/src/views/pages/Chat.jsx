@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState, useRef } from 'react';
 import ChatFooter from '../features/chat/ChatFooter';
 import ChatWindow from '../features/chat/ChatWindow';
 import ChatLayout from '../layouts/ChatLayout';
@@ -20,15 +20,16 @@ const Chat = () => {
   const dispatch = useDispatch();
   const { chatId } = useParams();
   const navigate = useNavigate();
+
   const { chatMessageObject, messageLoading, error, statusCode } = useSelector(
     (state) => state.chatsState
   );
   const { profileDetails } = useSelector((state) => state.userProfileState);
 
+  const intervalRef = useRef(null);
   const [info, setInfo] = useState({
     loading: false,
     clearInput: false,
-    timeOut: null,
     responseLoading: {
       gpt: false,
       gemini: false,
@@ -64,13 +65,17 @@ const Chat = () => {
       if (info?.loading) return;
 
       const { selectedModels, inputMessage } = e;
+      let responseLoading = selectedModels.reduce((acc, model) => {
+        acc[model] = true;
+        return acc;
+      }, {});
 
       setInfo((prev) => ({ ...prev, loading: true, clearInput: true }));
-      const json = {
-        question: inputMessage,
-        models: selectedModels,
-      };
+
+      const json = { question: inputMessage, models: selectedModels };
       const response = await newQuestionAction(chatId, json);
+      let finalObjectUpdateState = { loading: false, clearInput: false };
+
       if (response[0] === true) {
         let appendData = {
           _id: response?.[1]?.data?._id,
@@ -87,38 +92,86 @@ const Chat = () => {
         updatedMessageObject = { ...updatedMessageObject, [chatId]: chatDataClone };
         dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updatedMessageObject) }));
         pollingHandlerFunction(response?.[1]?.pollingId);
+
+        // state update
+        finalObjectUpdateState.responseLoading = { ...info.responseLoading, ...responseLoading };
       } else {
         toast.error(response?.[1]?.message || 'something went wrong');
       }
 
-      setInfo((prev) => ({ ...prev, loading: false, clearInput: false }));
+      setInfo((prev) => ({ ...prev, ...finalObjectUpdateState }));
     },
-    [info?.loading, info?.clearInput, chatId, chatMessageObject[chatId]]
+    [info?.loading, info?.clearInput, info?.responseLoading, chatId, chatMessageObject[chatId]]
   );
 
-  const pollingHandlerFunction = useCallback((pollingId) => {
-    let query = {
-      userId: profileDetails?._id,
-      messageId: pollingId,
-    };
+  const pollingHandlerFunction = useCallback(
+    (pollingId) => {
+      let query = {
+        userId: profileDetails?._id,
+        messageId: pollingId,
+      };
 
-    // api polling function
-    const apiPollingFunction = async () => {
-      const response = await pollingAnswerAction(query);
-      if (response[1] === true) {
-        if (response[1]?.data?.isRecievedAllResponses) {
-          clearInterval(info?.timeOut);
-          setInfo((prev) => ({ ...prev, timeOut: null }));
+      // api polling function
+      const apiPollingFunction = async () => {
+        const response = await pollingAnswerAction(query);
+        if (response[0] === true) {
+          if (response[1]?.isRecievedAllResponses) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+            setInfo((prev) => ({
+              ...prev,
+              responseLoading: { gpt: false, gemini: false, deepseek: false, qrok: false },
+            }));
+
+            let updateRedux = _.cloneDeep(chatMessageObject);
+            updateRedux[chatId].docs.forEach((item) => {
+              if (item._id === pollingId) {
+                item.responses = response[1]?.data?.responses;
+              }
+            });
+
+            dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updateRedux) }));
+          } else {
+            const activeModels = response[1]?.data?.models;
+            const answerResponses = response[1]?.data?.responses;
+            let updateResponseLoading = {};
+            let updateReduxAnswer = {};
+            activeModels?.models?.forEach((singleModel) => {
+              if (answerResponses?.[singleModel]?.answer) {
+                updateResponseLoading[singleModel] = true;
+                updateReduxAnswer[singleModel] = answerResponses?.[singleModel];
+              }
+            });
+
+            if (_.size(updateResponseLoading)) {
+              setInfo((prev) => ({
+                ...prev,
+                responseLoading: { ...prev, responseLoading, ...updateResponseLoading },
+              }));
+
+              let updateRedux = _.cloneDeep(chatMessageObject);
+              updateRedux[chatId].docs.forEach((item) => {
+                if (item._id === pollingId) {
+                  item.responses = { ...item.responses, ...updateReduxAnswer };
+                }
+              });
+
+              dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updateRedux) }));
+            }
+          }
         }
+      };
+
+      // Clear any existing interval before setting a new one
+      if (intervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
       }
-    };
 
-    let timeOut = setTimeout(() => {
-      apiPollingFunction();
-    }, 1000);
-
-    setInfo((prev) => ({ ...prev, timeOut }));
-  }, []);
+      const intervalId = setInterval(apiPollingFunction, 1000);
+      intervalRef.current = intervalId;
+    },
+    [info?.responseLoading, info?.timeOut, profileDetails, chatMessageObject]
+  );
 
   return (
     <ChatLayout>
