@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import _ from 'lodash';
 import { updatePaginationData } from '@/helpers';
+import { ChatSkeleton } from '../wrappers/AuthWrapper';
 
 const Chat = () => {
   const {
@@ -175,7 +176,9 @@ const Chat = () => {
 
   return (
     <ChatLayout>
-      {messageLoading ? null : (
+      {messageLoading ? (
+        <ChatSkeleton className="m-0 h-full" />
+      ) : (
         <>
           <ChatWindow info={info} />
           <ChatFooter
