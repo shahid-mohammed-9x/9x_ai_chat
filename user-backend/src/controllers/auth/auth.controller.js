@@ -10,6 +10,7 @@ const responseHandlerUtil = require("../../utils/responseHandler.util");
 const { generateOTP } = require("../../utils/otpGenerator.util");
 const { createAccessToken } = require("../../utils/jwtToken.util");
 const { verifyPasswordMethod } = require("../../utils/verifyPassword.util");
+const NodeMailerServiceClass = require("../../aws/mails/mail.nodemailer");
 
 // check user controller
 const checkUserController = async (req, res, next) => {
@@ -120,6 +121,15 @@ const sendEmailOTPController = async (req, res, next) => {
       });
       await otpDetails.save();
     }
+
+    const nodeMailerServiceClass = new NodeMailerServiceClass()
+    let mailDetails = {
+      user_name: otpDetails.name,
+      user_email: otpDetails.email,
+      otp: otpDetails.otp
+    };
+
+    await nodeMailerServiceClass.sendMail(otpDetails.email, "OTPEmailVerificationTemplate", null, mailDetails);
 
     // const awsMailServiceClass = new AwsMailServiceClass();
     // let mailDetails = {

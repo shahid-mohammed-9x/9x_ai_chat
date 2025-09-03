@@ -43,7 +43,7 @@ function LoginModal() {
     e.preventDefault();
     const res = await findUserEmailAction(email);
 
-    if (res[0]) setData(res[1]?.data)
+    if (res[0]) setData(res[1]?.data);
     if (!res[1]?.data?.isPasswordSet && !res[1]?.data?.isEmailVerified) {
       let data = {
         email: email,
@@ -90,7 +90,7 @@ function LoginModal() {
   return (
     <div>
       <Dialog open={loginPopup} onOpenChange={() => dispatch(openLoginAction('false'))}>
-        <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-md" />
+        <DialogOverlay className="fixed inset-0 bg-card backdrop-blur-md" />
 
         <DialogContent
           className="w-[90%] sm:max-w-sm md:max-w-md lg:max-w-lg rounded-2xl p-6 
