@@ -1,4 +1,4 @@
-import { ArrowUpRight, Link, MoreHorizontal, StarOff, Trash2 } from 'lucide-react';
+import { ArrowUpRight, Link, MoreHorizontal, StarOff, Trash2, MessageCircleX } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +21,7 @@ import { chatActions } from '@/redux/combineAction';
 import { useCallback, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useNavigate, useParams } from 'react-router-dom';
+import _ from 'lodash';
 
 const SidebarContentComponent = ({ profileDetails }) => {
   const { getChatsListAction } = chatActions;
@@ -56,53 +57,62 @@ const SidebarContentComponent = ({ profileDetails }) => {
             ))
           ) : (
             <SidebarMenu>
-              {chatsList?.docs?.map((item) => (
-                <SidebarMenuItem key={item?._id}>
-                  <SidebarMenuButton
-                    asChild
-                    // className={'cursor-pointer '}
-                    className={` cursor-pointer ${chatId === item?._id && 'bg-white text-black hover:bg-white hover:text-black'}`}
-                    onClick={() => navigateToChatFunction(item)}
-                  >
-                    <div>
-                      <span>{item?.title}</span>
-                    </div>
+              {_.size(chatsList?.docs) === 0 ? (
+                <SidebarMenuItem>
+                  <SidebarMenuButton className="flex justify-center text-sidebar-foreground/70 border-2 py-8">
+                    <MessageCircleX />
+                    <span>No Chat's</span>
                   </SidebarMenuButton>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuAction showOnHover>
-                        <MoreHorizontal />
-                        <span className="sr-only">More</span>
-                      </SidebarMenuAction>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      className="w-56 rounded-lg"
-                      side={isMobile ? 'bottom' : 'right'}
-                      align={isMobile ? 'end' : 'start'}
-                    >
-                      <DropdownMenuItem>
-                        <Link className="text-muted-foreground" />
-                        <span>Copy Link</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <ArrowUpRight className="text-muted-foreground" />
-                        <span>Open in New Tab</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>
-                        <Trash2 className="text-muted-foreground" />
-                        <span>Delete</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </SidebarMenuItem>
-              ))}
-              <SidebarMenuItem>
+              ) : (
+                chatsList?.docs?.map((item) => (
+                  <SidebarMenuItem key={item?._id}>
+                    <SidebarMenuButton
+                      asChild
+                      // className={'cursor-pointer '}
+                      className={` cursor-pointer ${chatId === item?._id && 'bg-white text-black hover:bg-white hover:text-black'}`}
+                      onClick={() => navigateToChatFunction(item)}
+                    >
+                      <div>
+                        <span>{item?.title}</span>
+                      </div>
+                    </SidebarMenuButton>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <SidebarMenuAction showOnHover>
+                          <MoreHorizontal />
+                          <span className="sr-only">More</span>
+                        </SidebarMenuAction>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className="w-56 rounded-lg"
+                        side={isMobile ? 'bottom' : 'right'}
+                        align={isMobile ? 'end' : 'start'}
+                      >
+                        <DropdownMenuItem>
+                          <Link className="text-muted-foreground" />
+                          <span>Copy Link</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <ArrowUpRight className="text-muted-foreground" />
+                          <span>Open in New Tab</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                          <Trash2 className="text-muted-foreground" />
+                          <span>Delete</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </SidebarMenuItem>
+                ))
+              )}
+              {/* <SidebarMenuItem>
                 <SidebarMenuButton className="text-sidebar-foreground/70">
                   <MoreHorizontal />
                   <span>More</span>
                 </SidebarMenuButton>
-              </SidebarMenuItem>
+              </SidebarMenuItem> */}
             </SidebarMenu>
           )}
         </SidebarGroup>
