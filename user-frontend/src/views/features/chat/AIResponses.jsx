@@ -11,6 +11,7 @@ import { getInitials } from '@/helpers';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import ReactMarkdown from 'react-markdown';
 import _ from 'lodash';
+import DotLoader from '@/components/custom/loaders/DotLoader';
 
 const modelIcons = {
   chatgpt: chatgpt,
@@ -62,8 +63,8 @@ const AIResponses = ({ docs, info, profileDetails }) => {
                         <Avatar>
                           <AvatarImage src={modelIcons[singleAiModel]} />
                         </Avatar>
-                        <div className=" text-white px-4 py-2 rounded-2xl shadow max-h-[500px] overflow-y-auto">
-                          loading ...
+                        <div className=" text-white px-4 py-2 rounded-2xl shadow flex items-center gap-1.5">
+                          <DotLoader />
                         </div>
                       </div>
                     );
