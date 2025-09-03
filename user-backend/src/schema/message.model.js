@@ -49,7 +49,7 @@ const ModelSchema = new mongoose.Schema(
           type: Object,
         },
       },
-      grok: {
+      groq: {
         answer: {
           type: String,
         },

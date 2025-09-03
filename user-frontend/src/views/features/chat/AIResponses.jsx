@@ -19,7 +19,7 @@ const modelIcons = {
   gemini: gemini,
   deepseek: deepseek,
   groq: groq,
-  sonar: sonar,
+  // sonar: sonar,
 };
 
 const AIResponses = ({ docs, info, profileDetails }) => {
