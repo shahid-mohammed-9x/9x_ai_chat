@@ -129,10 +129,15 @@ const SetPassword = () => {
               label="Full Name"
               type="text"
               value={formData.fullName}
-              onChange={(e) => handleChange('fullName', e.target.value)}
+              onChange={(e) => {
+                // Allow only letters and spaces
+                const onlyLetters = e.target.value.replace(/[^A-Za-z\s]/g, '');
+                handleChange('fullName', onlyLetters);
+              }}
               onFocus={() => setFocused((p) => ({ ...p, fullName: true }))}
               onBlur={() => setFocused((p) => ({ ...p, fullName: false }))}
             />
+
             {focused.fullName && formData.fullName.length > 0 && formData.fullName.length < 3 && (
               <p className="mt-2 text-sm flex items-center gap-2 text-red-400">
                 <XCircle size={16} />
