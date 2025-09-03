@@ -8,6 +8,7 @@ const initialState = {
 };
 
 export const UserProfileReducer = (state = initialState, action) => {
+  console.log(action.payload)
   const actionHandlers = {
     // Loading state
     [USER_PROFILE.request]: () => ({
@@ -25,7 +26,6 @@ export const UserProfileReducer = (state = initialState, action) => {
     //update state
     [USER_PROFILE.update]: () => ({
       ...state,
-      loading: false,
       profileDetails: {
         ...state.profileDetails,
         ...action.payload
