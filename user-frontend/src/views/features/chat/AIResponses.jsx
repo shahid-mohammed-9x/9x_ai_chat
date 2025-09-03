@@ -50,7 +50,7 @@ const AIResponses = ({ docs, info, profileDetails }) => {
 
             {/* AI Responses */}
             <div className="w-full shadow-sm rounded-2xl">
-              <div className="flex flex-row gap-4 p-4 overflow-x-auto min-h-[600px] no-scrollbar snap-x snap-mandatory">
+              <div className="flex flex-row gap-4 p-4 overflow-x-auto max-h-[600px] no-scrollbar snap-x snap-mandatory">
                 {singleMessage?.models?.map((singleAiModel, modelIndex) => {
                   const answer = singleMessage?.responses?.[singleAiModel]?.answer ?? null;
 
