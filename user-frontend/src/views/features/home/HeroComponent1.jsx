@@ -14,11 +14,12 @@ const featuresData = [
       'Tailor your AI workflow easily',
       'Always find the best solution for your query',
     ],
-    gradientFrom: 'from-purple-500',
-    gradientTo: 'to-pink-500',
+    gradientFrom: 'from-[var(--primary)]',
+    gradientTo: 'to-[var(--secondary)]',
     image:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAiepA0CEDglzeTYtosieQLtbSPs5rndQk4UqgB_36YEjjDmisQ_xp7YY0WqN8q44iP7rRvcSTUdDL8eGsFaQbsS-f4KgaYAp4QBtPbnbMcdlqWeC_uWLkHtvnQgfJO5C6agVAvNBtRWclTlnK9doeRJ8L5ZsO4gUmnANUxaGCGEISoD2d4yo9ADv5LUhS5of0-Ye9P4PuLfufI7Yy92t_dAl6NWHyIWVruLP8drrKHztdHGmSSlLg33rahvRY0v2nM2L93e-uJ4gc',
   },
+
   {
     title: 'Idea Amplifier – Smarter Outputs',
     description:
@@ -33,6 +34,7 @@ const featuresData = [
     image:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAiepA0CEDglzeTYtosieQLtbSPs5rndQk4UqgB_36YEjjDmisQ_xp7YY0WqN8q44iP7rRvcSTUdDL8eGsFaQbsS-f4KgaYAp4QBtPbnbMcdlqWeC_uWLkHtvnQgfJO5C6agVAvNBtRWclTlnK9doeRJ8L5ZsO4gUmnANUxaGCGEISoD2d4yo9ADv5LUhS5of0-Ye9P4PuLfufI7Yy92t_dAl6NWHyIWVruLP8drrKHztdHGmSSlLg33rahvRY0v2nM2L93e-uJ4gc',
   },
+
   {
     title: 'Content Wizard – AI Made Simple',
     description:
@@ -42,16 +44,16 @@ const featuresData = [
       'Save hours of writing and editing',
       'Perfect for blogs, social media, and newsletters',
     ],
-    gradientFrom: 'from-purple-500',
-    gradientTo: 'to-pink-400',
+    // New gradient using theme tokens
+    gradientFrom: 'from-[var(--chart-4)]',
+    gradientTo: 'to-[var(--chart-5)]',
     image:
       'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80',
   },
 ];
-
 const FeatureCard = memo(({ title, description, list, gradientFrom, gradientTo, image, index }) => (
   <motion.div
-    className="gradient-border shadow-2xl shadow-purple-500/10 bg-gradient-to-br from-slate-900/70 via-slate-800/60 to-slate-900/70 backdrop-blur-md rounded-2xl mb-10"
+    className="gradient-border shadow-2xl shadow-[var(--ring)]/10 bg-gradient-to-br from-[var(--card)] via-[var(--background)] to-[var(--card)] backdrop-blur-md rounded-2xl mb-10"
     initial={{ opacity: 0, y: 50, scale: 0.95 }}
     whileInView={{ opacity: 1, y: 0, scale: 1 }}
     transition={{ duration: 0.8, ease: 'easeOut', delay: index * 0.2 }}
@@ -65,16 +67,22 @@ const FeatureCard = memo(({ title, description, list, gradientFrom, gradientTo, 
         >
           {title}
         </h2>
-        <p className="text-gray-300 mb-6 sm:mb-8 text-sm sm:text-base md:text-lg">{description}</p>
+
+        <p className="text-[var(--muted-foreground)] mb-6 sm:mb-8 text-sm sm:text-base md:text-lg">
+          {description}
+        </p>
+
         <ul className="space-y-3 sm:space-y-4">
           {list?.map((item) => (
             <li key={item} className="flex items-start gap-3">
               <span
                 className={`w-6 h-6 rounded-full bg-gradient-to-br ${gradientFrom} ${gradientTo} flex items-center justify-center shrink-0`}
               >
-                <Check className="w-3.5 h-3.5 text-white" />
+                <Check className="w-3.5 h-3.5 text-[var(--primary-foreground)]" />
               </span>
-              <span className="text-sm sm:text-base md:text-lg text-gray-200">{item}</span>
+              <span className="text-sm sm:text-base md:text-lg text-[var(--foreground)]">
+                {item}
+              </span>
             </li>
           ))}
         </ul>
@@ -109,8 +117,7 @@ const HeroComponent1 = () => {
           <br className="hidden sm:block" />
           Redefining the Future with AI.
         </motion.h1>
-
-        <p className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
+        <p className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto">
           Every detail is designed to elevate productivity and unlock the true potential of AI.
         </p>
 

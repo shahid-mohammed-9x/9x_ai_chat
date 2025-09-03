@@ -23,7 +23,6 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import validateEmail from '@/helpers/EmailValidators';
 
-
 function LoginModal() {
   const { findUserEmailAction, userLoginAction, sendEmailVerificationAction, verifyEmailAction } =
     userActions;
@@ -37,7 +36,6 @@ function LoginModal() {
   const [password, setPassword] = useState('');
   const [data, setData] = useState(null);
   const [otp, setOTP] = useState('');
- 
 
   const navigate = useNavigate();
 
@@ -46,7 +44,7 @@ function LoginModal() {
 
     const res = await findUserEmailAction(email);
 
-    if (res[0]) setData(res[1]?.data)
+    if (res[0]) setData(res[1]?.data);
     if (!res[1]?.data?.isPasswordSet && !res[1]?.data?.isEmailVerified) {
       let data = {
         email: email,
@@ -89,7 +87,16 @@ function LoginModal() {
       }
     });
   };
-
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (data?.isPasswordSet && data?.userExists) {
+      handleLogin(e);
+    } else if (data != null && !data?.isEmailVerified) {
+      handleVerify(e);
+    } else if (data == null) {
+      handleSubmit(e);
+    }
+  };
   return (
     <div>
       <Dialog open={loginPopup} onOpenChange={() => dispatch(openLoginAction('false'))}>
@@ -139,7 +146,7 @@ function LoginModal() {
             <div className="flex-1 h-px bg-primary" />
           </div>
 
-          <div className="flex flex-col items-center w-full gap-4">
+          <form onSubmit={handleFormSubmit} className="flex flex-col items-center w-full gap-4">
             {/* Email input */}
             <div className="relative w-full sm:w-[70%] md:w-[55%]">
               <Input
@@ -215,7 +222,7 @@ function LoginModal() {
               </div>
             )}
 
-            {/* Submit Button */}
+            {/* login Button */}
             {data?.isPasswordSet && data?.userExists && (
               <Button
                 className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
@@ -226,7 +233,7 @@ function LoginModal() {
                 <span className="sm:inline">Login</span>
               </Button>
             )}
-
+            {/* verify button */}
             {data != null && !data?.isEmailVerified && (
               <Button
                 className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
@@ -237,7 +244,7 @@ function LoginModal() {
                 <span className="sm:inline"> Verify</span>
               </Button>
             )}
-
+            {/* submit button */}
             {data == null && (
               <Button
                 className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
@@ -249,7 +256,7 @@ function LoginModal() {
                 <span className="sm:inline">Submit</span>
               </Button>
             )}
-          </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
