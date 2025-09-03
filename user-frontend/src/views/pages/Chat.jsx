@@ -29,6 +29,7 @@ const Chat = () => {
     loading: false,
     clearInput: false,
     timeOut: null,
+    responseLoading: false,
   });
 
   useEffect(() => {

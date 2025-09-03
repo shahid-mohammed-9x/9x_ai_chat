@@ -41,19 +41,13 @@ const newQuestionController = async (req, res, next) => {
       $push: { messages: messageDetails._id },
     });
 
-    // const summaryData = await summaryModel.findOne({ chat: chatId });
-
-    // let context = models?.map((model) => ({
-    //   [model]: summaryData?.summaries?.[model]?.summary || null,
-    // }));
-
     const json = {
       question,
       userId,
       chatId,
       messageId: messageDetails?._id,
       context: null,
-      models: ["gemini"],
+      models,
     };
 
     // calling ai api without waiting

@@ -21,7 +21,7 @@ const ModelSchema = new mongoose.Schema(
     models: [
       {
         type: String,
-        enum: ["gpt", "gemini"],
+        enum: ["gpt", "gemini", "deepseek", "groq", "claude"],
       },
     ],
     responses: {
