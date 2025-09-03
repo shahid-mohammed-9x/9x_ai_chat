@@ -28,7 +28,7 @@ AuthRoutes.route("/login").post(loginValidation, loginController);
 
 
 // login with google
-AuthRoutes.route('/google/callback');
-AuthRoutes.route('/google')
+// AuthRoutes.route('/google/callback');
+// AuthRoutes.route('/google')
 
 module.exports = AuthRoutes;
