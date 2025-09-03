@@ -32,7 +32,8 @@ const setPasswordAction = (data) => async(dispatch)=>{
   );
 
   if (response[0] === true) {
-    dispatch({ type: USER_PROFILE.update, payload: data });
+    const res = {fullName: data.fullName}
+    dispatch({ type: USER_PROFILE.update, payload: res});
     return response
   } else {
     dispatch({
@@ -75,8 +76,9 @@ const verifyEmailAction = (data) => async(dispatch)=>{
     `${API.BASE_AUTH}${API.AUTH_ROUTES.verifyEmail}`, data
   );
   if (response[0] === true) {
+    console.log(response)
     setAccessToken(response[1]?.token)
-    dispatch({ type: USER_PROFILE.success, payload: data });
+    dispatch({ type: USER_PROFILE.success, payload: response[1]?.data });
     return response[0]
   } else {
     dispatch({

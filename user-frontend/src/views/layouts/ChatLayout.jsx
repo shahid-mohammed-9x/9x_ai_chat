@@ -32,6 +32,7 @@ const ChatLayout = ({ children }) => {
   }, [isSidebarOpen]);
 
   useEffect(() => {
+    console.log(profileDetails);
     if (profileDetails?.fullName == null) {
       dispatch(openPasswordAction('true'));
     }

@@ -20,7 +20,7 @@ const SetPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { setPasswordAction, resetUserProfileAction } = userActions;
+  const { setPasswordAction, clearUserProfileErrorsAction } = userActions;
   const { openPasswordAction } = themeActions;
   const { passwordPopup } = useSelector((state) => state.themeState);
   const { profileDetails, error, statusCode } =
@@ -68,8 +68,8 @@ const SetPassword = () => {
     dispatch(setPasswordAction(submittedData)).then((res) => {
       if (res) {
         toast.success('Password Successfully set');
-        navigate('/new-chat');
         dispatch(openPasswordAction('false'));
+        navigate('/new-chat');
       }
     });
   };
@@ -77,9 +77,9 @@ const SetPassword = () => {
   useEffect(() => {
     if (error && statusCode === 400) {
       toast.error(error);
-      dispatch(resetUserProfileAction());
+      dispatch(clearUserProfileErrorsAction());
     }
-  }, [error, statusCode, dispatch, navigate]);
+  }, [error, statusCode]);
 
   // Validations
   const fullNameValid = formData.fullName.length >= 3;
