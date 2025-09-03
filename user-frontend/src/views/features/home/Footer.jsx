@@ -41,7 +41,7 @@ const Footer = () => {
     toast.info('Thanks for subscribing!');
   };
   return (
-    <footer className="bg-[#111318] border-t border-slate-800/50 relative">
+    <footer className="bg-[var(--background)] border-t border-[var(--border)] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid gap-12 md:grid-cols-4">
         {/* Logo & Description */}
         <div className="md:col-span-1">
@@ -52,21 +52,22 @@ const Footer = () => {
               className="h-10 w-auto object-contain"
             />
           </div>
-          <p className="mt-4 text-slate-400 text-sm leading-relaxed">
+          <p className="mt-4 text-[var(--muted-foreground)] text-sm leading-relaxed">
             Pioneering the future of artificial intelligence.
           </p>
         </div>
 
         {/* Navigation, Social & Newsletter */}
+
         <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-8">
           {/* Navigation */}
           <div>
-            <h3 className="text-lg font-semibold text-primary">Navigation</h3>
+            <h3 className="text-lg font-semibold text-[var(--primary)]">Navigation</h3>
             <ul className="mt-4 space-y-2">
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <a
-                    className="text-slate-400 hover:text-primary transition-colors"
+                    className="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors"
                     href={link.href}
                   >
                     {link.name}
@@ -78,13 +79,12 @@ const Footer = () => {
 
           {/* Social Links */}
           <div>
-            <h3 className="text-lg font-semibold text-primary">Connect</h3>
+            <h3 className="text-lg font-semibold text-[var(--primary)]">Connect</h3>
             <div className="flex space-x-4 mt-4">
               {socialLinks.map((link) => (
                 <a
                   key={link.name}
-                  //   className="text-slate-400 rounded-full hover:text-primary transition-colors"
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-800  transition-colors"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--muted)] text-[var(--foreground)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition-colors"
                   href={link.href}
                 >
                   {link.icon}
@@ -96,19 +96,19 @@ const Footer = () => {
 
           {/* subscript */}
           <div>
-            <h3 className="text-lg font-semibold text-primary">Subscript to 9X_AI_CHAT</h3>
-            <p className="mt-4 text-slate-400 text-sm">
+            <h3 className="text-lg font-semibold text-[var(--primary)]">Subscribe to 9X_AI_CHAT</h3>
+            <p className="mt-4 text-[var(--muted-foreground)] text-sm">
               Stay up to date with our latest news and features.
             </p>
             <form className="mt-4 flex flex-col sm:flex-row gap-2" onSubmit={handleSubmit}>
               <input
                 type="email"
                 placeholder="Your email"
-                className="w-full bg-slate-800 border border-slate-700 text-white rounded-md px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                className="w-full bg-[var(--muted)] border border-[var(--border)] text-[var(--foreground)] rounded-md px-4 py-2 focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all"
               />
               <button
                 type="submit"
-                className="bg-primary text-white font-semibold px-4 py-2 rounded-md hover:bg-[#D3AC56]-500 transition-colors"
+                className="bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold px-4 py-2 rounded-md hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)] transition-colors"
               >
                 Subscribe
               </button>
@@ -118,16 +118,17 @@ const Footer = () => {
       </div>
 
       {/* Bottom */}
-      <div className="border-t border-slate-800/50 py-6 flex flex-col md:flex-row justify-between items-center text-sm text-slate-400 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div className="border-t border-[var(--border)] py-6 flex flex-col md:flex-row justify-between items-center text-sm text-[var(--muted-foreground)] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p>© 2025 9X_AI_CHAT. All rights reserved.</p>
         <div className="flex space-x-4 mt-4 md:mt-0">
-          <a className="hover:text-white transition-colors">Terms of Service</a>
-          <a className="hover:text-white transition-colors">Privacy Policy</a>
+          <a className="hover:text-[var(--foreground)] transition-colors">Terms of Service</a>
+          <a className="hover:text-[var(--foreground)] transition-colors">Privacy Policy</a>
         </div>
       </div>
 
       {/* Gradient Overlay */}
-      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary/20 to-transparent pointer-events-none"></div>
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[var(--primary)]/20 to-transparent pointer-events-none"></div>
     </footer>
   );
 };

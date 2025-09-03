@@ -1,4 +1,4 @@
-import { memo, useState, useMemo, useEffect } from 'react';
+import { memo, useState, useMemo, useRef, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -20,6 +20,8 @@ const SetPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const passwordRef = useRef(null);
+  const confirmRef = useRef(null);
   const { setPasswordAction, clearUserProfileErrorsAction } = userActions;
   const { openPasswordAction } = themeActions;
   const { passwordPopup } = useSelector((state) => state.themeState);
@@ -145,6 +147,7 @@ const SetPassword = () => {
           {/* Password */}
           <div>
             <FloatingInput
+              ref={passwordRef}
               label="Password"
               type="password"
               value={formData.password}
@@ -153,6 +156,12 @@ const SetPassword = () => {
               setVisible={setPasswordVisible}
               onFocus={() => setFocused((p) => ({ ...p, password: true }))}
               onBlur={() => setFocused((p) => ({ ...p, password: false }))}
+              onKeyDown={(e) => {
+                if (e.key === 'Tab' && !e.shiftKey) {
+                  e.preventDefault();
+                  confirmRef.current?.focus();
+                }
+              }}
             />
             <PasswordRules rules={rules} show={focused.password} />
           </div>
@@ -160,6 +169,7 @@ const SetPassword = () => {
           {/* Confirm Password */}
           <div>
             <FloatingInput
+              ref={confirmRef}
               label="Confirm Password"
               type="password"
               value={formData.confirmPassword}
