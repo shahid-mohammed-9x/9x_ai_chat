@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 const navLinks = [
   { name: 'About', href: '#' },
   { name: 'Features', href: '#features' },
+  { name: 'Pricing', href: '#pricing' },
   { name: 'FAQs', href: '#faqs' },
 ];
 const socialLinks = [
