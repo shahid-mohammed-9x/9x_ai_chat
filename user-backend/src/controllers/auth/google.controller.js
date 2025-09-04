@@ -1,5 +1,6 @@
 const { DEVELOPMENT_MODE } = require("../../config/index.config");
 const logger = require("../../config/logger.config");
+const userModel = require("../../schema/user.model");
 const GoogleAuthServiceClass = require("../../services/google.auth.service");
 const errorHandling = require("../../utils/errorHandling.util");
 const responseHandlerUtil = require("../../utils/responseHandler.util");
@@ -42,9 +43,25 @@ const googleAuthCallbackController = async(req, res, next) =>{
 
         const googleUser = await googleAuthService.getTokensFromCode(code);
 
+        if(!googleUser){
+            return next(httpErrors.BadRequest("Something Went wrong"));
+        }
+        console.log(googleUser)
 
+        let newUser;
+        const user = await userModel.findOne({email: googleUser?.email});
+        if(!user){
+            newUser = new userModel({
+                email: googleUser?.email,
+                userName: googleUser?.email.split('@')[0],
+                fullName: googleUser?.name,
+                isEmailVerified: googleUser?.verified_email,
+            })
 
-        console.log(user)
+            await newUser.save();
+        }
+
+        console.log(newUser)
 
         let baseUrl = DEVELOPMENT_MODE == "development" ? "http://localhost:5173/new-chat" : ""
 
@@ -52,15 +69,13 @@ const googleAuthCallbackController = async(req, res, next) =>{
             "controller - auth - google.controller - googleAuthCallbackController - end"
         );
 
-        responseHandlerUtil.successResponseStandard(res, {
-            message: "successfully user LoggedIn",
-            data: user,
-            otherData: {
-            baseUrl
-            }
-        });
-
-        res.status(200).json({ success: true, statusCode: 200, baseUrl });
+        // responseHandlerUtil.successResponseStandard(res, {
+        //     message: "successfully user LoggedIn",
+        //     data: user,
+        //     otherData: {
+        //     baseUrl
+        //     }
+        // });
     }
     catch(error){
         logger.info(
