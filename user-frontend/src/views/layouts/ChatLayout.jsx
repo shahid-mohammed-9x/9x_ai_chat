@@ -32,10 +32,10 @@ const ChatLayout = ({ children }) => {
   }, [isSidebarOpen]);
 
   useEffect(() => {
-    if (profileDetails?.fullName == null) {
+    if ((profileDetails?.fullName == null) & (profileDetails?.email != null)) {
       dispatch(openPasswordAction('true'));
     }
-  }, [profileDetails, dispatch, openPasswordAction]);
+  }, [profileDetails]);
   return (
     <>
       <Password />

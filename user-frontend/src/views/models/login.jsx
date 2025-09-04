@@ -116,10 +116,10 @@ function LoginModal() {
                 className="h-12 w-auto"
               />
             </div>
-            <DialogTitle className="text-lg md:text-xl font-bold">
+            <DialogTitle className="text-lg md:text-xl font-bold text-secondary-foreground">
               Welcome to 9x AI Chat
             </DialogTitle>
-            <DialogDescription className="text-xs md:text-sm text-gray-300">
+            <DialogDescription className="text-xs md:text-sm text-gray-700">
               Choose how you would like to sign in
             </DialogDescription>
           </DialogHeader>
@@ -128,7 +128,7 @@ function LoginModal() {
           <Button
             variant="default"
             className="h-10 px-6 w-full sm:w-[70%] md:w-[55%] flex-shrink-0 m-auto 
-             bg-gray-700 text-white hover:bg-gray-600 rounded-lg shadow mt-4"
+              text-secondary-foreground rounded-lg mt-4 bg-background shadow-primary "
           >
             <img
               src="https://www.svgrepo.com/show/355037/google.svg"
@@ -194,9 +194,9 @@ function LoginModal() {
               <label
                 htmlFor="email"
                 className="absolute left-3 top-3 text-gray-500 text-sm transition-all
-      peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400
-      peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary
-      peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
+                  peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400
+                  peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary
+                  peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
               >
                 Email
               </label>
@@ -246,9 +246,9 @@ function LoginModal() {
                 <label
                   htmlFor="password"
                   className="absolute left-3 top-3 text-gray-500 text-sm transition-all 
-              peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
-              peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary 
-              peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
+                    peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
+                    peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary 
+                    peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
                 >
                   Password
                 </label>
