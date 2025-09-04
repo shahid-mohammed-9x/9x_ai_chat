@@ -59,12 +59,12 @@ const ChatLayout = ({ children }) => {
 
         <SidebarInset>
           {/* Foreground Content */}
-          <div className="relative z-10 flex flex-col h-full">
+          <div className="relative z-10 flex flex-col h-[100vh]">
             <div className="flex items-center gap-2 p-4">
               <SidebarTrigger onClick={() => handleSidebarTrigger(!isSidebarOpen)} />
             </div>
             {/* {children} */}
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-auto w-full">
+            <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-hidden w-full justify-between">
               {children}
             </div>
           </div>

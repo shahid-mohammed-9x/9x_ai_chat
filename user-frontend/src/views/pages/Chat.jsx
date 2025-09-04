@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import _ from 'lodash';
 import { updatePaginationData } from '@/helpers';
 import { ChatSkeleton } from '../wrappers/AuthWrapper';
+import ProgressLoader from '@/components/custom/loaders/ProgressLoader';
 
 const Chat = () => {
   const {
@@ -188,8 +189,8 @@ const Chat = () => {
 
   return (
     <ChatLayout>
-      {messageLoading ? (
-        <ChatSkeleton className="m-0 h-full" />
+      {!messageLoading ? (
+        <ProgressLoader />
       ) : (
         <>
           <ChatWindow info={info} />
