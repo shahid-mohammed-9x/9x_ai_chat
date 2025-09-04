@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { ArrowUpRight, Link, MoreHorizontal, StarOff, Trash2, MessageCircleX } from 'lucide-react';
 import {
   DropdownMenu,
@@ -23,6 +24,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useNavigate, useParams } from 'react-router-dom';
 import _ from 'lodash';
 import toast from 'react-hot-toast';
+
 const SidebarContentComponent = ({ profileDetails }) => {
   const { getChatsListAction } = chatActions;
   const { chatsList, loading } = useSelector((state) => state.chatsState);
@@ -31,6 +33,10 @@ const SidebarContentComponent = ({ profileDetails }) => {
   const { chatId } = useParams();
   const { isMobile } = useSidebar();
 
+  const [info, setInfo] = useState({
+    limit: 15,
+  });
+
   useEffect(() => {
     if (profileDetails && !chatsList && chatsList?.currentPage !== 1) {
       fetchChatListFunctions();
@@ -38,8 +44,11 @@ const SidebarContentComponent = ({ profileDetails }) => {
   }, [profileDetails]);
 
   const fetchChatListFunctions = useCallback(() => {
-    dispatch(getChatsListAction());
-  }, [profileDetails, chatsList]);
+    const payload = {
+      limit: info?.limit,
+    };
+    dispatch(getChatsListAction(payload));
+  }, [profileDetails, chatsList, info?.limit]);
 
   const navigateToChatFunction = useCallback((chatDetails) => {
     navigate(`/chat/${chatDetails?._id}`);

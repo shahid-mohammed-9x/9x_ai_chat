@@ -11,10 +11,11 @@ import { getAccessToken } from '../../helpers/local-storage';
 import _ from 'lodash';
 import { objectToQueryString } from '@/helpers';
 
-const getChatsListAction = () => async (dispatch) => {
+const getChatsListAction = (queryObject) => async (dispatch) => {
   dispatch({ type: CHAT_LIST.request });
   const token = getAccessToken();
-  const response = await Service.fetchGet(`${API.BASE_CHAT}${API.CHATS.UserChats}`, token);
+  let query = queryObject ? objectToQueryString(queryObject) : '';
+  const response = await Service.fetchGet(`${API.BASE_CHAT}${API.CHATS.UserChats}${query}`, token);
   if (response[0] === true) {
     dispatch({ type: CHAT_LIST.success, payload: response[1].data });
   } else {
