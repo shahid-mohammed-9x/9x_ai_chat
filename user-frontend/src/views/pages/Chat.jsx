@@ -191,7 +191,7 @@ const Chat = () => {
 
   return (
     <ChatLayout>
-      {messageLoading ? (
+      {!messageLoading ? (
         <Progress />
       ) : (
         <>
