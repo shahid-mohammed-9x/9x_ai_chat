@@ -64,7 +64,7 @@ const ChatLayout = ({ children }) => {
               <SidebarTrigger onClick={() => handleSidebarTrigger(!isSidebarOpen)} />
             </div>
             {/* {children} */}
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-hidden w-full justify-between">
+            <div className="flex flex-1 flex-col gap-4 p-4 pt-0  w-full justify-between">
               {children}
             </div>
           </div>

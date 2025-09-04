@@ -101,6 +101,7 @@ const ChatHistory = () => {
         dataLength={chatHistory?.docs || 0}
         hasMore={chatHistory?.hasNext || false}
         next={fetchPaginationFunction}
+        // className="overflow-auto max-h-[90vh]"
         // scrollableTarget="chat_history_scrollable"
       >
         {_.keys(groupDocumentsByDate || {})?.map((singleGroup) => {
