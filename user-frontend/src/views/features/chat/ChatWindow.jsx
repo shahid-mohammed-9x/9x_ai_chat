@@ -19,7 +19,7 @@ const ChatWindow = ({ info }) => {
   return (
     <div className="w-full flex flex-col h-[700px] rounded-2xl  max-md:h-8/12">
       {/* Chat Messages */}
-      <CardContent className="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar max-md:p-0">
+      <CardContent className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar max-md:p-0">
         <AIResponses {...chatMessages} profileDetails={profileDetails} info={info} />
       </CardContent>
 
