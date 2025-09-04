@@ -13,6 +13,7 @@ const initialState = {
   chatsList: null,
   messageLoading: null,
   chatMessageObject: {},
+  newChatPollingId: null,
 };
 
 export const ChatsReducer = (state = initialState, action) => {

@@ -22,7 +22,7 @@ const Chat = () => {
   const { chatId } = useParams();
   const navigate = useNavigate();
 
-  const { chatMessageObject, messageLoading, error, statusCode } = useSelector(
+  const { chatMessageObject, messageLoading, error, statusCode, newChatPollingId } = useSelector(
     (state) => state.chatsState
   );
   const { profileDetails } = useSelector((state) => state.userProfileState);
@@ -38,6 +38,18 @@ const Chat = () => {
       qrok: false,
     },
   });
+
+  // for new chat polling
+  useEffect(() => {
+    if (chatMessageObject?.[chatId] && newChatPollingId) {
+      setInfo((prev) => ({
+        ...prev,
+        responseLoading: { ...prev.responseLoading, ...newChatPollingId?.responseLoading },
+      }));
+      pollingHandlerFunction(newChatPollingId?._id, chatMessageObject?.[chatId]);
+      dispatch(updateChatStateAction({ newChatPollingId: null }));
+    }
+  }, [chatMessageObject?.[chatId], newChatPollingId]);
 
   useEffect(() => {
     if (chatId && !chatMessageObject?.[chatId] && !chatMessageObject?.[chatId]?.currentPage !== 1) {
