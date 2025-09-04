@@ -27,15 +27,16 @@ const ChatLayout = ({ children }) => {
     sidebarState: { isSidebarOpen, navUser, changeNavUserAction, isSidebarOpenAction },
   } = useContext(Context);
 
-  const handleSidebarTrigger = useCallback(() => {
-    isSidebarOpenAction(!isSidebarOpen);
-  }, [isSidebarOpen]);
-
   useEffect(() => {
     if ((profileDetails?.fullName == null) & (profileDetails?.email != null)) {
       dispatch(openPasswordAction('true'));
     }
   }, [profileDetails]);
+
+  const handleSidebarTrigger = useCallback(() => {
+    isSidebarOpenAction(!isSidebarOpen);
+  }, [isSidebarOpen]);
+
   return (
     <>
       <Password />
