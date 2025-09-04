@@ -44,12 +44,12 @@ const Chat = () => {
     if (chatMessageObject?.[chatId] && newChatPollingId) {
       setInfo((prev) => ({
         ...prev,
-        responseLoading: { ...prev.responseLoading, ...newChatPollingId?.responseLoading },
+        responseLoading: { ...prev?.responseLoading, ...newChatPollingId?.responseLoading },
       }));
-      pollingHandlerFunction(newChatPollingId?._id, chatMessageObject?.[chatId]);
+      pollingHandlerFunction(newChatPollingId?._id, chatMessageObject);
       dispatch(updateChatStateAction({ newChatPollingId: null }));
     }
-  }, [chatMessageObject?.[chatId], newChatPollingId]);
+  }, [chatId, chatMessageObject?.[chatId], newChatPollingId]);
 
   useEffect(() => {
     if (chatId && !chatMessageObject?.[chatId] && !chatMessageObject?.[chatId]?.currentPage !== 1) {
@@ -137,7 +137,7 @@ const Chat = () => {
           }));
 
           const updateRedux = _.cloneDeep(latestChatMessageObject);
-          updateRedux[chatId].docs.forEach((item) => {
+          updateRedux?.[chatId]?.docs?.forEach((item) => {
             if (item._id === pollingId) {
               item.responses = response[1]?.data?.responses;
             }
