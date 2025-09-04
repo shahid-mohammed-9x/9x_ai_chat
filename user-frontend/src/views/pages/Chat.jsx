@@ -8,9 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import _ from 'lodash';
 import { updatePaginationData } from '@/helpers';
-import { ChatSkeleton } from '../wrappers/AuthWrapper';
-
-//import Spinner from '@/components/custom/loaders/Spinner';
 import Progress from '@/components/custom/loaders/Progress';
 
 const Chat = () => {
@@ -194,8 +191,7 @@ const Chat = () => {
 
   return (
     <ChatLayout>
-      {!messageLoading ? (
-        // <ChatSkeleton className="m-0 h-full" />
+      {messageLoading ? (
         <Progress />
       ) : (
         <>
