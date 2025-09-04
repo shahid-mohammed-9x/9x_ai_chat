@@ -22,7 +22,7 @@ import { useCallback, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useNavigate, useParams } from 'react-router-dom';
 import _ from 'lodash';
-
+import toast from 'react-hot-toast';
 const SidebarContentComponent = ({ profileDetails }) => {
   const { getChatsListAction } = chatActions;
   const { chatsList, loading } = useSelector((state) => state.chatsState);
@@ -43,6 +43,23 @@ const SidebarContentComponent = ({ profileDetails }) => {
 
   const navigateToChatFunction = useCallback((chatDetails) => {
     navigate(`/chat/${chatDetails?._id}`);
+  }, []);
+
+  const copyLinkFunction = useCallback((item) => {
+    const link = `${window.location.origin}/chat/${item?._id}`;
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        toast.success('Link copied to clipboard!');
+      })
+      .catch(() => {
+        toast.error('Failed to copy link.');
+      });
+  }, []);
+
+  const newTabFunction = useCallback((item) => {
+    const link = `${window.location.origin}/chat/${item?._id}`;
+    window.open(link, '_blank'); // opens in a new tab
   }, []);
 
   return (
@@ -89,11 +106,24 @@ const SidebarContentComponent = ({ profileDetails }) => {
                         side={isMobile ? 'bottom' : 'right'}
                         align={isMobile ? 'end' : 'start'}
                       >
-                        <DropdownMenuItem>
+                        {/* <DropdownMenuItem>
+                          <Link className="text-muted-foreground" />
+                          <span>Copy Link</span>
+                        </DropdownMenuItem> */}
+                        <DropdownMenuItem
+                          onClick={() => {
+                            copyLinkFunction(item);
+                          }}
+                        >
                           <Link className="text-muted-foreground" />
                           <span>Copy Link</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+
+                        {/* <DropdownMenuItem>
+                          <ArrowUpRight className="text-muted-foreground" />
+                          <span>Open in New Tab</span>
+                        </DropdownMenuItem> */}
+                        <DropdownMenuItem onClick={() => newTabFunction(item)}>
                           <ArrowUpRight className="text-muted-foreground" />
                           <span>Open in New Tab</span>
                         </DropdownMenuItem>

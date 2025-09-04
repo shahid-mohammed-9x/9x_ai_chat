@@ -22,7 +22,7 @@ const Chat = () => {
   const { chatId } = useParams();
   const navigate = useNavigate();
 
-  const { chatMessageObject, messageLoading, error, statusCode } = useSelector(
+  const { chatMessageObject, messageLoading, error, statusCode, newChatPollingId } = useSelector(
     (state) => state.chatsState
   );
   const { profileDetails } = useSelector((state) => state.userProfileState);
@@ -38,6 +38,18 @@ const Chat = () => {
       qrok: false,
     },
   });
+
+  // for new chat polling
+  useEffect(() => {
+    if (chatMessageObject?.[chatId] && newChatPollingId) {
+      setInfo((prev) => ({
+        ...prev,
+        responseLoading: { ...prev?.responseLoading, ...newChatPollingId?.responseLoading },
+      }));
+      pollingHandlerFunction(newChatPollingId?._id, chatMessageObject);
+      dispatch(updateChatStateAction({ newChatPollingId: null }));
+    }
+  }, [chatId, chatMessageObject?.[chatId], newChatPollingId]);
 
   useEffect(() => {
     if (chatId && !chatMessageObject?.[chatId] && !chatMessageObject?.[chatId]?.currentPage !== 1) {
@@ -125,7 +137,7 @@ const Chat = () => {
           }));
 
           const updateRedux = _.cloneDeep(latestChatMessageObject);
-          updateRedux[chatId].docs.forEach((item) => {
+          updateRedux?.[chatId]?.docs?.forEach((item) => {
             if (item._id === pollingId) {
               item.responses = response[1]?.data?.responses;
             }

@@ -63,11 +63,15 @@ const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) =>
     [selectedModels]
   );
 
-  const submitButtonHandler = useCallback(() => {
-    if (loading) return;
-    let data = { selectedModels, inputMessage: info?.inputMessage };
-    onClickFunction(data);
-  }, [info?.inputMessage, selectedModels, loading]);
+  const submitButtonHandler = useCallback(
+    (e) => {
+      e?.preventDefault?.();
+      if (loading) return;
+      let data = { selectedModels, inputMessage: info?.inputMessage };
+      onClickFunction(data);
+    },
+    [info?.inputMessage, selectedModels, loading]
+  );
 
   return (
     <div className="bottom-0 left-0 right-0 items-center m-2">
@@ -81,7 +85,7 @@ const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) =>
           onChange={onChangeHandlerFunction}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey && info?.inputMessage?.length > 3) {
-              submitButtonHandler();
+              submitButtonHandler(e);
             }
           }}
         />
