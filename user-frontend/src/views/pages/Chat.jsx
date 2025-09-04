@@ -10,6 +10,9 @@ import _ from 'lodash';
 import { updatePaginationData } from '@/helpers';
 import { ChatSkeleton } from '../wrappers/AuthWrapper';
 
+//import Spinner from '@/components/custom/loaders/Spinner';
+import Progress from '@/components/custom/loaders/Progress';
+
 const Chat = () => {
   const {
     getChatMessagesAction,
@@ -188,8 +191,9 @@ const Chat = () => {
 
   return (
     <ChatLayout>
-      {messageLoading ? (
-        <ChatSkeleton className="m-0 h-full" />
+      {!messageLoading ? (
+        // <ChatSkeleton className="m-0 h-full" />
+        <Progress />
       ) : (
         <>
           <ChatWindow info={info} />
