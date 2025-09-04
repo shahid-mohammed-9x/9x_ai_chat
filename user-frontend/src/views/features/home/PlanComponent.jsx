@@ -1,6 +1,8 @@
 import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Check, XIcon } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { themeActions } from '@/redux/combineAction';
 
 const pricingCards = [
   {
@@ -17,7 +19,7 @@ const pricingCards = [
       'No priority support',
       'No advanced AI models like GPT-5',
     ],
-    gradientFrom: 'from-purple-500',
+    gradientFrom: 'from-purple-800',
     gradientTo: 'to-pink-300',
     paid: false,
   },
@@ -53,6 +55,8 @@ const FeatureCard = memo(
     paid,
     planDetails,
   }) => {
+    const dispatch = useDispatch();
+    const { openLoginAction } = themeActions;
     const selectedRate = paid
       ? planDetails?.find((plan) => (isYearly ? plan.plan === 'year' : plan.plan === 'month'))?.rate
       : price;
@@ -131,6 +135,7 @@ const FeatureCard = memo(
                       rounded-lg shadow mt-8 text-xl`}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => dispatch(openLoginAction('true'))}
           >
             {paid ? 'Get Started Now' : 'Try Now'}
           </motion.button>
