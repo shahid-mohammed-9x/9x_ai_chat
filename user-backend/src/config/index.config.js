@@ -27,7 +27,11 @@ module.exports = {
  NODEMAILER_PORT: process.env.SMPT_PORT,
  NODEMAILER_PASS: process.env.SMPT_PASS,
  NODEMAILER_USER: process.env.SMPT_USER,
- NODEMAILER_EMAIL: process.env.SMPT_EMAIL
+ NODEMAILER_EMAIL: process.env.SMPT_EMAIL,
 
+ // google authentication
+ GOOGLE_CLIENT_ID : process.env.GOOGLE_CLIENT_ID,
+ GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+ GOOGLE_REDIRECT_URI : process.env.GOOGLE_REDIRECT_URI
 
 };
