@@ -37,6 +37,7 @@ const Chat = () => {
       deepseek: false,
       qrok: false,
     },
+    allModelLoading: false,
   });
 
   // for new chat polling
@@ -45,6 +46,7 @@ const Chat = () => {
       setInfo((prev) => ({
         ...prev,
         responseLoading: { ...prev?.responseLoading, ...newChatPollingId?.responseLoading },
+        allModelLoading: true,
       }));
       pollingHandlerFunction(newChatPollingId?._id, chatMessageObject);
       dispatch(updateChatStateAction({ newChatPollingId: null }));
@@ -87,7 +89,7 @@ const Chat = () => {
 
       const json = { question: inputMessage, models: selectedModels };
       const response = await newQuestionAction(chatId, json);
-      let finalObjectUpdateState = { clearInput: false };
+      let finalObjectUpdateState = { clearInput: false, allModelLoading: true };
 
       if (response[0] === true) {
         let appendData = {
@@ -134,6 +136,7 @@ const Chat = () => {
             ...prev,
             loading: false,
             responseLoading: { chatgpt: false, gemini: false, deepseek: false, qrok: false },
+            allModelLoading: false,
           }));
 
           const updateRedux = _.cloneDeep(latestChatMessageObject);
@@ -195,7 +198,7 @@ const Chat = () => {
           <ChatWindow info={info} />
           <ChatFooter
             onClickFunction={submitNewQuestionHandlerFunction}
-            loading={info?.loading}
+            loading={info?.loading || info?.allModelLoading}
             clearInput={info?.clearInput}
             activeModels={
               newChatPollingId?.models || _.first(chatMessageObject?.[chatId]?.docs)?.models
