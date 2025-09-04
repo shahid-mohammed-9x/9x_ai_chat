@@ -45,6 +45,23 @@ const SidebarContentComponent = ({ profileDetails }) => {
     navigate(`/chat/${chatDetails?._id}`);
   }, []);
 
+  const copyLinkFunction = useCallback((item) => {
+    const link = `${window.location.origin}/chat/${item?._id}`;
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        toast.success('Link copied to clipboard!');
+      })
+      .catch(() => {
+        toast.error('Failed to copy link.');
+      });
+  }, []);
+
+  const newTabFunction = useCallback((item) => {
+    const link = `${window.location.origin}/chat/${item?._id}`;
+    window.open(link, '_blank'); // opens in a new tab
+  }, []);
+
   return (
     <SidebarContent>
       {profileDetails && (
@@ -95,15 +112,7 @@ const SidebarContentComponent = ({ profileDetails }) => {
                         </DropdownMenuItem> */}
                         <DropdownMenuItem
                           onClick={() => {
-                            const link = `${window.location.origin}/chat/${item?._id}`;
-                            navigator.clipboard
-                              .writeText(link)
-                              .then(() => {
-                                toast.success('Link copied to clipboard!');
-                              })
-                              .catch(() => {
-                                toast.error('Failed to copy link.');
-                              });
+                            copyLinkFunction(item);
                           }}
                         >
                           <Link className="text-muted-foreground" />
@@ -114,12 +123,7 @@ const SidebarContentComponent = ({ profileDetails }) => {
                           <ArrowUpRight className="text-muted-foreground" />
                           <span>Open in New Tab</span>
                         </DropdownMenuItem> */}
-                        <DropdownMenuItem
-                          onClick={() => {
-                            const link = `${window.location.origin}/chat/${item?._id}`;
-                            window.open(link, '_blank'); // opens in a new tab
-                          }}
-                        >
+                        <DropdownMenuItem onClick={() => newTabFunction(item)}>
                           <ArrowUpRight className="text-muted-foreground" />
                           <span>Open in New Tab</span>
                         </DropdownMenuItem>
