@@ -75,7 +75,7 @@ const Chat = () => {
 
       const json = { question: inputMessage, models: selectedModels };
       const response = await newQuestionAction(chatId, json);
-      let finalObjectUpdateState = { loading: false, clearInput: false };
+      let finalObjectUpdateState = { clearInput: false };
 
       if (response[0] === true) {
         let appendData = {
@@ -120,6 +120,7 @@ const Chat = () => {
 
           setInfo((prev) => ({
             ...prev,
+            loading: false,
             responseLoading: { chatgpt: false, gemini: false, deepseek: false, qrok: false },
           }));
 
@@ -144,11 +145,10 @@ const Chat = () => {
             }
           });
 
-          console.log(updateResponseLoading, 'shahid');
-
           if (_.size(updateResponseLoading) > 0) {
             setInfo((prev) => ({
               ...prev,
+              loading: false,
               responseLoading: { ...prev.responseLoading, ...updateResponseLoading },
             }));
 
