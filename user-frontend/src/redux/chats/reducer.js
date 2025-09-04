@@ -1,4 +1,5 @@
 import {
+  CHAT_HISTORY,
   CHAT_LIST,
   CHAT_MESSAGES,
   CLEAR_CHAT_ERRORS,
@@ -14,6 +15,8 @@ const initialState = {
   messageLoading: null,
   chatMessageObject: {},
   newChatPollingId: null,
+  chatHistory: null,
+  chatHistoryLoading: false,
 };
 
 export const ChatsReducer = (state = initialState, action) => {
@@ -22,6 +25,10 @@ export const ChatsReducer = (state = initialState, action) => {
     [CHAT_LIST.request]: () => ({
       ...state,
       loading: true,
+    }),
+    [CHAT_HISTORY.request]: () => ({
+      ...state,
+      chatHistoryLoading: true,
     }),
     [CHAT_MESSAGES.request]: () => ({
       ...state,
@@ -34,10 +41,21 @@ export const ChatsReducer = (state = initialState, action) => {
       loading: false, // Ensure loading is set to false on success
       chatsList: action.payload,
     }),
+    [CHAT_HISTORY.success]: () => ({
+      ...state,
+      chatHistoryLoading: false, // Ensure loading is set to false on success
+      chatHistory: action.payload,
+    }),
     [CHAT_MESSAGES.success]: () => ({
       ...state,
       messageLoading: false, // Ensure loading is set to false on success
       chatMessageObject: action.payload,
+    }),
+
+    // update
+    [CHAT_HISTORY.update]: () => ({
+      ...state,
+      chatHistory: action.payload,
     }),
 
     // Failure state
@@ -45,6 +63,12 @@ export const ChatsReducer = (state = initialState, action) => {
       ...state,
       loading: false,
       error: action?.payload?.message || 'Failed to load chats', // Default error message
+      statusCode: action?.payload?.statusCode || 500,
+    }),
+    [CHAT_HISTORY.fail]: () => ({
+      ...state,
+      chatHistoryLoading: false,
+      error: action?.payload?.message || 'Failed to load chat history', // Default error message
       statusCode: action?.payload?.statusCode || 500,
     }),
     [CHAT_MESSAGES.fail]: () => ({
