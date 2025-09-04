@@ -127,24 +127,25 @@ const SidebarContentComponent = ({ profileDetails }) => {
                           onClick={() => {
                             copyLinkFunction(item);
                           }}
+                          className={'cursor-pointer'}
                         >
                           <Link className="text-muted-foreground" />
                           <span>Copy Link</span>
                         </DropdownMenuItem>
 
-                        {/* <DropdownMenuItem>
-                          <ArrowUpRight className="text-muted-foreground" />
-                          <span>Open in New Tab</span>
-                        </DropdownMenuItem> */}
-                        <DropdownMenuItem onClick={() => newTabFunction(item)}>
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem
+                          onClick={() => newTabFunction(item)}
+                          className={'cursor-pointer'}
+                        >
                           <ArrowUpRight className="text-muted-foreground" />
                           <span>Open in New Tab</span>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        {/* <DropdownMenuItem>
                           <Trash2 className="text-muted-foreground" />
                           <span>Delete</span>
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </SidebarMenuItem>
