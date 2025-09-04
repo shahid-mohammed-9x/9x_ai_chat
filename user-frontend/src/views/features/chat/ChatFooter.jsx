@@ -95,7 +95,7 @@ const ChatFooter = ({
           value={info?.inputMessage || ''}
           onChange={onChangeHandlerFunction}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey && info?.inputMessage?.length > 3) {
+            if (e.key === 'Enter' && !e.shiftKey && info?.inputMessage?.length > 1) {
               submitButtonHandler(e);
             }
           }}
@@ -133,7 +133,7 @@ const ChatFooter = ({
           <Button
             size="icon"
             className="h-10 w-10 rounded-full hover:bg-gray-50 shrink-0"
-            disabled={loading || info?.inputMessage.length < 3 || selectedModels.length < 1}
+            disabled={loading || info?.inputMessage.length < 1 || selectedModels.length < 1}
             onClick={submitButtonHandler}
           >
             {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
