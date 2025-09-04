@@ -84,6 +84,8 @@ function LoginModal() {
         dispatch(openPasswordAction('true'));
         dispatch(openLoginAction('false'));
         toast.success('Done with Email verification!, Set Your UserName and Password');
+        setEmail('');
+        setOTP('');
       }
     });
   };
