@@ -14,12 +14,17 @@ const aiModels = [
   { value: 'gemini', label: 'Gemini' },
   { value: 'chatgpt', label: 'Chat GPT' },
   { value: 'groq', label: 'Groq' },
-  { value: 'claude', label: 'Claude' },
   { value: 'deepseek', label: 'DeepSeek' },
+  // { value: 'claude', label: 'Claude' },
   // { value: 'sonar', label: 'Sonar' },
 ];
 
-const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) => {
+const ChatFooter = ({
+  onClickFunction,
+  loading = false,
+  clearInput = false,
+  activeModels = null,
+}) => {
   const [selectedModels, setSelectedModels] = useState(['gemini']);
   const [info, setInfo] = useState({
     inputMessage: '',
@@ -41,6 +46,12 @@ const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) =>
       setInfo((prev) => ({ ...prev, inputMessage: '' }));
     }
   }, [clearInput]);
+
+  useEffect(() => {
+    if (activeModels) {
+      setSelectedModels(activeModels);
+    }
+  }, [activeModels]);
 
   // Functions
   const onChangeHandlerFunction = useCallback(

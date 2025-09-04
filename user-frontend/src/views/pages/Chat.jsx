@@ -197,6 +197,9 @@ const Chat = () => {
             onClickFunction={submitNewQuestionHandlerFunction}
             loading={info?.loading}
             clearInput={info?.clearInput}
+            activeModels={
+              newChatPollingId?.models || _.first(chatMessageObject?.[chatId]?.docs)?.models
+            }
           />
         </>
       )}
