@@ -62,6 +62,10 @@ const SidebarContentComponent = ({ profileDetails }) => {
     window.open(link, '_blank'); // opens in a new tab
   }, []);
 
+  const chatHistoryFunction = useCallback(() => {
+    navigate('/chat-history');
+  }, []);
+
   return (
     <SidebarContent>
       {profileDetails && (
@@ -137,12 +141,18 @@ const SidebarContentComponent = ({ profileDetails }) => {
                   </SidebarMenuItem>
                 ))
               )}
-              {/* <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70">
-                  <MoreHorizontal />
-                  <span>More</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem> */}
+
+              {_.size(chatsList?.docs) >= 15 && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    className="text-sidebar-foreground/70"
+                    onClick={chatHistoryFunction}
+                  >
+                    <MoreHorizontal />
+                    <span>More</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           )}
         </SidebarGroup>
