@@ -13,10 +13,10 @@ import { Loader2 } from 'lucide-react';
 const aiModels = [
   { value: 'gemini', label: 'Gemini' },
   { value: 'chatgpt', label: 'Chat GPT' },
-  { value: 'gork', label: 'Gork' },
+  { value: 'groq', label: 'Groq' },
   { value: 'claude', label: 'Claude' },
   { value: 'deepseek', label: 'DeepSeek' },
-  { value: 'sonar', label: 'Sonar' },
+  // { value: 'sonar', label: 'Sonar' },
 ];
 
 const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) => {

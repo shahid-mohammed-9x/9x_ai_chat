@@ -79,7 +79,6 @@ const callBackMessageResponseController = async (req, res, next) => {
     console.log(req.body);
 
     const { token_usage, answer, messageId, model } = req.body;
-    console.log(req.body);
 
     const messageExist = await messageModel.findById(messageId);
 

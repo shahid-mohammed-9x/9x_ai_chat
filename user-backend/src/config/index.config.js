@@ -21,4 +21,13 @@ module.exports = {
 
   // ai server configs
   AI_API_URL: process.env.AI_API_URL || "http://10.10.1.65:8000",
+
+  // nodemailer SMPT
+ NODEMAILER_HOST: process.env.SMPT_HOST,
+ NODEMAILER_PORT: process.env.SMPT_PORT,
+ NODEMAILER_PASS: process.env.SMPT_PASS,
+ NODEMAILER_USER: process.env.SMPT_USER,
+ NODEMAILER_EMAIL: process.env.SMPT_EMAIL
+
+
 };

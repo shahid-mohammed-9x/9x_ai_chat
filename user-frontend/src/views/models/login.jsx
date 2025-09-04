@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Shield } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userActions, themeActions } from '@/redux/combineAction';
 import { setAccessToken } from '@/helpers/local-storage';
@@ -32,18 +31,20 @@ function LoginModal() {
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+
   const [password, setPassword] = useState('');
   const [data, setData] = useState(null);
   const [otp, setOTP] = useState('');
-  const [emailError, setEmailError] = useState(null);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const res = await findUserEmailAction(email);
 
-    if (res[0]) setData(res[1]?.data)
+    if (res[0]) setData(res[1]?.data);
     if (!res[1]?.data?.isPasswordSet && !res[1]?.data?.isEmailVerified) {
       let data = {
         email: email,
@@ -86,11 +87,20 @@ function LoginModal() {
       }
     });
   };
-
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (data?.isPasswordSet && data?.userExists) {
+      handleLogin(e);
+    } else if (data != null && !data?.isEmailVerified) {
+      handleVerify(e);
+    } else if (data == null) {
+      handleSubmit(e);
+    }
+  };
   return (
     <div>
       <Dialog open={loginPopup} onOpenChange={() => dispatch(openLoginAction('false'))}>
-        <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-md" />
+        <DialogOverlay className="fixed inset-0 bg-card backdrop-blur-md" />
 
         <DialogContent
           className="w-[90%] sm:max-w-sm md:max-w-md lg:max-w-lg rounded-2xl p-6 
@@ -136,9 +146,9 @@ function LoginModal() {
             <div className="flex-1 h-px bg-primary" />
           </div>
 
-          <div className="flex flex-col items-center w-full gap-4">
+          <form onSubmit={handleFormSubmit} className="flex flex-col items-center w-full gap-4">
             {/* Email input */}
-            <div className="relative w-full sm:w-[70%] md:w-[55%]">
+            {/* <div className="relative w-full sm:w-[70%] md:w-[55%]">
               <Input
                 type="email"
                 id="email"
@@ -161,6 +171,39 @@ function LoginModal() {
                 Email
               </label>
               {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
+            </div> */}
+            <div className="relative w-full sm:w-[70%] md:w-[55%]">
+              <Input
+                type="email"
+                id="email"
+                placeholder=" "
+                className={`peer h-12 px-2 pt-3 w-full ${
+                  data != null ? 'bg-gray-100 text-white-600 cursor-not-allowed' : ''
+                }`}
+                value={email}
+                onChange={(e) => {
+                  if (data == null) {
+                    // 👈 Only allow typing before OTP stage
+                    setEmail(e.target.value);
+                    setEmailError(validateEmail(e.target.value));
+                  }
+                }}
+                readOnly={data != null} // 👈 Email becomes read-only after OTP stage
+              />
+
+              <label
+                htmlFor="email"
+                className="absolute left-3 top-3 text-gray-500 text-sm transition-all
+      peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400
+      peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary
+      peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
+              >
+                Email
+              </label>
+              {emailError &&
+                !data && ( // 👈 Show error only when editable
+                  <p className="text-red-500 text-sm mt-1">{emailError}</p>
+                )}
             </div>
 
             {/* OTP Input */}
@@ -212,7 +255,7 @@ function LoginModal() {
               </div>
             )}
 
-            {/* Submit Button */}
+            {/* login Button */}
             {data?.isPasswordSet && data?.userExists && (
               <Button
                 className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
@@ -223,7 +266,7 @@ function LoginModal() {
                 <span className="sm:inline">Login</span>
               </Button>
             )}
-
+            {/* verify button */}
             {data != null && !data?.isEmailVerified && (
               <Button
                 className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
@@ -234,7 +277,7 @@ function LoginModal() {
                 <span className="sm:inline"> Verify</span>
               </Button>
             )}
-
+            {/* submit button */}
             {data == null && (
               <Button
                 className="h-10 px-6 w-full sm:w-[70%] md:w-[25%] flex-shrink-0 m-auto 
@@ -246,7 +289,7 @@ function LoginModal() {
                 <span className="sm:inline">Submit</span>
               </Button>
             )}
-          </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>

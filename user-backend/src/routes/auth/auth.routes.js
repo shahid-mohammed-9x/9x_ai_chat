@@ -21,8 +21,14 @@ AuthRoutes.route("/send-otp").post(
   sendEmailOTPController
 );
 
+
 AuthRoutes.route("/verify-otp").post(verifyOTPValidation, verifyOTPController);
 
 AuthRoutes.route("/login").post(loginValidation, loginController);
+
+
+// login with google
+// AuthRoutes.route('/google/callback');
+// AuthRoutes.route('/google')
 
 module.exports = AuthRoutes;

@@ -21,11 +21,11 @@ const ModelSchema = new mongoose.Schema(
     models: [
       {
         type: String,
-        enum: ["gpt", "gemini", "deepseek", "groq", "claude"],
+        enum: ["chatgpt", "gemini", "deepseek", "groq", "claude"],
       },
     ],
     responses: {
-      gpt: {
+      chatgpt: {
         answer: {
           type: String,
         },
@@ -34,6 +34,30 @@ const ModelSchema = new mongoose.Schema(
         },
       },
       gemini: {
+        answer: {
+          type: String,
+        },
+        token_usage: {
+          type: Object,
+        },
+      },
+      deepseek: {
+        answer: {
+          type: String,
+        },
+        token_usage: {
+          type: Object,
+        },
+      },
+      groq: {
+        answer: {
+          type: String,
+        },
+        token_usage: {
+          type: Object,
+        },
+      },
+      claude: {
         answer: {
           type: String,
         },

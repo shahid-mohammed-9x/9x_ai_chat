@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import InitialLoader from '@/components/custom/loaders/InitialLoader';
 import Service from '@/services';
 import useLogout from '@/hooks/useLogout';
+import { cn } from '@/lib/utils';
 
 export const SidebarSkeleton = memo(() => {
   return (
@@ -78,9 +79,9 @@ export const SidebarSkeleton = memo(() => {
   );
 });
 
-export const ChatSkeleton = memo(() => {
+export const ChatSkeleton = memo(({ className }) => {
   return (
-    <div className="flex ml-3 h-screen w-full flex-col bg-sidebar shadow-lg ">
+    <div className={cn('flex ml-3 h-screen w-full flex-col bg-sidebar shadow-lg ', className)}>
       {/* Main Navigation Skeleton */}
       <div className="flex-1  p-4 space-y-6">
         <div className="w-full flex flex-col h-[700px] rounded-2xl shadow-lg">
@@ -88,8 +89,8 @@ export const ChatSkeleton = memo(() => {
             <div className="space-y-6 animate-pulse">
               {/* User Message Skeleton */}
               <div className="flex justify-end">
-                <div className="flex items-center gap-2 max-w-[90%]">
-                  <div className="bg-gray-300 h-6 w-10 rounded-2xl" />
+                <div className="flex items-center w-2/4 gap-2">
+                  <div className="bg-gray-300 h-6 w-full rounded-2xl" />
                   <div className="bg-gray-300 h-8 w-8 rounded-lg" />
                 </div>
               </div>

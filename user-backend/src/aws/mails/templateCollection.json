@@ -7,5 +7,14 @@
     },
     "fileName": "welcome.template.html",
     "dynamicDataKeys": ["user_name", "user_email"]
+  },
+  "OTPEmailVerificationTemplate": {
+    "message": {
+      "subject": "Welcome to the 9X_AI_Verification",
+      "text": "Welcome to the 9X_AI_Verification. We are glad to have you with us.",
+      "html": null
+    },
+    "fileName": "otp.template.html",
+    "dynamicDataKeys": ["user_name", "user_email", "otp"]
   }
 }

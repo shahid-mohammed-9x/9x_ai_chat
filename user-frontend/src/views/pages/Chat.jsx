@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState, useRef } from 'react';
 import ChatFooter from '../features/chat/ChatFooter';
 import ChatWindow from '../features/chat/ChatWindow';
 import ChatLayout from '../layouts/ChatLayout';
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import _ from 'lodash';
 import { updatePaginationData } from '@/helpers';
+import { ChatSkeleton } from '../wrappers/AuthWrapper';
 
 const Chat = () => {
   const {
@@ -20,16 +21,22 @@ const Chat = () => {
   const dispatch = useDispatch();
   const { chatId } = useParams();
   const navigate = useNavigate();
+
   const { chatMessageObject, messageLoading, error, statusCode } = useSelector(
     (state) => state.chatsState
   );
   const { profileDetails } = useSelector((state) => state.userProfileState);
 
+  const intervalRef = useRef(null);
   const [info, setInfo] = useState({
     loading: false,
     clearInput: false,
-    timeOut: null,
-    responseLoading: false,
+    responseLoading: {
+      chatgpt: false,
+      gemini: false,
+      deepseek: false,
+      qrok: false,
+    },
   });
 
   useEffect(() => {
@@ -59,13 +66,17 @@ const Chat = () => {
       if (info?.loading) return;
 
       const { selectedModels, inputMessage } = e;
+      let responseLoading = selectedModels.reduce((acc, model) => {
+        acc[model] = true;
+        return acc;
+      }, {});
 
       setInfo((prev) => ({ ...prev, loading: true, clearInput: true }));
-      const json = {
-        question: inputMessage,
-        models: selectedModels,
-      };
+
+      const json = { question: inputMessage, models: selectedModels };
       const response = await newQuestionAction(chatId, json);
+      let finalObjectUpdateState = { clearInput: false };
+
       if (response[0] === true) {
         let appendData = {
           _id: response?.[1]?.data?._id,
@@ -81,45 +92,95 @@ const Chat = () => {
         chatDataClone = updatePaginationData(chatDataClone, appendData);
         updatedMessageObject = { ...updatedMessageObject, [chatId]: chatDataClone };
         dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updatedMessageObject) }));
-        pollingHandlerFunction(response?.[1]?.pollingId);
+        pollingHandlerFunction(response?.[1]?.pollingId, updatedMessageObject);
+
+        // state update
+        finalObjectUpdateState.responseLoading = { ...info.responseLoading, ...responseLoading };
       } else {
         toast.error(response?.[1]?.message || 'something went wrong');
       }
 
-      setInfo((prev) => ({ ...prev, loading: false, clearInput: false }));
+      setInfo((prev) => ({ ...prev, ...finalObjectUpdateState }));
     },
-    [info?.loading, info?.clearInput, chatId, chatMessageObject[chatId]]
+    [info?.loading, info?.clearInput, info?.responseLoading, chatId, chatMessageObject]
   );
 
-  const pollingHandlerFunction = useCallback((pollingId) => {
+  const pollingHandlerFunction = (pollingId, latestChatMessageObject) => {
     let query = {
       userId: profileDetails?._id,
       messageId: pollingId,
     };
 
-    // api polling function
     const apiPollingFunction = async () => {
       const response = await pollingAnswerAction(query);
-      if (response[1] === true) {
-        if (response[1]?.data?.isRecievedAllResponses) {
-          clearInterval(info?.timeOut);
-          setInfo((prev) => ({ ...prev, timeOut: null }));
+      if (response[0] === true) {
+        if (response[1]?.isRecievedAllResponses) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+
+          setInfo((prev) => ({
+            ...prev,
+            loading: false,
+            responseLoading: { chatgpt: false, gemini: false, deepseek: false, qrok: false },
+          }));
+
+          const updateRedux = _.cloneDeep(latestChatMessageObject);
+          updateRedux[chatId].docs.forEach((item) => {
+            if (item._id === pollingId) {
+              item.responses = response[1]?.data?.responses;
+            }
+          });
+
+          dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updateRedux) }));
+        } else {
+          const activeModels = response[1]?.data?.models;
+          const answerResponses = response[1]?.data?.responses;
+          let updateResponseLoading = {};
+          let updateReduxAnswer = {};
+
+          activeModels?.forEach((singleModel) => {
+            if (answerResponses?.[singleModel]?.answer) {
+              updateResponseLoading[singleModel] = false;
+              updateReduxAnswer[singleModel] = answerResponses?.[singleModel];
+            }
+          });
+
+          if (_.size(updateResponseLoading) > 0) {
+            setInfo((prev) => ({
+              ...prev,
+              loading: false,
+              responseLoading: { ...prev.responseLoading, ...updateResponseLoading },
+            }));
+
+            const updateRedux = _.cloneDeep(latestChatMessageObject);
+            updateRedux[chatId].docs.forEach((item) => {
+              if (item._id === pollingId) {
+                item.responses = { ...item.responses, ...updateReduxAnswer };
+              }
+            });
+
+            dispatch(updateChatStateAction({ chatMessageObject: _.cloneDeep(updateRedux) }));
+          }
         }
       }
     };
 
-    let timeOut = setTimeout(() => {
-      apiPollingFunction();
-    }, 1000);
+    // Clear any existing interval before setting a new one
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
 
-    setInfo((prev) => ({ ...prev, timeOut }));
-  }, []);
+    const intervalId = setInterval(apiPollingFunction, 1000);
+    intervalRef.current = intervalId;
+  };
 
   return (
     <ChatLayout>
-      {messageLoading ? null : (
+      {messageLoading ? (
+        <ChatSkeleton className="m-0 h-full" />
+      ) : (
         <>
-          <ChatWindow />
+          <ChatWindow info={info} />
           <ChatFooter
             onClickFunction={submitNewQuestionHandlerFunction}
             loading={info?.loading}
