@@ -70,6 +70,8 @@ function LoginModal() {
       setAccessToken(res[1]?.token);
       navigate('/new-chat');
       dispatch(openLoginAction('false'));
+      setEmail('');
+      setPassword('');
     }
   };
 
@@ -84,6 +86,8 @@ function LoginModal() {
         dispatch(openPasswordAction('true'));
         dispatch(openLoginAction('false'));
         toast.success('Done with Email verification!, Set Your UserName and Password');
+        setEmail('');
+        setOTP('');
       }
     });
   };
@@ -103,6 +107,7 @@ function LoginModal() {
         <DialogOverlay className="fixed inset-0 bg-card backdrop-blur-md" />
 
         <DialogContent
+          onInteractOutside={(e) => e.preventDefault()}
           className="w-[90%] sm:max-w-sm md:max-w-md lg:max-w-lg rounded-2xl p-6 
              bg-card ring-1 ring-white/40 
              shadow-[0_0_30px_rgba(255,255,255,0.3)] 
@@ -116,10 +121,10 @@ function LoginModal() {
                 className="h-12 w-auto"
               />
             </div>
-            <DialogTitle className="text-lg md:text-xl font-bold">
+            <DialogTitle className="text-lg md:text-xl font-bold text-secondary-foreground">
               Welcome to 9x AI Chat
             </DialogTitle>
-            <DialogDescription className="text-xs md:text-sm text-gray-300">
+            <DialogDescription className="text-xs md:text-sm text-gray-700">
               Choose how you would like to sign in
             </DialogDescription>
           </DialogHeader>
@@ -128,7 +133,7 @@ function LoginModal() {
           <Button
             variant="default"
             className="h-10 px-6 w-full sm:w-[70%] md:w-[55%] flex-shrink-0 m-auto 
-             bg-gray-700 text-white hover:bg-gray-600 rounded-lg shadow mt-4"
+              text-secondary-foreground rounded-lg mt-4 bg-background shadow-primary "
           >
             <img
               src="https://www.svgrepo.com/show/355037/google.svg"
@@ -147,31 +152,6 @@ function LoginModal() {
           </div>
 
           <form onSubmit={handleFormSubmit} className="flex flex-col items-center w-full gap-4">
-            {/* Email input */}
-            {/* <div className="relative w-full sm:w-[70%] md:w-[55%]">
-              <Input
-                type="email"
-                id="email"
-                placeholder=" "
-                className="peer h-12 px-2 pt-3 w-full"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setEmailError(validateEmail(e.target.value));
-                }}
-              />
-
-              <label
-                htmlFor="email"
-                className="absolute left-3 top-3 text-gray-500 text-sm transition-all
-              peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400
-              peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary
-              peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
-              >
-                Email
-              </label>
-              {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
-            </div> */}
             <div className="relative w-full sm:w-[70%] md:w-[55%]">
               <Input
                 type="email"
@@ -194,9 +174,9 @@ function LoginModal() {
               <label
                 htmlFor="email"
                 className="absolute left-3 top-3 text-gray-500 text-sm transition-all
-      peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400
-      peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary
-      peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
+                  peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400
+                  peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary
+                  peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
               >
                 Email
               </label>
@@ -246,9 +226,9 @@ function LoginModal() {
                 <label
                   htmlFor="password"
                   className="absolute left-3 top-3 text-gray-500 text-sm transition-all 
-              peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
-              peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary 
-              peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
+                    peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 
+                    peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary 
+                    peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-xs"
                 >
                   Password
                 </label>

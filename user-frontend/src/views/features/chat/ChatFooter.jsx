@@ -14,12 +14,17 @@ const aiModels = [
   { value: 'gemini', label: 'Gemini' },
   { value: 'chatgpt', label: 'Chat GPT' },
   { value: 'groq', label: 'Groq' },
-  { value: 'claude', label: 'Claude' },
   { value: 'deepseek', label: 'DeepSeek' },
+  // { value: 'claude', label: 'Claude' },
   // { value: 'sonar', label: 'Sonar' },
 ];
 
-const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) => {
+const ChatFooter = ({
+  onClickFunction,
+  loading = false,
+  clearInput = false,
+  activeModels = null,
+}) => {
   const [selectedModels, setSelectedModels] = useState(['gemini']);
   const [info, setInfo] = useState({
     inputMessage: '',
@@ -42,10 +47,16 @@ const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) =>
     }
   }, [clearInput]);
 
+  useEffect(() => {
+    if (activeModels) {
+      setSelectedModels(activeModels);
+    }
+  }, [activeModels]);
+
   // Functions
   const onChangeHandlerFunction = useCallback(
     (e) => {
-      const { name, value } = e?.target;
+      let { name, value } = e?.target;
       setInfo((prev) => ({
         ...prev,
         [name]: value,
@@ -65,7 +76,7 @@ const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) =>
 
   const submitButtonHandler = useCallback(
     (e) => {
-      e.preventDefault();
+      e?.preventDefault?.();
       if (loading) return;
       let data = { selectedModels, inputMessage: info?.inputMessage };
       onClickFunction(data);
@@ -83,6 +94,11 @@ const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) =>
           className="min-h-[40px] max-h-[100px] w-full resize-none bg-transparent outline-none px-3 text-base placeholder-gray-400"
           value={info?.inputMessage || ''}
           onChange={onChangeHandlerFunction}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey && info?.inputMessage?.length > 1) {
+              submitButtonHandler(e);
+            }
+          }}
         />
 
         {/* Actions */}
@@ -117,9 +133,8 @@ const ChatFooter = ({ onClickFunction, loading = false, clearInput = false }) =>
           <Button
             size="icon"
             className="h-10 w-10 rounded-full hover:bg-gray-50 shrink-0"
-            disabled={loading || info?.inputMessage.length < 3 || selectedModels.length < 1}
+            disabled={loading || info?.inputMessage.length < 1 || selectedModels.length < 1}
             onClick={submitButtonHandler}
-            onKeyDown={(e) => e.key === 'Enter' && submitButtonHandler()}
           >
             {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
           </Button>

@@ -4,6 +4,7 @@ import AuthWrapper from './views/wrappers/AuthWrapper';
 import ChatWrapper from './views/wrappers/ChatWrapper';
 import NewChat from './views/pages/NewChat';
 import ProfilePage from './views/pages/ProfilePage';
+import ChatHistory from './views/pages/ChatHistory';
 
 const allRoutesMapper = [
   {
@@ -24,6 +25,14 @@ const allRoutesMapper = [
     component: (
       <AuthWrapper roles={['user']}>
         <NewChat />
+      </AuthWrapper>
+    ),
+  },
+  {
+    path: '/chat-history',
+    component: (
+      <AuthWrapper roles={['user']}>
+        <ChatHistory />
       </AuthWrapper>
     ),
   },

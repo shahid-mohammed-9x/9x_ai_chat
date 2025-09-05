@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import {
   SidebarHeader,
   SidebarMenu,
@@ -12,6 +12,14 @@ import { useNavigate } from 'react-router-dom';
 
 const SidebarHeaderComponent = ({ isSidebarOpen, profileDetails }) => {
   const navigate = useNavigate();
+
+  const newChatFunctionHandler = useCallback((e) => {
+    if (e?.ctrlKey) {
+      window.open('/new-chat', '_blank'); // Open in new tab
+    } else {
+      navigate('/new-chat'); // Navigate in same tab
+    }
+  }, []);
 
   return (
     <SidebarHeader>
@@ -33,7 +41,7 @@ const SidebarHeaderComponent = ({ isSidebarOpen, profileDetails }) => {
         {profileDetails && (
           <SidebarMenuButton asChild className="w-full my-3">
             <Button
-              onClick={() => navigate('/new-chat')}
+              onClick={newChatFunctionHandler}
               className={'cursor-pointer hover:bg-primary/90 hover:text-black'}
             >
               <Plus /> {isSidebarOpen && 'New Chat'}

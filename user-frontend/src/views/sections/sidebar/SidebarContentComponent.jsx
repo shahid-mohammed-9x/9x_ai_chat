@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { ArrowUpRight, Link, MoreHorizontal, StarOff, Trash2, MessageCircleX } from 'lucide-react';
 import {
   DropdownMenu,
@@ -22,6 +23,7 @@ import { useCallback, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useNavigate, useParams } from 'react-router-dom';
 import _ from 'lodash';
+import toast from 'react-hot-toast';
 
 const SidebarContentComponent = ({ profileDetails }) => {
   const { getChatsListAction } = chatActions;
@@ -31,6 +33,10 @@ const SidebarContentComponent = ({ profileDetails }) => {
   const { chatId } = useParams();
   const { isMobile } = useSidebar();
 
+  const [info, setInfo] = useState({
+    limit: 15,
+  });
+
   useEffect(() => {
     if (profileDetails && !chatsList && chatsList?.currentPage !== 1) {
       fetchChatListFunctions();
@@ -38,11 +44,35 @@ const SidebarContentComponent = ({ profileDetails }) => {
   }, [profileDetails]);
 
   const fetchChatListFunctions = useCallback(() => {
-    dispatch(getChatsListAction());
-  }, [profileDetails, chatsList]);
+    const payload = {
+      limit: info?.limit,
+    };
+    dispatch(getChatsListAction(payload));
+  }, [profileDetails, chatsList, info?.limit]);
 
   const navigateToChatFunction = useCallback((chatDetails) => {
     navigate(`/chat/${chatDetails?._id}`);
+  }, []);
+
+  const copyLinkFunction = useCallback((item) => {
+    const link = `${window.location.origin}/chat/${item?._id}`;
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        toast.success('Link copied to clipboard!');
+      })
+      .catch(() => {
+        toast.error('Failed to copy link.');
+      });
+  }, []);
+
+  const newTabFunction = useCallback((item) => {
+    const link = `${window.location.origin}/chat/${item?._id}`;
+    window.open(link, '_blank'); // opens in a new tab
+  }, []);
+
+  const chatHistoryFunction = useCallback(() => {
+    navigate('/chat-history');
   }, []);
 
   return (
@@ -89,30 +119,50 @@ const SidebarContentComponent = ({ profileDetails }) => {
                         side={isMobile ? 'bottom' : 'right'}
                         align={isMobile ? 'end' : 'start'}
                       >
-                        <DropdownMenuItem>
+                        {/* <DropdownMenuItem>
+                          <Link className="text-muted-foreground" />
+                          <span>Copy Link</span>
+                        </DropdownMenuItem> */}
+                        <DropdownMenuItem
+                          onClick={() => {
+                            copyLinkFunction(item);
+                          }}
+                          className={'cursor-pointer'}
+                        >
                           <Link className="text-muted-foreground" />
                           <span>Copy Link</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem
+                          onClick={() => newTabFunction(item)}
+                          className={'cursor-pointer'}
+                        >
                           <ArrowUpRight className="text-muted-foreground" />
                           <span>Open in New Tab</span>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        {/* <DropdownMenuItem>
                           <Trash2 className="text-muted-foreground" />
                           <span>Delete</span>
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </SidebarMenuItem>
                 ))
               )}
-              {/* <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70">
-                  <MoreHorizontal />
-                  <span>More</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem> */}
+
+              {_.size(chatsList?.docs) >= 15 && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    className="text-sidebar-foreground/70"
+                    onClick={chatHistoryFunction}
+                  >
+                    <MoreHorizontal />
+                    <span>More</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           )}
         </SidebarGroup>

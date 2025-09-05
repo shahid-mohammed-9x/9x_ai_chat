@@ -76,9 +76,9 @@ const callBackMessageResponseController = async (req, res, next) => {
     logger.info(
       "controller - chat - messsage.controller - callBackMessageResponseController - start"
     );
-    console.log(req.body);
 
     const { token_usage, answer, messageId, model } = req.body;
+    console.log("Answer :-", model, answer);
 
     const messageExist = await messageModel.findById(messageId);
 
@@ -115,7 +115,7 @@ const callBackSummaryResponseController = async (req, res, next) => {
       "controller - chat - messsage.controller - callBackSummaryResponseController - start"
     );
     const { question, token_usage, model, chatId } = req.body;
-    console.log(req.body);
+    console.log("Summary :-", model, answer);
     const key = `summaries.${model}`;
     const summaryExist = await summaryModel.findOneAndUpdate(
       { chat: chatId },

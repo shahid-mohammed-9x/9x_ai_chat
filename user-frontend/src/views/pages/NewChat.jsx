@@ -39,7 +39,20 @@ const NewChat = () => {
           createdAt: response?.[1]?.data?.createdAt,
         };
         newUpdatedData = updatePaginationData(newUpdatedData, appendData);
-        dispatch(updateChatStateAction({ chatsList: newUpdatedData }));
+        let responseLoading = selectedModels.reduce((acc, model) => {
+          acc[model] = true;
+          return acc;
+        }, {});
+        dispatch(
+          updateChatStateAction({
+            chatsList: newUpdatedData,
+            newChatPollingId: {
+              _id: response?.[1]?.pollingId,
+              models: selectedModels,
+              responseLoading,
+            },
+          })
+        );
         navigate(`/chat/${response?.[1]?.data?._id}`);
       } else {
         toast.error(response?.[1]?.message || 'something went wrong');

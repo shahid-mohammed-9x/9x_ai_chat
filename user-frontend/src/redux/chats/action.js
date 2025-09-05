@@ -1,6 +1,7 @@
 import {
   CHAT_LIST,
   CHAT_MESSAGES,
+  CHAT_HISTORY,
   UPDATE_CHAT_STATE,
   CLEAR_CHAT_ERRORS,
   RESET_CHAT_STATE,
@@ -11,10 +12,11 @@ import { getAccessToken } from '../../helpers/local-storage';
 import _ from 'lodash';
 import { objectToQueryString } from '@/helpers';
 
-const getChatsListAction = () => async (dispatch) => {
+const getChatsListAction = (queryObject) => async (dispatch) => {
   dispatch({ type: CHAT_LIST.request });
   const token = getAccessToken();
-  const response = await Service.fetchGet(`${API.BASE_CHAT}${API.CHATS.UserChats}`, token);
+  let query = queryObject ? objectToQueryString(queryObject) : '';
+  const response = await Service.fetchGet(`${API.BASE_CHAT}${API.CHATS.UserChats}${query}`, token);
   if (response[0] === true) {
     dispatch({ type: CHAT_LIST.success, payload: response[1].data });
   } else {
@@ -24,6 +26,37 @@ const getChatsListAction = () => async (dispatch) => {
     });
   }
 };
+
+const getChatHistoryAction =
+  (queryObject, append = false) =>
+  async (dispatch, state) => {
+    dispatch({ type: CHAT_HISTORY.request });
+    const token = getAccessToken();
+    let query = queryObject ? objectToQueryString(queryObject) : '';
+    const response = await Service.fetchGet(
+      `${API.BASE_CHAT}${API.CHATS.UserChats}${query}`,
+      token
+    );
+    if (response[0] === true) {
+      if (append) {
+        const storeState = state();
+        let updateHistoryState = _.cloneDeep(storeState?.chatsState?.chatHistory);
+        updateHistoryState = {
+          ...updateHistoryState,
+          ...response[1]?.data,
+          docs: [...(response[1]?.data?.docs || []), ...updateHistoryState.docs],
+        };
+        dispatch({ type: CHAT_HISTORY.update, payload: updateHistoryState });
+      } else {
+        dispatch({ type: CHAT_HISTORY.success, payload: response[1].data });
+      }
+    } else {
+      dispatch({
+        type: CHAT_HISTORY.fail,
+        payload: response[1],
+      });
+    }
+  };
 
 const getChatMessagesAction = (chatId) => async (dispatch, state) => {
   dispatch({ type: CHAT_MESSAGES.request });
@@ -98,6 +131,7 @@ const resetChatsAction = () => (dispatch) => {
 };
 export default {
   getChatsListAction,
+  getChatHistoryAction,
   getChatMessagesAction,
   createNewChatAction,
   newQuestionAction,

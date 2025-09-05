@@ -26,7 +26,7 @@ const AIResponses = ({ docs, info, profileDetails }) => {
   return (
     // <div className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
     <ScrollToBottom
-      className="flex flex-col space-y-6 p-4 max-h-[80vh] overflow-y-auto max-md:p-0 max-md:space-y-0"
+      className="flex flex-col p-4 max-h-[80vh] overflow-y-auto max-md:p-0 max-md:space-y-0"
       initialScrollBehavior="auto"
     >
       {docs?.map((singleMessage, docIndex) => {

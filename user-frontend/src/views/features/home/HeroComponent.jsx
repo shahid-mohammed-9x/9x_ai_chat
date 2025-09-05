@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux';
 import { themeActions } from '@/redux/combineAction';
 import { getAccessToken } from '@/helpers/local-storage';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import useLogout from '@/hooks/useLogout';
 
 const navLinks = [
   { name: 'About', href: '#' },
@@ -22,6 +24,8 @@ const Home = () => {
   const baseLink = 'text-gray-400 hover:text-white transition duration-200';
   const { openLoginAction } = themeActions;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logoutFunction = useLogout();
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--background)] text-[var(--foreground)] font-inter">
@@ -49,7 +53,7 @@ const Home = () => {
           <Button
             className="bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold py-2 px-6 rounded-[var(--radius)] hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)] transition"
             onClick={() => {
-              token ? '' : dispatch(openLoginAction('true'));
+              token ? logoutFunction() : dispatch(openLoginAction('true'));
             }}
           >
             {token ? 'Logout' : 'Login'}
@@ -75,12 +79,12 @@ const Home = () => {
                 {link.name}
               </a>
             ))}
-            <button
+            <Button
               className="bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold py-2 px-6 rounded-[var(--radius)] hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)] transition"
               onClick={() => dispatch(openLoginAction('true'))}
             >
               Login
-            </button>
+            </Button>
           </div>
         )}
       </header>
@@ -112,18 +116,22 @@ const Home = () => {
               className="w-full bg-[var(--input)] border border-[var(--border)] text-[var(--foreground)] placeholder-[var(--muted-foreground)] rounded-full py-4 pl-6 pr-16 focus:outline-none focus:ring-2 focus:ring-[var(--ring)] transition"
             />
 
-            <button
+            <Button
               type="submit"
               className="absolute right-3 top-1/2 -translate-y-1/2 bg-[var(--primary)] hover:bg-[var(--accent)] text-[var(--primary-foreground)] rounded-full p-2.5 transition"
+              onClick={() => navigate('/')}
             >
               <ArrowUp className="w-5 h-5" />
-            </button>
+            </Button>
           </form>
         </div>
         <div className="relative mt-8 flex flex-col md:flex-row items-center gap-4">
-          <button className="bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold py-3 px-8 rounded-[var(--radius)] hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)] transition w-full md:w-auto">
+          <Button
+            className="bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold py-3 px-8 rounded-[var(--radius)] hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)] transition w-full md:w-auto"
+            onClick={() => navigate('/new-chat')}
+          >
             Try AI Chat
-          </button>
+          </Button>
         </div>
       </main>
     </div>
